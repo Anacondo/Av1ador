@@ -120,7 +120,8 @@
             this.removeBlackBarsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.denoiseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.strongDenoiseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resizeZscaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resizePlaceboToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tonemapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openclToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vulkanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1498,7 +1499,8 @@
             this.removeBlackBarsToolStripMenuItem,
             this.denoiseToolStripMenuItem,
             this.strongDenoiseToolStripMenuItem,
-            this.resizeToolStripMenuItem,
+            this.resizeZscaleToolStripMenuItem,
+            this.resizePlaceboToolStripMenuItem,
             this.tonemapToolStripMenuItem,
             this.toolStripSeparator16,
             this.savedToolStripMenuItem});
@@ -1512,7 +1514,6 @@
             // 
             // removeBlackBarsToolStripMenuItem
             // 
-            this.removeBlackBarsToolStripMenuItem.AutoSize = false;
             this.removeBlackBarsToolStripMenuItem.Name = "removeBlackBarsToolStripMenuItem";
             this.removeBlackBarsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.removeBlackBarsToolStripMenuItem.Text = "Auto-crop";
@@ -1520,7 +1521,6 @@
             // 
             // denoiseToolStripMenuItem
             // 
-            this.denoiseToolStripMenuItem.AutoSize = false;
             this.denoiseToolStripMenuItem.Name = "denoiseToolStripMenuItem";
             this.denoiseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.denoiseToolStripMenuItem.Text = "Light denoise";
@@ -1528,23 +1528,27 @@
             // 
             // strongDenoiseToolStripMenuItem
             // 
-            this.strongDenoiseToolStripMenuItem.AutoSize = false;
             this.strongDenoiseToolStripMenuItem.Name = "strongDenoiseToolStripMenuItem";
             this.strongDenoiseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.strongDenoiseToolStripMenuItem.Text = "Strong denoise";
             this.strongDenoiseToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
-            // resizeToolStripMenuItem
+            // resizeZscaleToolStripMenuItem
             // 
-            this.resizeToolStripMenuItem.AutoSize = false;
-            this.resizeToolStripMenuItem.Name = "resizeToolStripMenuItem";
-            this.resizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.resizeToolStripMenuItem.Text = "Resize to 1080p";
-            this.resizeToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
+            this.resizeZscaleToolStripMenuItem.Name = "resizeZscaleToolStripMenuItem";
+            this.resizeZscaleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resizeZscaleToolStripMenuItem.Text = "Resize to 1080p (zscale spline36)";
+            this.resizeZscaleToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
+            // 
+            // resizePlaceboToolStripMenuItem
+            // 
+            this.resizePlaceboToolStripMenuItem.Name = "resizePlaceboToolStripMenuItem";
+            this.resizePlaceboToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.resizePlaceboToolStripMenuItem.Text = "Resize to 1080p (libplacebo mitchell)";
+            this.resizePlaceboToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
             // tonemapToolStripMenuItem
             // 
-            this.tonemapToolStripMenuItem.AutoSize = false;
             this.tonemapToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openclToolStripMenuItem,
             this.vulkanToolStripMenuItem});
@@ -1572,7 +1576,7 @@
             // 
             this.toolStripSeparator16.AutoSize = false;
             this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(151, 6);
+            this.toolStripSeparator16.Size = new System.Drawing.Size(263, 6);
             // 
             // savedToolStripMenuItem
             // 
@@ -1600,7 +1604,6 @@
             // 
             // downmixToolStripMenuItem
             // 
-            this.downmixToolStripMenuItem.AutoSize = false;
             this.downmixToolStripMenuItem.Name = "downmixToolStripMenuItem";
             this.downmixToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.downmixToolStripMenuItem.Text = "Downmix to 2.0";
@@ -1608,7 +1611,6 @@
             // 
             // normalizeToolStripMenuItem
             // 
-            this.normalizeToolStripMenuItem.AutoSize = false;
             this.normalizeToolStripMenuItem.Name = "normalizeToolStripMenuItem";
             this.normalizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.normalizeToolStripMenuItem.Text = "Loudness normalization";
@@ -2982,7 +2984,7 @@
         private System.Windows.Forms.ToolStripMenuItem normalizeToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton encodelistButton;
         private System.Windows.Forms.ToolStripButton zoomButton;
-        private System.Windows.Forms.ToolStripMenuItem resizeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resizeZscaleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sharpenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tonemapToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openclToolStripMenuItem;
@@ -3053,6 +3055,7 @@
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripButton moveDownButton;
         private System.Windows.Forms.NumericUpDown gsUpDown;
+        private System.Windows.Forms.ToolStripMenuItem resizePlaceboToolStripMenuItem;
     }
 }
 

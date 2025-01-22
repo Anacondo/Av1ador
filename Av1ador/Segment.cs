@@ -351,8 +351,7 @@ namespace Av1ador
             if (!System.IO.File.Exists(Name + "\\chunks.txt") || (vbr && !System.IO.File.Exists(Name + "\\complexity.txt")))
             {
                 Status.Add("Detecting scenes...");
-                //int workers = vbr ? 1 : Math.Max(Math.Min((int)Math.Ceiling(v.Duration / (double)(180 / ((double)v.Width / 1000))), 3), 1) + 10;
-                int workers = Environment.ProcessorCount > 16 ? 8 : Environment.ProcessorCount;
+                int workers = Math.Abs(Environment.ProcessorCount / 4);
                 double tdist = (final - v.StartTime) / (double)workers;
                 Bw = new BackgroundWorker[workers];
                 List<string>[] trim_time = new List<string>[workers];
@@ -507,8 +506,7 @@ namespace Av1ador
             if (Running)
                 return;
             Running = true;
-            if (Splits == null)
-                Splits = new List<string>(System.IO.File.ReadAllLines(Name + "\\chunks.txt"));
+            Splits ??= new List<string>(System.IO.File.ReadAllLines(Name + "\\chunks.txt"));
             if (bitrate > 0 && Complexity == null)
                 Complexity = new List<string>(System.IO.File.ReadAllLines(Name + "\\complexity.txt"));
             if (Chunks == null)

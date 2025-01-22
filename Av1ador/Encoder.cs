@@ -432,8 +432,10 @@ namespace Av1ador
                 if (v == "True")
                     Vf.Insert(0, "nnedi='weights=" + resdir + "nnedi3_weights.bin:field=a'");
             }
-            else if (f == "Resize to 1080p")
+            else if (f == "Resize to 1080p (zscale spline36)")
                 Vf.Add("zscale=w=1920:h=-2:f=spline36");
+            else if (f == "Resize to 1080p (libplacebo mitchell)")
+                Vf.Add("libplacebo=w=1920:h=1080:force_original_aspect_ratio=decrease:normalize_sar=true:downscaler=mitchell");
             else if (f == "Light denoise")
                 Vf.Add("removegrain=1:0:0,noise=c0s=1:c0f=t");
             else if (f == "Strong denoise")
