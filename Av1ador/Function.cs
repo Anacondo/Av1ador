@@ -54,6 +54,7 @@ namespace Av1ador
             if (msg != "")
                 if (MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
                     Environment.Exit(0);
+
             Setinicial(process, 3, " -hide_banner -init_hw_device list");
             process.Start();
             string types = process.StandardOutput.ReadToEnd();
@@ -63,17 +64,13 @@ namespace Av1ador
                 process.Start();
                 output[1] = new Regex(@"[0-9]+\.[0-9]+: ").Match(process.StandardError.ReadToEnd()).Value.Replace(":", "").Trim();
             }
-            else
-            {
-                if (MessageBox.Show("No OpenCL device found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
-                    Environment.Exit(0);
-            }
             if (types.Contains("vulkan"))
             {
                 process.StartInfo.Arguments = " -hide_banner -v debug -init_hw_device vulkan";
                 process.Start();
                 output[2] = new Regex(@"[0-9\.]+:").Match(new Regex(@"GPU listing:[\n\r]*.*[0-9]+: ").Match(process.StandardError.ReadToEnd()).Value).Value.Replace(":", "").Trim();
             }
+
             return output;
         }
 
@@ -133,7 +130,7 @@ namespace Av1ador
         public static string Param_replace(string str, string param, string replace)
         {
             str = Regex.Replace(str, "-(" + param + " )[0-9]+ ", m => replace == "" ? "" : "-" + m.Groups[1].Value + replace + " ");
-            str = Regex.Replace(str, "([\\s:]+)(" + param + "=)[0-9]+", m => replace == "" ? m.Groups[1].Value + "" : m.Groups[1].Value + m.Groups[2].Value + replace);
+            str = Regex.Replace(str, "([\\s:]+)(" + param + "=)[0-9]+", m => replace == "" ? "" : m.Groups[1].Value + m.Groups[2].Value + replace);
             return str.Replace("::", ":").Replace("params :", "params ").Replace(": ", " ");
         }
 
@@ -291,15 +288,14 @@ namespace Av1ador
 
         public static string Size_unit(double size)
         {
-            string unit = "MB";
+            string unit = " MB";
             if (size > 1024)
             {
-                size = Math.Round(size / 1024.0, 1);
-                unit = "GB";
+                size = Math.Round(size / 1024.0, 2);
+                unit = " GB";
             }
             return size.ToString() + unit;
         }
-
         public static List<string> Concat(List<string>[] list, bool sort = true)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -313,7 +309,8 @@ namespace Av1ador
                 List<double> result = concatenated.Select(x => double.Parse(x)).ToList();
                 result.Sort();
                 return result.Select(i => i.ToString()).ToList();
-            } catch
+            }
+            catch
             {
                 return concatenated;
             }

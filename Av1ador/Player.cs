@@ -18,7 +18,7 @@ namespace Av1ador
         static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
         [DllImport("user32.dll")]
         static extern int GetWindowThreadProcessId(IntPtr hWnd, ref int ProcessID);
-        
+
         private string Mpv_args
         {
             get
@@ -40,8 +40,10 @@ namespace Av1ador
         private string Version { get; set; }
         public bool Mpv_loaded { get; set; }
         public bool Mpv2_loaded { get; set; }
-        public int Mpv_id { 
-            get {
+        public int Mpv_id
+        {
+            get
+            {
                 if (mpvid != -1 || !Mpv_loaded)
                     return mpvid;
                 GetWindowThreadProcessId(mpv1p.MainWindowHandle, ref mpvid);
@@ -70,7 +72,7 @@ namespace Av1ador
             Process.Start(Func.bindir + "mpv.exe", Mpv_args.Replace("socket", "socket" + processID.ToString()) + " --vo=gpu-next,gpu");
 
             Process mp = mpv1p;
-            
+
             bool found = false;
             int limit = 0;
             while (!found && limit < 8000)
@@ -92,7 +94,7 @@ namespace Av1ador
                 if (MessageBox.Show("The video player (mpv) failed to start or is unavailable.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
                     Environment.Exit(0);
             }
-            
+
             mpv1p = mp;
             Wait_mpv(5);
             Thread.Sleep(16);
