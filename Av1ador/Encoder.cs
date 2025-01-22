@@ -433,7 +433,7 @@ namespace Av1ador
                     Vf.Insert(0, "nnedi='weights=" + resdir + "nnedi3_weights.bin:field=a'");
             }
             else if (f == "Resize to 1080p")
-                Vf.Add("zscale=w=1920:h=-1:f=spline36");
+                Vf.Add("zscale=w=1920:h=-2:f=spline36");
             else if (f == "Light denoise")
                 Vf.Add("removegrain=1:0:0,noise=c0s=1:c0f=t");
             else if (f == "Strong denoise")

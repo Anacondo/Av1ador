@@ -1729,7 +1729,7 @@ namespace Av1ador
         private void ResizeStripMenuItem_Click(object sender, EventArgs e)
         {
             if (primer_video != null)
-                encoder.Vf_add("zscale=w=1920:h=-1:f=spline36");
+                encoder.Vf_add("zscale=w=1920:h=-2:f=spline36");
             Filter_items_update(true);
         }
 
