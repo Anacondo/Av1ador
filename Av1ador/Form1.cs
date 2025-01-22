@@ -1273,6 +1273,10 @@ namespace Av1ador
             thread.Start();
             heat = Func.Heat(0);
             workersgroupBox.Refresh();
+
+            string size_estimation_file = encode.Name + "\\size_estimation.log";
+            if (System.IO.File.Exists(size_estimation_file))
+                System.IO.File.Delete(size_estimation_file);
         }
 
         private void Abitrate_update(bool calc)

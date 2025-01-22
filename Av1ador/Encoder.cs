@@ -493,12 +493,7 @@ namespace Av1ador
 
             if (f == "normalize")
                 Af.Add("loudnorm=I=-16:TP=-1.5:LRA=11:measured_I=-27.61:measured_LRA=18.06:measured_TP=-4.47:measured_thresh=-39.20:offset=0.58:linear=true:print_format=summary");
-            /*if (f == "adelay")
-            {
-                Af.RemoveAll(s => s.StartsWith("adelay"));
-                if (double.Parse(v) > 0)
-                    Af.Add("adelay=" + v + ":all=true");
-            }*/
+
             if (f == "noisereduction")
                 Af.Add("arnndn=m='" + resdir + "std.rnnn':mix=0.65,afftdn=nr=3:nf=-20");
         }

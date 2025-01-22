@@ -158,11 +158,6 @@ namespace Av1ador
                 // Compute average bitrate so far
                 Abr = totalSize / 1024.0 * 8.0 / timeElapsed;
 
-                // Tweaked progress factors
-                double calibrationFactor = 1.25; // Decrease fallback influence slightly
-                double quadp = Math.Pow(progress / 100.0, 0.25) * calibrationFactor; // Flatter curve early on
-                double quad2p = Math.Pow(progress / 100.0, 0.65); // Slightly steeper for tighter mid-range estimates
-
                 video_size = Math.Round(avgBitrate * duration / 8 / 1024);   // simple calculation of final video size based on average bitrate calculation, with no infering
 
                 // Check if we’ve crossed the next 10% threshold
@@ -172,7 +167,7 @@ namespace Av1ador
                     string logMessage = $"{(int)progress}%" + $" -> {video_size / 1024:F2} GB";
 
                     // Append the log message to the file
-                    string logFilePath = Name + "\\size_predictions.log";
+                    string logFilePath = Name + "\\size_estimation.log";
                     try
                     {
                         using StreamWriter writer = new StreamWriter(logFilePath, append: true);
