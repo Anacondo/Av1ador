@@ -22,7 +22,8 @@ namespace Av1ador
         public string File { get; }
         public double Duration { get; }
         public double EncodeDuration { get; set; }
-        public double StartTime {
+        public double StartTime
+        {
             get { return starttime; }
             set
             {
@@ -68,6 +69,7 @@ namespace Av1ador
         public int Grain_level { get; set; }
         public double Predicted { get; set; }
         public List<string> Tracks { get; set; }
+        public List<string> Subtitles { get; set; }
         public List<double> Tracks_delay { get; set; }
         public Rect Letterbox { get; set; }
 
@@ -79,6 +81,7 @@ namespace Av1ador
             Kf_fixed = true;
             Grain_level = -1;
             Tracks = new List<string> { };
+            Subtitles = new List<string> { };
             Tracks_delay = new List<double>();
             Channels = new List<int>();
 
@@ -96,9 +99,12 @@ namespace Av1ador
             string info = Get_info(file);
             Match compare = Regex.Match(info, @"Stream #0:([0-9]+).*Video:");
             int first = 0;
+
             if (compare.Success)
                 first = int.Parse(compare.Groups[1].ToString());
+
             compare = Regex.Match(info, @"Stream #0:([0-9]+).*Video:.*\(default\)");
+
             if (compare.Success)
                 Default = int.Parse(compare.Groups[1].ToString()) + 1 - first;
 
@@ -173,16 +179,7 @@ namespace Av1ador
                     if (compara.Success)
                         Fps = Math.Round(Double.Parse(compara.Groups[1].ToString()) / (Duration < 180 ? Duration : 180));
                     else
-                    {
-                        Func.Setinicial(ffmpeg, 2, " -v error -select_streams v:0 -count_packets -show_entries stream=nb_read_packets -of csv=p=0 -read_intervals %180 \"" + file + "\"");
-                        ffmpeg.Start();
-                        output2 = ffmpeg.StandardOutput.ReadToEnd();
-                        compara = new Regex("([0-9]+)", RegexOptions.RightToLeft).Match(output2);
-                        if (compara.Success)
-                            Fps = Math.Round(Double.Parse(compara.Groups[1].ToString()) / (Duration < 180 ? Duration : 180));
-                        else
-                            Fps = -1;
-                    }
+                        Fps = -1;
                 };
                 bw.RunWorkerAsync();
             }
@@ -199,9 +196,48 @@ namespace Av1ador
                 if (compara.Success)
                     Tracks.Add(lang + compara.Groups[1].ToString());
                 else
-                    Tracks.Add(lang + r.Groups[2].ToString().Split(new string[] { "\n" }, StringSplitOptions.None)[0].Replace("\r",""));
+                    Tracks.Add(lang + r.Groups[2].ToString().Split(new string[] { "\n" }, StringSplitOptions.None)[0].Replace("\r", ""));
             }
-            
+
+            // add subtitle detection for later extraction
+            res_regex = new Regex(@"(\([\w]*?\):|:) Subtitle: ([\w\W]*?)\n(  [A-Z]|[A-Z]|$)");
+            foreach (Match r in res_regex.Matches(info))
+            {
+                Regex title = new Regex(@"[ ]+title[ ]*: ([\w\W]*?)[\r|\n]");
+                Regex format = new Regex(@"Subtitle: ([\w\W]*?)[:|\n]");
+                Match compara = title.Match(r.Groups[2].ToString());
+                Match compara2 = format.Match(r.Groups[2].ToString());
+                string lang = r.Groups[1].ToString();
+                string sub_fmt = r.Groups[2].ToString();
+                lang = lang.Remove(lang.Length - 1);
+                sub_fmt = sub_fmt.Remove(sub_fmt.Length - 1);
+
+                // determine subtitle format from the ffinfo result
+                Regex fmt = new Regex(@"\(\w+?\)");
+                Match compara3 = fmt.Match(sub_fmt);
+
+                if (compara3.Success)
+                {
+                    switch (compara3.Groups[0].ToString())
+                    {
+                        case "(pgssub)":
+                            sub_fmt = "(sup)";
+
+                            break;
+                        case "(srt)":
+                            sub_fmt = "(srt)";
+                            break;
+                        case "(dvdsub)":
+                            sub_fmt = "(vob)";
+                            break;
+                    }
+                }
+
+                if (compara.Success)
+                    Subtitles.Add(lang + sub_fmt + " " + compara.Groups[1].ToString());
+                else
+                    Subtitles.Add(lang + sub_fmt + " " + r.Groups[2].ToString().Split(new string[] { "\n" }, StringSplitOptions.None)[0].Replace("\r", ""));
+            }
 
             Busy = true;
             BackgroundWorker bw2 = new BackgroundWorker();
@@ -240,7 +276,8 @@ namespace Av1ador
                         {
                             t_regex = new Regex("pts:[ ]*([0-9]+)");
                             compare = t_regex.Match(output);
-                            if (compare.Success) {
+                            if (compare.Success)
+                            {
                                 First_frame = Double.Parse(compare.Groups[1].ToString()) * Timebase;
                                 if (segundo)
                                     Busy = false;
@@ -293,7 +330,8 @@ namespace Av1ador
                     }
                 }
             };
-            bw2.RunWorkerCompleted += (s, e) => {
+            bw2.RunWorkerCompleted += (s, e) =>
+            {
                 Busy = false;
             };
             bw2.RunWorkerAsync();
@@ -446,99 +484,25 @@ namespace Av1ador
                     break;
             }
             double size = Math.Round(new FileInfo(File).Length / 1024.0 / 1024.0, 1);
-            return str_duration + ", " + Width + "x" + Height + (Interlaced ? "i" : "p") + ", " + (Fps == 0 ? "..." : Fps.ToString() ) + " fps" + (Hdr == 1 ? ", HDR" : Hdr == 2 ? ", DOVI" : "") + " - " + str_ch + " - " + Func.Size_unit(size);
-        }
-
-        internal void Grain_detect(NumericUpDown gsupdown, Label status, int maxgs, Label inf, List<string> vf)
-        {
-            Gs_thread = true;
-            int loop = (int)((5 + Math.Sqrt(Duration / 5)) / 2);
-            int frames = (int)(70 + (Duration / 30));
-            string name = Path.GetFileNameWithoutExtension(File);
-            BackgroundWorker bw = new BackgroundWorker();
-            status.Text = "Measuring frame grain level...";
-            string mediainfo = inf.Text;
-            string crop = "";
-            foreach (string filtro in vf)
-            {
-                if (filtro.Contains("crop="))
-                    crop = filtro + ",";
-            }
-            bw.DoWork += (s, e) =>
-            {
-                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-                List<int> gs = new List<int>();
-                for (int i = 1; i <= loop; i++)
-                {
-                    if (gsupdown.Enabled || mediainfo != inf.Text || !status.Text.Contains("grain"))
-                    {
-                        Grain_level = -1;
-                        break;
-                    }
-                    Process ffmpeg = new Process();
-                    Func.Setinicial(ffmpeg, 3);
-                    int ss = (int)(Duration * i / (loop + 2));
-                    string cmd = " -loglevel panic -init_hw_device opencl:" + Encoder.OCL_Device + " -ss " + ss + " -i \"" + File + "\"  -an -sn -frames:v 1 -vf \"" + crop + "crop='min(386,iw):min(386,ih)':exact=1,thumbnail=n=" + frames;
-                    if (Hdr == 1)
-                        cmd += ",format=p010,hwupload,tonemap_opencl=tonemap=hable:r=tv:p=bt709:t=bt709:m=bt709:format=nv12,hwdownload,format=nv12";
-                    else if (Hdr == 2 && Encoder.Libplacebo)
-                    {
-                        cmd = cmd.Replace("opencl:" + Encoder.OCL_Device, "vulkan:" + Encoder.Vkn_Device);
-                        cmd += ",format=yuv420p10le,hwupload,libplacebo=tonemapping=reinhard:range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709:format=yuv420p,hwdownload,format=yuv420p";
-                    }
-                    cmd += "\" -y \"" + name + "_ss.png\"";
-                    ffmpeg.StartInfo.Arguments = cmd;
-                    ffmpeg.Start();
-                    ffmpeg.WaitForExit(-1);
-                    ffmpeg.StartInfo.Arguments = " -loglevel panic -i \"" + name + "_ss.png\" -vf crop='min(270,iw):min(270,ih)' -lossless 1 -compression_level 1 -y \"" + name + "_th.webp\"";
-                    ffmpeg.Start();
-                    ffmpeg.WaitForExit(-1);
-                    ffmpeg.StartInfo.Arguments = " -loglevel panic -init_hw_device opencl:" + Encoder.OCL_Device + " -i \"" + name + "_ss.png\" -frames:v 1 -vf format=pix_fmts=yuv420p,hwupload,nlmeans_opencl=s=1.8:p=7:r=9,hwdownload,format=pix_fmts=yuv420p,crop='min(270,iw):min(270,ih)':exact=1 -lossless 1 -compression_level 1 -y \"" + name + "_th_dns.webp\"";
-                    ffmpeg.Start();
-                    ffmpeg.WaitForExit(-1);
-                    ffmpeg.StartInfo.Arguments = " -loglevel panic -init_hw_device opencl:" + Encoder.OCL_Device + " -i \"" + name + "_ss.png\" -frames:v 1 -vf format=pix_fmts=yuv420p,hwupload,nlmeans_opencl=s=4:p=5:r=15,hwdownload,format=pix_fmts=yuv420p,crop='min(270,iw):min(270,ih)':exact=1 -lossless 1 -compression_level 1 -y \"" + name + "_th_dnb.webp\"";
-                    ffmpeg.Start();
-                    ffmpeg.WaitForExit(-1);
-                    double s1 = new FileInfo(name + "_th.webp").Length;
-                    double s2 = new FileInfo(name + "_th_dns.webp").Length;
-                    double s3 = new FileInfo(name + "_th_dnb.webp").Length;
-                    double g = s1 * 100.0 / s2;
-                    g = ((s1 * 100.0 / s3 * 100.0 / g) - 105.0) * 8.0 / 10.0;
-                    g = g > 100 ? 100 : g;
-                    g = g < 0 ? 0 : g;
-                    gs.Add((int)g);
-                }
-                Clear_tmp();
-                if (!gsupdown.Enabled && mediainfo == inf.Text && status.Text.Contains("grain"))
-                    Grain_level = (int)Math.Min(Func.Median(gs.ToArray()), maxgs);
-            };
-            bw.RunWorkerCompleted += (s, e) => {
-                if (!gsupdown.Enabled && Grain_level > -1)
-                {
-                    gsupdown.Value = Grain_level <= gsupdown.Maximum ? Grain_level : gsupdown.Maximum;
-                    status.Text = "";
-                }
-                else if (gsupdown.Enabled)
-                    status.Text = "";
-                Gs_thread = false;
-            };
-            bw.RunWorkerAsync();
+            return str_duration + ", " + Width + "x" + Height + (Interlaced ? "i" : "p") + ", " + (Fps == 0 ? "..." : Fps.ToString()) + " fps" + (Hdr == 1 ? ", HDR" : Hdr == 2 ? ", DOVI" : "") + " - " + str_ch + " - " + Func.Size_unit(size);
         }
 
         internal void Blackbars([Optional] Encoder enc)
         {
-            if (Letterbox.Width != 0) {
+            if (Letterbox.Width != 0)
+            {
                 enc.Vf_add("crop", Letterbox.Width.ToString(), Letterbox.Height.ToString(), Letterbox.X.ToString(), Letterbox.Y.ToString());
                 return;
             }
             string th = (Hdr > 0 ? 64 : 16).ToString();
             double ss = Duration > Kf_interval * 3 ? Duration / 2.0 : 0;
             Process ffmpeg = new Process();
-            Func.Setinicial(ffmpeg, 3, " -hide_banner -ss " + ss + " -i \"" + File + "\" -vframes " + ((35 - (int)Math.Pow(Width, 1.0/3.0)) * (int)Fps) + " -an -vf cropdetect=limit=" + th + ":round=2 -f null NUL");
+            Func.Setinicial(ffmpeg, 3, " -hide_banner -ss " + ss + " -i \"" + File + "\" -vframes " + ((35 - (int)Math.Pow(Width, 1.0 / 3.0)) * (int)Fps) + " -an -vf cropdetect=limit=" + th + ":round=2 -f null NUL");
             ffmpeg.Start();
             Regex regex = new Regex("crop=([0-9]*):([0-9]*):([0-9]*):([0-9]*)", RegexOptions.RightToLeft);
             Match m = regex.Match(ffmpeg.StandardError.ReadToEnd());
-            if (m.Success) {
+            if (m.Success)
+            {
                 Letterbox = new Rect(int.Parse(m.Groups[3].Value), int.Parse(m.Groups[4].Value), int.Parse(m.Groups[1].Value), int.Parse(m.Groups[2].Value));
                 enc?.Vf_add("crop", Letterbox.Width.ToString(), Letterbox.Height.ToString(), Letterbox.X.ToString(), Letterbox.Y.ToString());
             }
@@ -549,15 +513,14 @@ namespace Av1ador
             string name = Path.GetFileNameWithoutExtension(File);
             try
             {
-                if (System.IO.File.Exists(name + "_ss.png"))
-                    System.IO.File.Delete(name + "_ss.png");
                 if (System.IO.File.Exists(name + "_th.webp"))
                     System.IO.File.Delete(name + "_th.webp");
                 if (System.IO.File.Exists(name + "_th_dns.webp"))
                     System.IO.File.Delete(name + "_th_dns.webp");
                 if (System.IO.File.Exists(name + "_th_dnb.webp"))
                     System.IO.File.Delete(name + "_th_dnb.webp");
-            } catch { }
+            }
+            catch { }
         }
 
         internal void Predict(Label status, Encoder encoder, ListBox vf)
@@ -573,7 +536,7 @@ namespace Av1ador
             enc.V_kbps = enc.Out_w * enc.Out_h * fr / 100 * 3 / 1024;
             enc.Vf.RemoveAll(s => s.StartsWith("scale=w"));
             int t = 6;
-            string str = enc.Build_vstr(true).Replace("\"!name!\"","-f null -").Replace("!start! ","").Replace("!file!",File).Replace("!duration!","-t " + t);
+            string str = enc.Build_vstr(true).Replace("\"!name!\"", "-f null -").Replace("!start! ", "").Replace("!file!", File).Replace("!duration!", "-t " + t);
             str = str.Replace("-copyts -start_at_zero ", "");
             int loop = (int)((5 + Math.Sqrt(duration / 2)) / t);
             status.Text = "Analyzing...";
@@ -590,7 +553,7 @@ namespace Av1ador
                     for (int i = 1; i <= loop; i++)
                     {
                         int ss = (int)(StartTime + (duration * i / (loop + 2)));
-                        ffmpeg.StartInfo.Arguments = str.Replace("!seek!", "-ss " + ss).Replace("!bitrate!" , enc.V_kbps.ToString());
+                        ffmpeg.StartInfo.Arguments = str.Replace("!seek!", "-ss " + ss).Replace("!bitrate!", enc.V_kbps.ToString());
                         ffmpeg.Start();
                         ffmpeg.PriorityClass = ProcessPriorityClass.BelowNormal;
                         string output = "";
@@ -621,7 +584,8 @@ namespace Av1ador
                 h *= 8;
                 encoder.Vf_add("scale", w.ToString(), h.ToString(), Width.ToString(), Height.ToString());
             };
-            bw.RunWorkerCompleted += (s, e) => {
+            bw.RunWorkerCompleted += (s, e) =>
+            {
                 vf.Items.Clear();
                 foreach (string f in encoder.Vf)
                     vf.Items.Add(f);

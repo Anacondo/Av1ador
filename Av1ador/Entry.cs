@@ -33,6 +33,8 @@ namespace Av1ador
         public int Ba { get; set; }
         public string Bv { get; set; }
         public int Track { get; set; }
+        public int Subtitle { get; set; }
+        public bool AudioPassthru { get; set; }
         public string Resolution { get; set; }
         public string Speed { get; set; }
 
@@ -79,7 +81,7 @@ namespace Av1ador
                     if (dif > 0)
                         name = name.Substring(0, name.Length > dif ? name.Length - dif : name.Length) + "...";
                 }
-                e.Graphics.DrawString((dir + "\\" + name).Replace(@"\\",@"\"), e.Font, Brushes.Black, e.Bounds);
+                e.Graphics.DrawString((dir + "\\" + name).Replace(@"\\", @"\"), e.Font, Brushes.Black, e.Bounds);
                 if (entry.Elapsed > 0 || entry.Status == 1)
                 {
                     int x = e.Bounds.Right - 52;
@@ -108,7 +110,8 @@ namespace Av1ador
                         Save_entries(list);
                         Lastsave = (int)ts.TotalMilliseconds;
                     }
-                } catch { elapsed_add = null; }
+                }
+                catch { elapsed_add = null; }
             }
         }
 
@@ -128,7 +131,7 @@ namespace Av1ador
                     {
                         if (entry.Status == 2 || entry.Status == -1 || (status == 1 && entry.Status == 0))
                         {
-                            entry.Elapsed += lastupdate > Lastsave ? lastupdate - Lastsave : 0;
+                            entry.Elapsed += lastupdate;// > Lastsave ? lastupdate - Lastsave : 0;
                             Lastsave = 0;
                         }
                         Save(list, true);
@@ -162,6 +165,7 @@ namespace Av1ador
             if (System.IO.File.Exists(queue))
             {
                 System.Xml.Serialization.XmlSerializer reader = new System.Xml.Serialization.XmlSerializer(typeof(Entry[]));
+
                 StreamReader file = new StreamReader(queue);
                 Entry[] entries;
                 try
@@ -185,7 +189,7 @@ namespace Av1ador
             }
         }
 
-        public static void Update(int col, Video video, ListBox list, ListBox vf, ListBox af, string gs, string cv, string bits, string param, int crf, int ba, string bv, int track, string res, string spd)
+        public static void Update(int col, Video video, ListBox list, ListBox vf, ListBox af, string gs, string cv, string bits, string param, int crf, int ba, string bv, int track, int subs, bool audioPassthru, string res, string spd)
         {
             for (int i = 0; i < list.Items.Count; i++)
             {
@@ -272,6 +276,16 @@ namespace Av1ador
                                 entry.Start = video.StartTime;
                                 entry.End = video.EndTime;
                             }
+                            break;
+                        case 14:
+                            shouldsave = subs != entry.Subtitle;
+                            if (shouldsave)
+                                entry.Subtitle = subs;
+                            break;
+                        case 15:
+                            shouldsave = audioPassthru != entry.AudioPassthru;
+                            if (shouldsave)
+                                entry.AudioPassthru = audioPassthru;
                             break;
                     }
                     list.Items[i] = entry;

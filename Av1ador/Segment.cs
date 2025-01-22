@@ -44,6 +44,7 @@ namespace Av1ador
         public List<int> Order { get; set; }
         public string Job { get; set; }
         public string A_Job { get; set; }
+        public int SubIndex { get; set; }
         public bool Finished { get; set; }
         public double Merge { get; set; }
         public string Fps_filter { get; set; }
@@ -81,45 +82,116 @@ namespace Av1ador
                 }
             }
         }
+
+        private int lastLoggedPercentage = 0;
+
         public double Estimated
         {
             get
             {
-                if (Counter > 5)
+                if (Counter <= 5)
                 {
-                    if (Chunks != null && Splits != null && progress > 0)
-                    {
-                        long sum = 0;
-                        int n = 0;
-                        long bsum = 0;
-                        foreach (var chunk in Chunks.ToList())
-                        {
-                            if (chunk.Completed || chunk.Encoding)
-                            {
-                                n++;
-                                bsum += (long)chunk.Bitrate;
-                            }
-                            sum += chunk.Size;
-                            if (chunk.Bitrate > Peak_br)
-                                Peak_br = chunk.Bitrate;
-                        }
-                        double duration = Double.Parse(Splits[Splits.Count - 1]) - Double.Parse(Splits[0]);
-                        double max = (Peak_br + (audio_size * 8.0 / 1024.0) / duration) * duration / 8.0 / 1024.0;
-                        double size = ((bsum / (double)n) + (audio_size / 1024.0 * 8.0 / duration)) * duration / 8.0 / 1024.0;
-                        sum += audio_size * (long)progress / (long)100;
-                        double time = progress * duration / 100.0;
-                        Abr = sum / 1024.0 * 8.0 / time;
-                        double quadp = Math.Sqrt(progress / 100.0);
-                        double quad2p = Math.Pow(progress / 100.0, 0.2);
-                        video_size = Math.Round((size * quad2p + (max + size) / 2.0 * (1.0 - quad2p)) * (1.0 - quadp) + (sum / 1024.0 * 100.0 / 1024.0 / progress) * quadp, 1);
-                        return video_size;
-                    }
-                    return 0;
-                } else
                     return video_size;
+                }
+
+                if (Chunks == null || Splits == null || progress <= 0)
+                {
+                    return 0;
+                }
+
+                // Ensure Splits has at least two elements for duration calculation
+                if (Splits.Count < 2)
+                {
+                    return 0; // Fallback if duration cannot be determined
+                }
+
+                // Check if at least 5% of all chunks are completed
+                double threshold = 0.05;
+                int totalChunks = Chunks.Count();
+                int minCompletedChunks = (int)Math.Ceiling(totalChunks * threshold);
+
+                int completedChunksCount = Chunks.Count(chunk => chunk.Completed);
+                if (completedChunksCount < minCompletedChunks)
+                {
+                    return 0; // Insufficient data to calculate estimation
+                }
+
+                double totalSize = 0;
+                double completedBitrateSum = 0;
+                double peakBitrate = 0;
+
+                // Process all chunks
+                foreach (var chunk in Chunks.ToList())
+                {
+                    if (chunk.Completed)
+                    {
+                        completedBitrateSum += chunk.Bitrate;
+                    }
+
+                    totalSize += chunk.Size;
+
+                    // Track the highest bitrate
+                    if (chunk.Bitrate > peakBitrate)
+                    {
+                        peakBitrate = chunk.Bitrate;
+                    }
+                }
+
+                // Calculate duration
+                double duration = Double.Parse(Splits[Splits.Count - 1]) - Double.Parse(Splits[0]);
+                if (duration <= 0)
+                {
+                    return 0; // Fallback if duration is invalid
+                }
+
+                // Calculate max and average sizes
+                double maxBitrateSize = (peakBitrate + (audio_size * 8.0 / duration / 1024.0)) * duration / 8.0 / 1024.0;
+                double avgBitrate = completedChunksCount > 0 ? completedBitrateSum / completedChunksCount : 0;
+                double avgBitrateSize = (avgBitrate + (audio_size * 8.0 / duration / 1024.0)) * duration / 8.0 / 1024.0;
+
+                // Include progress-adjusted audio size
+                totalSize += audio_size * progress / 100;
+
+                // Calculate time elapsed
+                double timeElapsed = progress * duration / 100.0;
+
+                // Compute average bitrate so far
+                Abr = totalSize / 1024.0 * 8.0 / timeElapsed;
+
+                // Tweaked progress factors
+                double calibrationFactor = 1.25; // Decrease fallback influence slightly
+                double quadp = Math.Pow(progress / 100.0, 0.25) * calibrationFactor; // Flatter curve early on
+                double quad2p = Math.Pow(progress / 100.0, 0.65); // Slightly steeper for tighter mid-range estimates
+
+                video_size = Math.Round(avgBitrate * duration / 8 / 1024);   // simple calculation of final video size based on average bitrate calculation, with no infering
+
+                // Check if we’ve crossed the next 10% threshold
+                int currentProgressPercentage = (int)Math.Floor(progress); // Whole number progress
+                if (currentProgressPercentage / 10 > lastLoggedPercentage / 10)
+                {
+                    string logMessage = $"{(int)progress}%" + $" -> {video_size / 1024:F2} GB";
+
+                    // Append the log message to the file
+                    string logFilePath = Name + "\\size_predictions.log";
+                    try
+                    {
+                        using StreamWriter writer = new StreamWriter(logFilePath, append: true);
+                        writer.WriteLine(logMessage);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Handle potential file writing exceptions (e.g., file access issues)
+                        Console.WriteLine($"Error writing to log file: {ex.Message}");
+                    }
+
+                    // Update the last logged percentage
+                    lastLoggedPercentage = currentProgressPercentage;
+                }
+
+                return video_size;
             }
         }
-
+    
         public double Speed
         {
             get
@@ -193,14 +265,14 @@ namespace Av1ador
 
         public Encode()
         {
-            Split_min_time = 6;
+            Split_min_time = 10;
             Status = new List<string>();
             watch = new Stopwatch();
             remaining = new TimeSpan();
             bitrate = 0;
         }
 
-        public void Start_encode(string dir, Video v, bool audio, double delay = 0, int br = 0, double spd = 1, bool unat = false)
+        public void Start_encode(string dir, Video v, bool audio, bool audioPassthru, double delay = 0, int br = 0, double spd = 1, bool unat = false)
         {
             track_delay = delay;
             Dir = dir == "" ? Path.GetDirectoryName(v.File) + "\\" : dir + "\\";
@@ -225,15 +297,23 @@ namespace Av1ador
             bool vbr = br > 0;
 
             Kf_interval = v.Kf_interval;
+            double seek = v.StartTime - Kf_interval;
+            string ss1 = seek > 0 ? " -ss " + seek.ToString() : "";
+            string ss2 = v.StartTime > 0 ? " -ss " + v.StartTime.ToString() : "";
             double to = v.EndTime != v.Duration ? v.EndTime : v.Duration + 1;
             double final = v.CreditsTime > 0 && !vbr ? v.CreditsTime - (double)Split_min_time : to;
+            double ato = (to - v.StartTime) * Spd;
+
+            if (audioPassthru)
+                A_Job = "mkv";   // we use mkv extension to trick ffmpeg into muxing whatever the audio codec is in the original audio
+
             string audiofile = Name + "\\audio." + A_Job;
 
             if (audio && A_Param != "")
             {
                 if (!System.IO.File.Exists(audiofile))
                 {
-                    Status.Add("Encoding audio...");
+                    Status.Add("Encoding audio + ");
                     string ssa = v.StartTime > 0 ? " -ss " + v.StartTime.ToString() : "";
                     double toa = (to - v.StartTime) * Spd;
                     Process ffaudio = new Process();
@@ -249,18 +329,21 @@ namespace Av1ador
                         {
                             while (System.IO.File.Exists(audiofile))
                             {
-                                try { 
+                                try
+                                {
                                     ffaudio.Kill();
                                     Thread.Sleep(1000);
                                     System.IO.File.Delete(audiofile);
-                                } catch { }
+                                }
+                                catch { }
                             }
                         }
                     };
+
                     abw.RunWorkerCompleted += (s, e) =>
                     {
                         System.IO.File.WriteAllText(Name + "\\audio.log", aout);
-                        Status.Remove("Encoding audio...");
+                        Status.Remove("Encoding audio + ");
                         if (System.IO.File.Exists(audiofile))
                             audio_size = new FileInfo(audiofile).Length;
                     };
@@ -270,10 +353,11 @@ namespace Av1ador
                     audio_size = new FileInfo(audiofile).Length;
             }
 
-            if (!System.IO.File.Exists(Name + "\\segments.txt") || (vbr && !System.IO.File.Exists(Name + "\\complexity.txt")))
+            if (!System.IO.File.Exists(Name + "\\chunks.txt") || (vbr && !System.IO.File.Exists(Name + "\\complexity.txt")))
             {
                 Status.Add("Detecting scenes...");
-                int workers = vbr ? 1 : Math.Max(Math.Min((int)Math.Ceiling(v.Duration / (double)(180 / ((double)v.Width / 1000))), 3), 1);
+                //int workers = vbr ? 1 : Math.Max(Math.Min((int)Math.Ceiling(v.Duration / (double)(180 / ((double)v.Width / 1000))), 3), 1) + 10;
+                int workers = Environment.ProcessorCount > 16 ? 8 : Environment.ProcessorCount;
                 double tdist = (final - v.StartTime) / (double)workers;
                 Bw = new BackgroundWorker[workers];
                 List<string>[] trim_time = new List<string>[workers];
@@ -302,7 +386,7 @@ namespace Av1ador
                         Process ffmpeg = new Process();
                         Func.Setinicial(ffmpeg, 3);
                         if ((v.Width <= 1920 || v.Kf_fixed) || vbr || Fps_filter != "")
-                            ffmpeg.StartInfo.Arguments = (vbr ? " -loglevel debug" : "") + " -copyts -start_at_zero" + ss1 + " -i \"" + v.File + "\"" + ss2 + " -to " + final2.ToString() + " -filter:v \"" + Fps_filter + "select='gt(scene,0.1)',select='isnan(prev_selected_t)+gte(t-prev_selected_t\\," + Split_min_time.ToString() + ")',showinfo\" -an -f null - ";
+                            ffmpeg.StartInfo.Arguments = (vbr ? " -loglevel debug" : "") + " -copyts -start_at_zero" + ss1 + " -i \"" + v.File + "\"" + ss2 + " -to " + final2.ToString() + " -filter:v \"" + Fps_filter + "select='gt(scene,0.1)+isnan(prev_selected_t)+gte(t-prev_selected_t\\," + Split_min_time.ToString() + ")',showinfo\" -an -f null - ";
                         else
                             ffmpeg.StartInfo.Arguments = " -copyts -start_at_zero -skip_frame nokey" + ss1 + " -i \"" + v.File + "\"" + ss2 + " -to " + final2.ToString() + " -filter:v showinfo -an -f null - ";
                         ffmpeg.Start();
@@ -393,7 +477,7 @@ namespace Av1ador
                                     Splits.Add(v.CreditsEndTime.ToString());
                             }
                             Splits.Add(to.ToString());
-                            System.IO.File.WriteAllLines(Name + "\\segments.txt", Splits.ToArray());
+                            System.IO.File.WriteAllLines(Name + "\\chunks.txt", Splits.ToArray());
                             if (vbr)
                                 System.IO.File.WriteAllLines(Name + "\\complexity.txt", Func.Concat(scenes_complex, false).ToArray());
 
@@ -410,6 +494,7 @@ namespace Av1ador
             else
                 Begin();
         }
+
 
         public void Begin()
         {
@@ -428,7 +513,7 @@ namespace Av1ador
                 return;
             Running = true;
             if (Splits == null)
-                Splits = new List<string>(System.IO.File.ReadAllLines(Name + "\\segments.txt"));
+                Splits = new List<string>(System.IO.File.ReadAllLines(Name + "\\chunks.txt"));
             if (bitrate > 0 && Complexity == null)
                 Complexity = new List<string>(System.IO.File.ReadAllLines(Name + "\\complexity.txt"));
             if (Chunks == null)
@@ -450,6 +535,7 @@ namespace Av1ador
                     }
                     avg_scene_score /= Complexity.Count;
                 }
+
                 for (int i = 0; i < Splits.Count - 1; i++)
                 {
                     double start = Double.Parse(Splits[i]);
@@ -468,26 +554,30 @@ namespace Av1ador
                         Pathfile = pathfile,
                         Length = scene_duration,
                         Credits = Splits[i].Length > 3 && Splits[i].Substring(0, 3) == "000",
-                        Last = i + 1 == Splits.Count() - 1,
-                        Compare = Job != "vvc"
+                        Last = i + 1 == Splits.Count() - 1
                     };
                     Sorted.Add(new KeyValuePair<int, double>(i, Chunks[i].Length));
                 }
-                Sorted.Sort((x, y) => (y.Value.CompareTo(x.Value)));
-                while(Sorted.Count > 0)
+
+                // here we determine the order of the chunks to be encoded
+                // Check if the order file exists
+                if (System.IO.File.Exists(Name + "\\chunks_order.txt"))
                 {
-                    if (Order.Count % 2 == 0)
-                    {
-                        Order.Add(Sorted[0].Key);
-                        Sorted.RemoveAt(0);
-                    }
-                    else
-                    {
-                        Order.Add(Sorted[Sorted.Count - 1].Key);
-                        Sorted.RemoveAt(Sorted.Count - 1);
-                    }
+                    // Load the order from the file
+                    Order = System.IO.File.ReadAllLines(Name + "\\chunks_order.txt")
+                                .Select(line => int.Parse(line))
+                                .ToList();
+                }
+                else
+                {
+
+                    Random rand = new Random();
+                    Sorted.Sort((x, y) => rand.Next(0, 2) * 2 - 1);  // Randomly sort the list
+                    Order = Sorted.Select(s => s.Key).ToList();
+                    System.IO.File.WriteAllLines(Name + "\\chunks_order.txt", Order.Select(i => i.ToString()));
                 }
             }
+
             BackgroundWorker bw = new BackgroundWorker();
             bw.DoWork += (ss, e) =>
             {
@@ -563,6 +653,13 @@ namespace Av1ador
             bw.RunWorkerAsync();
         }
 
+        private string BeautifyOutputName(string output)
+        {
+            //TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+            //string new_output = textInfo.ToTitleCase(output.Replace(".", " ").ToLower());
+            return output.Replace(".", " ");
+        }
+
         private void Concatenate()
         {
             while (Status.Count > 0)
@@ -572,15 +669,19 @@ namespace Av1ador
             Status.Add("Merging segments...");
             var files = new List<string>();
             for (int i = 0; i < Chunks.Length; i++)
-                files.Add("file '" + Name.Replace(Tempdir, "").Replace("'","\'\\'\'") + "\\" + i.ToString("00000").ToString() + "." + Job + "'");
+                files.Add("file '" + Name.Replace(Tempdir, "").Replace("'", "\'\\'\'") + "\\" + i.ToString("00000").ToString() + "." + Job + "'");
             System.IO.File.WriteAllLines(Tempdir + "concat.txt", files.ToArray());
             Process ffconcat = new Process();
             Func.Setinicial(ffconcat, 3);
             string b = A_Job == "m4a" ? "-bsf:a aac_adtstoasc " : "";
             b += Extension == "mp4" ? "-movflags faststart " : "";
             string f = Spd != 1 ? " -itsscale " + Spd : "";
+
             if (System.IO.File.Exists(Name + "\\audio." + A_Job))
-                ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt" + "\"" + (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\" -i \"" + File + "\" -c:v copy -c:a copy -map 0:v:0 -map 1:a:0? " + b + "\"" + Dir + Path.GetFileName(Name) + "_Av1ador." + Extension + "\"";
+                if (SubIndex > -1)
+                    ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt" + "\"" + (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\" -i \"" + File + "\" -c:v copy -c:a copy -c:s copy -map 0:v:0 -map 1:a:0 -map 2:s:" + SubIndex + " -disposition:s:0 default -metadata:s:s:0 language=eng " + b + "\"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
+                else
+                    ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt" + "\"" + (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\" -i \"" + File + "\" -c:v copy -c:a copy -map 0:v:0 -map 1:a:0 " + b + "\"" + Dir + Path.GetFileName(Name) + "_Av1ador." + Extension + "\"";
             else
                 ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + "  -i \"" + Tempdir + "concat.txt" + "\" -c:v copy -an -map 0:v:0 -map_metadata -1 " + b + "\"" + Dir + Path.GetFileNameWithoutExtension(Name) + "_Av1ador." + Extension + "\"";
             ffconcat.Start();
@@ -606,7 +707,8 @@ namespace Av1ador
                     }
                 }
             };
-            bw.RunWorkerCompleted += (s, e) => {
+            bw.RunWorkerCompleted += (s, e) =>
+            {
                 Status.Remove("Merging segments...");
                 Cleanup();
                 Finished = true;
@@ -618,24 +720,26 @@ namespace Av1ador
         {
             try
             {
-                long size = new FileInfo(Dir + Path.GetFileName(Name) + "_Av1ador." + Extension).Length;
-                if (size > 500 && Clean == 15)
+                if (Clean == 15)
                     Directory.Delete(Name, true);
                 else
                 {
                     if ((Clean & 2) != 0)
-                        System.IO.File.Delete(Name + "\\segments.txt");
+                        System.IO.File.Delete(Name + "\\chunks.txt");
                     if ((Clean & 4) != 0)
                         foreach (string f in Directory.GetFiles(Name, "*." + Job).Where(i => i.EndsWith("." + Job)))
                             System.IO.File.Delete(f);
                     if ((Clean & 8) != 0)
                         System.IO.File.Delete(Name + "\\audio." + A_Job);
+                    System.IO.File.Delete(Name + "\\chunks_order.txt");
                 }
-            } catch { }
+            }
+            catch { }
             try
             {
                 System.IO.File.Delete(Tempdir + "concat.txt");
-            } catch { }
+            }
+            catch { }
         }
 
         public void Background(Segment chunk)
@@ -689,7 +793,7 @@ namespace Av1ador
         public void Set_fps_filter(List<string> vf)
         {
             string str = "";
-            foreach(string f in vf)
+            foreach (string f in vf)
             {
                 if (f.Contains("fps=fps=") || f.Contains("framestep="))
                     str += f + ",";
@@ -700,8 +804,8 @@ namespace Av1ador
         public void Clear_splits(string file)
         {
             string name = Tempdir + Path.GetFileNameWithoutExtension(file);
-            if (System.IO.File.Exists(name + "\\segments.txt"))
-                System.IO.File.Delete(name + "\\segments.txt");
+            if (System.IO.File.Exists(name + "\\chunks.txt"))
+                System.IO.File.Delete(name + "\\chunks.txt");
         }
 
         public void Set_state(bool stop = false)
@@ -716,6 +820,7 @@ namespace Av1ador
                 }
         }
     }
+
     internal class Segment
     {
         public bool Completed { get; set; }
@@ -766,6 +871,7 @@ namespace Av1ador
                 }
                 ffmpeg.StartInfo.Arguments = pass;
             }
+            File.WriteAllText(Pathfile + ".txt", "ffmpeg" + Arguments + "\r\n");
             Stopwatch watch = Stopwatch.StartNew();
             watch.Start();
             ffmpeg.Start();
@@ -809,7 +915,7 @@ namespace Av1ador
                     crash = Process.GetProcessById(ffmpeg.Id);
                 }
                 catch
-                { 
+                {
                     jump = true;
                 }
                 if (jump || ffmpeg.HasExited || (crash != null && crash.HasExited))

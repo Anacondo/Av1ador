@@ -34,8 +34,10 @@ namespace Av1ador
         public int A_kbps { get; set; }
         public int A_min { get; set; }
         public int A_max { get; set; }
+        public bool AudioPassthru { get; set; }
         public string Job { get; set; }
         public string A_Job { get; set; }
+        public int SubIndex { get; set; }
         public string Speed { get; set; }
         public bool Hdr { get; set; }
         public int Bits { get; set; }
@@ -132,12 +134,12 @@ namespace Av1ador
             {
                 case "mp4":
                     A_codecs = new string[] { a[0], a[1], a[3] };
-                    V_codecs = new string[] { v[10], v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9] };
+                    V_codecs = new string[] { v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9] };
                     V_codecs = CheckNvidia(V_codecs);
                     break;
                 case "mkv":
                     A_codecs = new string[] { a[0], a[1], a[2], a[3] };
-                    V_codecs = new string[] { v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9] };
+                    V_codecs = new string[] { v[10], v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9] };
                     V_codecs = CheckNvidia(V_codecs);
                     break;
                 case "webm":
@@ -167,7 +169,7 @@ namespace Av1ador
                 Job = j[1];
                 Presets = new string[] { "0 (slowest)", "1", "2", "3", "*4", "5", "6", "7", "8 (fastest)" };
                 speed_str = "-cpu-used ";
-                Params = "-tune 1 -enable-restoration 0 -threads !threads! -tiles 2x1 -keyint_min !minkey! -g !maxkey! -aom-params sharpness=4:max-gf-interval=20:gf-max-pyr-height=5:disable-trellis-quant=2:denoise-noise-level=!gs!:enable-dnl-denoising=0:denoise-block-size=16:arnr-maxframes=3:arnr-strength=4:max-reference-frames=4:enable-rect-partitions=0:enable-filter-intra=0:enable-masked-comp=0:enable-qm=1:qm-min=0:qm-max=5 -strict -2";
+                Params = "-tune 1 -enable-restoration 0 -threads !threads! -tiles 2x1 -keyint_min !minkey! -g !maxkey! -aom-params sharpness=4:max-gf-interval=20:gf-max-pyr-height=4:disable-trellis-quant=2:denoise-noise-level=!gs!:enable-dnl-denoising=0:denoise-block-size=16:arnr-maxframes=3:arnr-strength=4:max-reference-frames=4:enable-rect-partitions=0:enable-filter-intra=0:enable-masked-comp=0:enable-qm=1:qm-min=0:qm-max=5 -strict -2";
                 Color = " -color_primaries 1 -color_trc 1 -colorspace 1";
                 Gs = 100;
                 Rate = 0.82;
@@ -177,16 +179,16 @@ namespace Av1ador
             {
                 Cv = "libsvtav1";
                 Max_crf = 63;
-                Crf = 36;
+                Crf = 18;
                 Bit_depth = new string[] { "10", "8" };
                 Job = j[1];
                 Presets = new string[] { "0 (slowest)", "1", "2", "3", "*4", "5", "6", "7", "8", "9", "10", "11", "12 (fastest)" };
                 speed_str = "-preset ";
-                Params = "-svtav1-params tune=0:fast-decode=0:irefresh-type=2:keyint=!maxkey!:enable-restoration=0:film-grain-denoise=0:film-grain=!gs!";
+                Params = " -svtav1-params tune=3:keyint=240:enable-qm=1:qm-min=0:qm-max=15:aq-mode=2:enable-dlf=2:enable-restoration=0:enable-tf=2:enable-cdef=0:sharpness=3:enable-variance-boost=1:variance-boost-strength=3:variance-octile=4:qp-scale-compress-strength=3:adaptive-film-grain=1:film-grain=!gs!:noise-norm-strength=1"; //:psy-rd=0.5";
                 Color = " -color_primaries 1 -color_trc 1 -colorspace 1";
                 Gs = 50;
                 Rate = 0.85;
-                Vbr_str = "undershoot-pct=60:overshoot-pct=0:minsection-pct=60:maxsection-pct=97";
+                Vbr_str = "";
             }
             else if (codec == v[2])
             {
@@ -274,7 +276,7 @@ namespace Av1ador
                 Params = "-bf:v 4 -b_adapt 0 -spatial-aq 1 -temporal-aq 1 -aq-strength 7 -coder 1 -b_ref_mode 2";
                 Color = " -color_primaries 1 -color_trc 1 -colorspace 1";
             }
-            else if (codec == v[9])
+            else if( codec == v[9])
             {
                 Cv = "libxvid";
                 Max_crf = 31;
@@ -300,6 +302,7 @@ namespace Av1ador
                 Rate = 0.9;
             }
         }
+
         public void Set_audio_codec(string codec, int ch)
         {
             if (codec == a[0])
@@ -309,22 +312,22 @@ namespace Av1ador
                 else
                     Ca = "aac";
                 Channels = new string[] { c[0], c[1], c[2], c[3] };
-                A_kbps = 112;
+                A_kbps = 192;
                 A_min = 2;
                 A_Job = "m4a";
             }
             else if (codec == a[1])
             {
                 Ca = "libopus";
-                A_kbps = 96;
+                A_kbps = 192;
                 A_min = 5;
                 A_Job = "ogg";
-                Channels = new string[] { c[0], c[1], c[2], c[3] };
+                Channels = new string[] { c[0], c[3] };
             }
             else if (codec == a[2])
             {
                 Ca = "libvorbis";
-                A_kbps = 128;
+                A_kbps = 192;
                 A_min = 48;
                 A_Job = "ogg";
                 Channels = new string[] { c[0], c[1], c[2], c[3] };
@@ -332,7 +335,7 @@ namespace Av1ador
             else
             {
                 Ca = "libmp3lame";
-                A_kbps = 128;
+                A_kbps = 192;
                 A_min = 32;
                 A_Job = "mp3";
                 Channels = new string[] { c[0], c[3] };
@@ -349,7 +352,7 @@ namespace Av1ador
         {
             if (kbps == 0)
                 kbps = (int)Math.Floor(total * 8.0 * 1024.0 / duracion);
-            //bitrate=!bitrate!-^(!hertz!/8000^)-^(!framerate!/10^)
+
             kbps -= fps / 10;
             kbps = kbps < 4 ? 4 : kbps;
             int reduccion = 16 - (((kbps * 4) - 4000) / (-253));
@@ -366,10 +369,10 @@ namespace Av1ador
             return Math.Round((double)(kbps + ba + fps / 10) * duracion / (double)8 / (double)1024, 1);
         }
 
-        public string Params_replace(double fps, [Optional] string p)
+        public string Params_replace(int fps, [Optional] string p)
         {
-            int minkey = fps > 1 ? (int)Math.Ceiling(fps) : 24;
-            int maxkey = fps > 1 ? (int)Math.Ceiling(fps * 10.0) : 240;
+            int minkey = fps > 1 ? fps : 24;
+            int maxkey = fps > 1 ? fps * 10 : 240;
             if (Cv == "libxvid")
                 maxkey /= 2;
             if (p == null)
@@ -390,14 +393,6 @@ namespace Av1ador
                 return "format=yuv420p";
         }
 
-        private string Bit_OCL()
-        {
-            if (Bits == 10)
-                return "format=p010";
-            else
-                return "format=nv12";
-        }
-
         public string Filter_convert(string f)
         {
             if (f.IndexOf("nlmeans") > -1)
@@ -412,55 +407,7 @@ namespace Av1ador
 
         public void Vf_add(string f, [Optional] string v, [Optional] string a, [Optional] string b, [Optional] string c)
         {
-            if (f == "fps")
-            {
-                Vf.RemoveAll(s => s.StartsWith("fps"));
-                Vf.RemoveAll(s => s.StartsWith("framestep="));
-                if (v != "Same")
-                {
-                    if (v.Contains("1/2"))
-                        Vf.Insert(0, "framestep=2");
-                    else if (v.Contains("1/3"))
-                        Vf.Insert(0, "framestep=3");
-                    else if (v.Contains("1/4"))
-                        Vf.Insert(0, "framestep=4");
-                    else
-                        Vf.Insert(0, "fps=fps=" + v.Split(' ')[0]);
-                }
-            }
-            else if (f == "scale")
-            {
-                Vf.RemoveAll(s => s.StartsWith("scale"));
-                int ow = (int)Double.Parse(v);
-                int oh = int.Parse(a);
-                int iw = int.Parse(b);
-                int ih = int.Parse(c);
-                double cw = iw;
-                double ch = ih;
-                int index = -1;
-                if (Vf.Count > 0)
-                {
-                    index = Math.Max(Vf.FindIndex(s => s.Contains("nnedi")), Vf.FindIndex(s => s.Contains("crop")));
-                    index = Math.Max(index, Vf.FindIndex(s => s.Contains("glsl")));
-                    if (index > -1)
-                    {
-                        string[] crop = Func.Find_w_h(Vf);
-                        if (crop.Count() > 0)
-                        {
-                            cw = int.Parse(crop[0]);
-                            ch = int.Parse(crop[1]);
-                        }
-                    }
-                    else
-                        index = Vf.FindIndex(s => s.StartsWith("fps"));
-                }
-                ow = (int)(Double.Parse(v) * (double)cw / (double)iw);
-                oh = (int)(oh * (double)ch / (double)ih);
-                ow = ow % 2 != 0 ? ow + 1 : ow;
-                oh = oh % 2 != 0 ? oh - 1 : oh;
-                Vf.Insert(index > -1 ? index + 1 : 0, "scale=w=" + ow + ":h=" + oh);
-            }
-            else if (f == "crop")
+            if (f == "crop")
             {
                 if (b == null)
                 {
@@ -479,109 +426,20 @@ namespace Av1ador
                     Vf.Insert(0, "crop=w=" + v + ":h=" + a + ":x=" + b + ":y=" + c);
                 }
             }
-            else if (f == "Deband")
-            {
-                if (Libplacebo && Vf.FindIndex(s => s.Contains("opencl")) == -1)
-                    Vf.Add(Bit_Format() + ",hwupload,libplacebo=deband=true:deband_iterations=1:deband_radius=8:deband_threshold=3:deband_grain=21,hwdownload," + Bit_Format());
-                else
-                    Vf.Add("gradfun=3:8");
-            }
-            else if (f == "delogo")
-            {
-                int w = int.Parse(v) * 2 / 10;
-                int h = int.Parse(a) * 2 / 10;
-                int x = int.Parse(v) * 7 / 10;
-                int y = int.Parse(a) * 1 / 10;
-                Vf.Add("delogo=x=" + x + ":y=" + y + ":w=" + w + ":h=" + h);
-            }
-            else if (f == "poi")
-                Vf.Add("addroi=iw/8:ih/8:iw*3/4:ih*3/4:-1/40,addroi=0:0:iw/16:ih:1/27,addroi=iw*15/16:0:iw/16:ih:1/27,addroi=iw/16:0:iw*7/8:ih/16:1/40,addroi=iw/16:ih*15/16:iw*7/8:ih/16:1/40");
             else if (f == "deinterlace")
             {
                 Vf.RemoveAll(s => s.StartsWith("nnedi"));
                 if (v == "True")
                     Vf.Insert(0, "nnedi='weights=" + resdir + "nnedi3_weights.bin:field=a'");
             }
-            else if (f == "detelecine")
-                Vf.Add("setfield=mode=tff,separatefields,scale=iw:ih*2,setsar=1");
-            else if (f == "autocolor" && v == "smpte170m")
-            {
-                Vf.RemoveAll(s => s.StartsWith("scale=in_color_matrix"));
-                if (v != "" && v != "bt2020")
-                    Vf.Add("scale=in_color_matrix=" + (v == "smpte170m" ? "bt601" : "auto") + ":out_color_matrix=" + (v == "smpte170m" ? "bt709" : "auto"));
-            }
-            else if (f == "Color adjustment")
-                Vf.Add("eq=contrast=1.1:brightness=0.05:saturation=1.4:gamma=1.0");
-            else if (f == "Sharpen")
-                Vf.Add("smartblur=luma_radius=2:luma_strength=-1.0:luma_threshold=-3");
-            else if (f == "Denoise")
-                Vf.Add("format=pix_fmts=yuv420p,hwupload,nlmeans_opencl=s=3:p=15:r=7,hwdownload,format=pix_fmts=yuv420p");
-            else if (f == "OpenCL")
-                Vf.Add("\"curves=m=0/0 0.25/0.2 0.63/0.53 1/0.6:r=0/0 0.5/0.504 1/1:g=0.005/0 0.506/0.5 1/1,format=p010,hwupload,tonemap_opencl=tonemap=hable:desat=0:threshold=0:r=tv:p=bt709:t=bt709:m=bt709:" + Bit_OCL() + ",hwdownload," + Bit_OCL() + "\"");
+            else if (f == "Resize to 1080p")
+                Vf.Add("zscale=w=1920:h=-1:f=spline36");
+            else if (f == "Light denoise")
+                Vf.Add("removegrain=1:0:0,noise=c0s=1:c0f=t");
+            else if (f == "Strong denoise")
+                Vf.Add("nlmeans=1:7:5:3:3");
             else if (f == "Vulkan")
-            {
-                /*if (v == "False")
-                    Vf.Add("\"" + Bit_Format(10) + ",hwupload,libplacebo=minimum_peak=1.6:gamut_mode=relative:tonemapping=reinhard:tonemapping_param=0.5:range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709:" + Bit_Format() + ",hwdownload," + Bit_Format() + "\"");
-                else
-                    Vf.Add("\"curves=m=0/0 0.25/0.3 0.87/0.88 1/1," + Bit_Format(10) + ",hwupload,libplacebo=minimum_peak=4.0:gamut_mode=relative:tonemapping=hable:range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709:" + Bit_Format() + ",hwdownload," + Bit_Format() + "\"");*/
-                Vf.Add("\"" + Bit_Format(10) + ",hwupload,libplacebo=percentile=99.6:gamut_mode=relative:tonemapping=bt.2446a:range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709:" + Bit_Format() + ",hwdownload," + Bit_Format() + "\"");
-            }
-            else if (f == "anime4k")
-                Vf.Add(Bit_Format() + ",hwupload,libplacebo='custom_shader_path=" + resdir + "Anime4K_Restore_CNN_" + (v == "1.5" ? "Soft_" : "") + "VL.glsl',libplacebo='w=iw*" + v + ":h=ih*" + v + ":custom_shader_path=" + resdir + "Anime4K_Upscale_Denoise_CNN_x2_VL.glsl',hwdownload," + Bit_Format());
-            else if (f == "fsrcnnx")
-                Vf.Add(Bit_Format() + ",hwupload,libplacebo='w=iw*2:h=ih*2:custom_shader_path=" + resdir + "FSRCNNX_x2_16-0-4-1.glsl',hwdownload," + Bit_Format());
-            else if (f == "Stabilization")
-                Vf.Insert(Vf.FindIndex(s => s.Contains("nnedi")) > -1 ? 1 : 0, "\"vidstabtransform=smoothing=6:crop=keep:zoom=0:optzoom=0:input='transforms.trf'\"");
-            else if (f.Contains("90° clock"))
-                Vf.Add("rotate=PI/2:ow=ih:oh=iw");
-            else if (f.Contains("90° anti"))
-                Vf.Add("rotate=-PI/2:ow=ih:oh=iw");
-            else if (f == "180°")
-                Vf.Add("rotate=PI");
-            else if (f == "rotate" && v != "0")
-            {
-                Vf.RemoveAll(s => s.StartsWith("rotate="));
-                v += "*PI/(-180)";
-                Vf.Add("rotate=" + v + ":ow=rotw(" + v + "):oh=roth(" + v + ")");
-            }
-            else if (f.Contains("Horizontal"))
-                Vf.Add("hflip");
-            else if (f.Contains("Vertical"))
-                Vf.Add("vflip");
-            else if (f == "interpolation")
-            {
-                Out_fps = (Out_fps > 0 ? Out_fps : (int)double.Parse(v)) * 2;
-                Vf.Add("minterpolate=fps=" + Out_fps.ToString() + ":mc_mode=aobmc:search_param=48:vsbmc=1:scd_threshold=3");
-            }
-            else if (f.StartsWith("Speed up") || f.StartsWith("Slow down") || f == "Speed update")
-            {
-                double spd = Func.Get_speed(Vf) + (f.StartsWith("Speed up") ? -0.1 : (f == "Speed update" ? 0.0 : 0.1));
-                spd = spd < 0.1 ? 0.1 : (spd > 100 ? 100 : spd);
-                Vf.RemoveAll(s => s.StartsWith("setpts="));
-                Af.RemoveAll(s => s.StartsWith("atempo="));
-                if (spd == 1)
-                    return;
-                Vf.Add("setpts=" + spd + "*PTS");
-                spd = 1.0 / spd;
-                while (spd < 0.5)
-                {
-                    spd /= 0.5;
-                    Af.Add("atempo=0.5");
-                }
-                Af.Add("atempo=" + spd);
-            }
-            else if (f.StartsWith("Subtitle"))
-            {
-                OpenFileDialog filedialog = new OpenFileDialog()
-                {
-                    Filter = "Subtitle Files|*.ass;*.srt;*.sub;*.vtt|All Files (*.*)|*.*",
-                    Title = "Select subtitle file to burn"
-                };
-                Form1.Dialogo = true;
-                if (filedialog.ShowDialog() == DialogResult.OK)
-                    Vf.Add("\"subtitles='" + filedialog.FileName.Replace(@"\", @"\\").Replace(@":", @"\:") + "'\"");
-                Form1.Dialogo = false;
-            }
+                Vf.Add("\"" + Bit_Format(10) + ",hwupload,libplacebo=percentile=99.6:gamut_mode=relative:tonemapping=hable:range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709:" + Bit_Format() + ",hwdownload," + Bit_Format() + "\"");
         }
 
         public void Vf_update(string f, [Optional] string v, [Optional] string a, [Optional] bool b)
@@ -614,7 +472,7 @@ namespace Av1ador
                 if (!d)
                 {
                     if (Libplacebo)
-                        Vf_add("Vulkan", b.ToString());
+                        Vf_add("Vulkan", "0");
                     else if (b)
                         Vf_add("OpenCL", "");
                 }
@@ -627,44 +485,20 @@ namespace Av1ador
         {
             if (f == "sofalizer")
             {
-                if (!(int.Parse(Ch) < int.Parse(v) && int.Parse(Ch) < 3))
-                {
-                    if (Af.FindIndex(s => s.Contains("sofalizer")) > -1)
-                    {
-                        Af.RemoveAll(s => s.Contains("sofalizer"));
-                        Af.RemoveAll(s => s.StartsWith("dynaudnorm"));
-                    }
-                }
-                else if (Af.FindIndex(s => s.Contains("sofalizer")) == -1 && Af.FindIndex(s => s.Contains("pan=stereo")) == -1)
-                {
-                    if (int.Parse(Ch) == 2 && int.Parse(v) > 4 && int.Parse(v) < 9)
-                    {
-                        string pan;
-                        if (int.Parse(v) > 6)
-                        {
-                            v = "7";
-                            pan = "[0:a]pan=stereo|FL=.14FL+.1FC|FR=.14FR+.1FC[lr];[0:a]pan=7.1|c0=.0*c0|c1=.0*c1|c2=.0*c2|c3=c3|c4=c4|c5=c5|c6=c6|c7=c7,";
-                        }
-                        else
-                        {
-                            v = "5";
-                            pan = "[0:a]pan=stereo|FL=.2FL+.14FC|FR=.2FR+.14FC[lr];[0:a]pan=5.1|c0=.0*c0|c1=.0*c1|c2=.0*c2|c3=c3|c4=c4|c5=c5,";
-                        }                        
-                        Af.Insert(0, pan + "sofalizer='" + resdir + "HRIR_CIRC360_NF150.sofa':lfegain=2:radius=5,\"firequalizer=gain_entry='entry(50,-2);entry(250,0);entry(1000,1);entry(4000,-0.5);entry(8000,3);entry(16000,4)'[sofa];[lr][sofa]amix=normalize=0\"");
-                    }
-                    Af.Add("dynaudnorm=g=3:peak=0.99:maxgain=" + v + ":b=1:r=1");
-                }
+                Af.Add("\"pan=stereo|FL = 0.414*FL + 0.293*FC + 0.293*SL|FR = 0.414*FR + 0.293*FC + 0.293*SR,loudnorm=I=-16:TP=-1.5:LRA=11:measured_I=-27.61:measured_LRA=18.06:measured_TP=-4.47:measured_thresh=-39.20:offset=0.58:linear=true:print_format=summary\"");
             }
-            else if (f == "volume")
+
+            if (f == "volume")
                 Af.Add("volume=1.3");
+
             if (f == "normalize")
-                Af.Add("dynaudnorm=g=3:peak=0.99:maxgain=" + v + ":b=1:r=1");
-            if (f == "adelay")
+                Af.Add("loudnorm=I=-16:TP=-1.5:LRA=11:measured_I=-27.61:measured_LRA=18.06:measured_TP=-4.47:measured_thresh=-39.20:offset=0.58:linear=true:print_format=summary");
+            /*if (f == "adelay")
             {
                 Af.RemoveAll(s => s.StartsWith("adelay"));
                 if (double.Parse(v) > 0)
                     Af.Add("adelay=" + v + ":all=true");
-            }
+            }*/
             if (f == "noisereduction")
                 Af.Add("arnndn=m='" + resdir + "std.rnnn':mix=0.65,afftdn=nr=3:nf=-20");
         }
@@ -688,15 +522,12 @@ namespace Av1ador
                     if (pos > 0 && vf[pos - 1].StartsWith("scale"))
                     {
                         string[] wh = Func.Find_w_h(new List<string>() { vf[pos - 1] });
-                        if (wh.Count() > 0)
-                        {
-                            Match algo = Regex.Match(vf[pos - 1], @"flags=(bilinear|neighbor|lanczos|spline|gauss)");
-                            string downscaler = "";
-                            if (algo.Success)
-                                downscaler = ":downscaler=" + algo.Groups[1].ToString().Replace("neighbor", "nearest").Replace("spline", "spline36").Replace("gauss", "gaussian");
-                            vf[pos] = vf[pos].Replace("libplacebo=", "libplacebo=w=" + wh[0] + ":h=" + wh[1] + downscaler + ":");
-                            vf.RemoveAll(s => s.StartsWith("scale"));
-                        }
+                        Match algo = Regex.Match(vf[pos - 1], @"flags=(bilinear|neighbor|lanczos|spline|gauss)");
+                        string downscaler = "";
+                        if (algo.Success)
+                            downscaler = ":downscaler=" + algo.Groups[1].ToString().Replace("neighbor", "nearest").Replace("spline", "spline36").Replace("gauss", "gaussian");
+                        vf[pos] = vf[pos].Replace("libplacebo=", "libplacebo=w=" + wh[0] + ":h=" + wh[1] + downscaler + ":");
+                        vf.RemoveAll(s => s.StartsWith("scale"));
                     }
                 }
             }
@@ -714,7 +545,7 @@ namespace Av1ador
                     }
                     if (s.Contains("opencl"))
                     {
-                        str += " -init_hw_device opencl:" + OCL_Device;
+                        str += " -init_hw_device opencl=" + OCL_Device + " -filter_hw_device " + OCL_Device;
                         break;
                     }
                 }
@@ -731,11 +562,7 @@ namespace Av1ador
                     str += " -rav1e-params bitrate=!bitrate!";
             }
             else if (always_2p)
-            {
                 str += " " + Multipass;
-                if (Cv == "libvpx-vp9")
-                    str += " -crf " + Crf.ToString();
-            }
             else
             {
                 if (Cv == "libxvid")
@@ -744,8 +571,6 @@ namespace Av1ador
                     str += " -maxrate:v 200M -cq:v ";
                 else if (Cv == "librav1e")
                     str += " -rav1e-params quantizer=";
-                else if (Cv == "libvvenc")
-                    str += " -qp ";
                 else
                     str += " -crf ";
                 str += Crf.ToString();
@@ -765,68 +590,76 @@ namespace Av1ador
 
         public string Build_astr(int track)
         {
-            if (Ca == "libfdk_aac")
+            string astr;
+            if (AudioPassthru)
             {
-                if (Ba < 8)
-                    Ch = "1";
-                else if (Ba < A_kbps)
-                    Ch = "2";
+                astr = " -vn -async 1 -c:a copy -map 0:a:" + track;
             }
-            string astr = " -vn -async 1 -c:a " + Ca;
-            astr += " -ac " + Ch + " " ;
-            string p2 = "-profile:a aac_he_v2", p1 = "-profile:a aac_he";
-            if (Ca == "libfdk_aac")
+            else
             {
-                int ba = int.Parse(Ch);
-                ba = ba > 2 ? Ba / ba * 2 : Ba; 
-                if (ba < 8)
-                    astr += "-b:a " + Ba + "k ";
-                else if (ba < 24)
-                    astr += "-b:a " + Ba + "k " + p2;
-                else if (ba < 41)
-                    astr += "-b:a " + Ba + "k " + p1;
-                else if (ba < 45)
-                    astr += "-vbr 1 " + p1;
-                else if (ba < 50)
-                    astr += "-vbr 2 " + p1;
-                else if (ba < 57)
-                    astr += "-vbr 1 " + p1;
-                else if (ba < 66)
-                    astr += "-vbr 2 " + p1;
-                else if (ba < 81)
-                    astr += "-vbr 3 " + p1;
-                else if (ba < 97)
-                    astr += "-vbr 4 " + p1;
-                else if (ba < 121)
-                    astr += "-vbr 5 " + p1;
-                else if (ba < 140)
-                    astr += "-vbr 2 -cutoff 17000";
-                else if (ba < 160)
-                    astr += "-vbr 3 -cutoff 17000";
-                else if (ba < 180)
-                    astr += "-vbr 4 -cutoff 17000";
-                else
-                    astr += "-vbr 5 -cutoff 18000";
+                if (Ca == "libfdk_aac")
+                {
+                    if (Ba < 8)
+                        Ch = "1";
+                    else if (Ba < A_kbps)
+                        Ch = "2";
+                }
+                astr = " -vn -async 1 -c:a " + Ca;
+                astr += " -ac " + Ch + " ";
+                string p2 = "-profile:a aac_he_v2", p1 = "-profile:a aac_he";
+                if (Ca == "libfdk_aac")
+                {
+                    int ba = int.Parse(Ch);
+                    ba = ba > 2 ? Ba / ba * 2 : Ba;
+                    if (ba < 8)
+                        astr += "-b:a " + Ba + "k ";
+                    else if (ba < 24)
+                        astr += "-b:a " + Ba + "k " + p2;
+                    else if (ba < 41)
+                        astr += "-b:a " + Ba + "k " + p1;
+                    else if (ba < 45)
+                        astr += "-vbr 1 " + p1;
+                    else if (ba < 50)
+                        astr += "-vbr 2 " + p1;
+                    else if (ba < 57)
+                        astr += "-vbr 1 " + p1;
+                    else if (ba < 66)
+                        astr += "-vbr 2 " + p1;
+                    else if (ba < 81)
+                        astr += "-vbr 3 " + p1;
+                    else if (ba < 97)
+                        astr += "-vbr 4 " + p1;
+                    else if (ba < 121)
+                        astr += "-vbr 5 " + p1;
+                    else if (ba < 140)
+                        astr += "-vbr 2 -cutoff 17000";
+                    else if (ba < 160)
+                        astr += "-vbr 3 -cutoff 17000";
+                    else if (ba < 180)
+                        astr += "-vbr 4 -cutoff 17000";
+                    else
+                        astr += "-vbr 5 -cutoff 18000";
 
-                if (ba < 8)
-                    astr += " -ar 8000";
-                else if (ba < 10)
-                    astr += " -ar 16000";
-                else if (ba < 14)
-                    astr += " -ar 22050";
-                else if (ba < 20)
-                    astr += " -ar 24000";
-                else if (ba < 50)
-                    astr += " -ar 32000";
+                    if (ba < 8)
+                        astr += " -ar 8000";
+                    else if (ba < 10)
+                        astr += " -ar 16000";
+                    else if (ba < 14)
+                        astr += " -ar 22050";
+                    else if (ba < 20)
+                        astr += " -ar 24000";
+                    else if (ba < 50)
+                        astr += " -ar 32000";
+                }
+                else
+                    astr += "-b:a " + Ba + "k";
+                if (Af.Count > 0)
+                    astr += " -af " + String.Join(",", Af.ToArray());
+                if (astr.IndexOf("[0:a") > -1)
+                    astr = astr.Replace(" -af ", " -filter_complex ").Replace("[0:a]", "[0:a:" + track + "]");
+                else
+                    astr += " -map 0:a:" + track;
             }
-            else
-                astr += "-b:a " + Ba + "k";
-            if (Af.Count > 0)
-                astr += " -af " + String.Join(",", Af.ToArray());
-            if (astr.IndexOf("[0:a") > -1)
-                astr = astr.Replace(" -af ", " -filter_complex ").Replace("[0:a]", "[0:a:" + track + "]");
-            else
-                astr += " -map 0:a:" + track;
             return astr;
         }
 
@@ -858,7 +691,7 @@ namespace Av1ador
             return str;
         }
 
-        public void Save_settings(ToolStripComboBox format, ToolStripComboBox codec_video, ToolStripComboBox speed, ToolStripComboBox resolution, ToolStripComboBox hdr, ToolStripComboBox bit_depth, NumericUpDown crf, ToolStripComboBox codec_audio, ToolStripComboBox channels, TextBox ba, string output_folder, CheckBox gsauto, Settings s)
+        public void Save_settings(ToolStripComboBox format, ToolStripComboBox codec_video, ToolStripComboBox speed, ToolStripComboBox resolution, ToolStripComboBox hdr, ToolStripComboBox bit_depth, NumericUpDown crf, ToolStripComboBox codec_audio, ToolStripComboBox channels, TextBox ba, string output_folder, Settings s)
         {
             if (Form.ActiveForm == null)
                 return;
@@ -884,7 +717,6 @@ namespace Av1ador
                 settings.Channels = ch_s == "Default" ? settings.Channels : ch_s[0] == '2' ? "Default" : ch_s;
                 settings.Audio_br = ba.Text;
                 settings.Output_folder = output_folder;
-                settings.Auto_grain_level = gsauto.Checked;
                 settings.Delete_temp_files = s.Delete_temp_files;
             }
             else
@@ -902,7 +734,6 @@ namespace Av1ador
                     Channels = ch_s,
                     Audio_br = ba.Text,
                     Output_folder = output_folder,
-                    Auto_grain_level = gsauto.Checked,
                     Delete_temp_files = s.Delete_temp_files
                 };
             }
@@ -945,7 +776,6 @@ namespace Av1ador
         public string Channels;
         public string Audio_br;
         public string Output_folder;
-        public bool Auto_grain_level;
         public uint Delete_temp_files;
         public List<string> CustomVf;
         public List<string> CustomAf;
