@@ -260,7 +260,6 @@ namespace Av1ador
 
         public Encode()
         {
-            Split_min_time = 10;
             Status = new List<string>();
             watch = new Stopwatch();
             remaining = new TimeSpan();
@@ -269,6 +268,7 @@ namespace Av1ador
 
         public void Start_encode(string dir, Video v, bool audio, bool audioPassthru, double delay = 0, int br = 0, double spd = 1, bool unat = false)
         {
+            Split_min_time = (int)Math.Round(v.Fps);
             track_delay = delay;
             Dir = dir == "" ? Path.GetDirectoryName(v.File) + "\\" : dir + "\\";
             File = v.File;
