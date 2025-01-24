@@ -164,7 +164,7 @@ namespace Av1ador
                 int currentProgressPercentage = (int)Math.Floor(progress); // Whole number progress
                 if (currentProgressPercentage / 10 > lastLoggedPercentage / 10)
                 {
-                    string logMessage = $"{(int)progress}%" + $" -> {video_size / 1024:F2} GB";
+                    string logMessage = $"{(int)progress}%" + $" -> {video_size / 1024:F2}GB ({avgBitrate}Kbps)";
 
                     // Append the log message to the file
                     string logFilePath = Name + "\\size_estimation.log";
@@ -351,7 +351,12 @@ namespace Av1ador
             if (!System.IO.File.Exists(Name + "\\chunks.txt") || (vbr && !System.IO.File.Exists(Name + "\\complexity.txt")))
             {
                 Status.Add("Detecting scenes...");
-                int workers = Math.Abs(Environment.ProcessorCount / 4);
+                int workers = 0;
+                if (v.Width > 2048)
+                    workers = 4;
+                else
+                    workers = Math.Abs(Environment.ProcessorCount / 4);
+
                 double tdist = (final - v.StartTime) / (double)workers;
                 Bw = new BackgroundWorker[workers];
                 List<string>[] trim_time = new List<string>[workers];
@@ -381,6 +386,7 @@ namespace Av1ador
                         Func.Setinicial(ffmpeg, 3);
                         if ((v.Width <= 1920 || v.Kf_fixed) || vbr || Fps_filter != "")
                             ffmpeg.StartInfo.Arguments = (vbr ? " -loglevel debug" : "") + " -copyts -start_at_zero" + ss1 + " -i \"" + v.File + "\"" + ss2 + " -to " + final2.ToString() + " -filter:v \"" + Fps_filter + "select='gt(scene,0.1)+isnan(prev_selected_t)+gte(t-prev_selected_t\\," + Split_min_time.ToString() + ")',showinfo\" -an -f null - ";
+                            //ffmpeg.StartInfo.Arguments = (vbr ? " -loglevel debug" : "") + " -copyts -start_at_zero" + ss1 + " -i \"" + v.File + "\"" + ss2 + " -to " + final2.ToString() + " -filter:v \"" + Fps_filter + "select='gt(scene,0.1)',select='isnan(prev_selected_t)+gte(t-prev_selected_t\\," + Split_min_time.ToString() + ")',showinfo\" -an -f null - ";
                         else
                             ffmpeg.StartInfo.Arguments = " -copyts -start_at_zero -skip_frame nokey" + ss1 + " -i \"" + v.File + "\"" + ss2 + " -to " + final2.ToString() + " -filter:v showinfo -an -f null - ";
                         ffmpeg.Start();

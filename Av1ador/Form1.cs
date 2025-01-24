@@ -25,7 +25,7 @@ namespace Av1ador
         [DllImport("user32.dll")]
         static extern bool GetCursorPos(ref Point point);
 
-        private readonly string title = "Av1ador 1.5.0";
+        private readonly string title = "Av1ador 1.5.1";
         private readonly Regex formatos = new Regex(".+(mkv|mp4|avi|webm|ivf|m2ts|wmv|mpg|mov|3gp|ts|mpeg|y4m|vob|m2v|m4v|flv|asf|png)$", RegexOptions.IgnoreCase);
         private Player mpv;
         private Video primer_video, segundo_video;
@@ -42,9 +42,6 @@ namespace Av1ador
         private PerformanceCounter ram;
         private string[] disks;
         Settings settings;
-        private FormWindowState winstate;
-        private Size winsize;
-        private Point winpos;
         private readonly BackgroundWorker aset = new BackgroundWorker();
         private Color heat = Color.FromArgb(220, 220, 220);
         private string[] clipboard = new string[] { "", "" };
@@ -697,44 +694,6 @@ namespace Av1ador
             toolStrip1.Focus();
         }
 
-        private void ExpandButton_Click(object sender, EventArgs e)
-        {
-            winstate = WindowState;
-            FormBorderStyle = FormBorderStyle.None;
-            WindowState = FormWindowState.Normal;
-            winsize = Size;
-            winpos = Location;
-            Location = new Point(Screen.FromControl(this).WorkingArea.Left, Screen.FromControl(this).WorkingArea.Top);
-            Size = new Size(Screen.FromControl(this).Bounds.Width, Screen.FromControl(this).Bounds.Height);
-            tableLayoutPanel1.RowStyles[2].Height = 16;
-            tableLayoutPanel1.RowStyles[3].Height = 0;
-            tableLayoutPanel4.RowStyles[0].Height = 24;
-            syncButton.DisplayStyle = prevframeButton.DisplayStyle = playButton.DisplayStyle = pauseButton.DisplayStyle = nextframeButton.DisplayStyle = grainButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            audiomuteButton.DisplayStyle = audiounmuteButton.DisplayStyle = expandButton.DisplayStyle = restoreButton.DisplayStyle = zoomButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            restoreButton.Visible = true;
-            expandButton.Visible = false;
-            splitContainer2.Panel1Collapsed = true;
-            panel1.Height = 12;
-            UpdateLayout(true);
-        }
-
-        private void RestoreButton_Click(object sender, EventArgs e)
-        {
-            FormBorderStyle = FormBorderStyle.Sizable;
-            WindowState = winstate;
-            Size = winsize;
-            Location = winpos;
-            tableLayoutPanel1.RowStyles[2].Height = 24;
-            tableLayoutPanel1.RowStyles[3].Height = 24;
-            tableLayoutPanel4.RowStyles[0].Height = 38;
-            syncButton.DisplayStyle = prevframeButton.DisplayStyle = playButton.DisplayStyle = pauseButton.DisplayStyle = nextframeButton.DisplayStyle = grainButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-            audiomuteButton.DisplayStyle = audiounmuteButton.DisplayStyle = expandButton.DisplayStyle = restoreButton.DisplayStyle = zoomButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-            restoreButton.Visible = false;
-            expandButton.Visible = true;
-            splitContainer2.Panel1Collapsed = false;
-            UpdateLayout(true);
-        }
-
         private void AudiounmuteButton_Click(object sender, EventArgs e)
         {
             audiounmuteButton.Visible = false;
@@ -1274,9 +1233,11 @@ namespace Av1ador
             heat = Func.Heat(0);
             workersgroupBox.Refresh();
 
+            /*
             string size_estimation_file = encode.Name + "\\size_estimation.log";
             if (System.IO.File.Exists(size_estimation_file))
                 System.IO.File.Delete(size_estimation_file);
+            */
         }
 
         private void Abitrate_update(bool calc)

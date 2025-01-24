@@ -160,8 +160,6 @@
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.grainButton = new System.Windows.Forms.ToolStripButton();
             this.zoomButton = new System.Windows.Forms.ToolStripButton();
-            this.expandButton = new System.Windows.Forms.ToolStripButton();
-            this.restoreButton = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
             this.playtimeLabel = new System.Windows.Forms.Label();
             this.mediainfoLabel = new System.Windows.Forms.Label();
@@ -1515,28 +1513,28 @@
             // removeBlackBarsToolStripMenuItem
             // 
             this.removeBlackBarsToolStripMenuItem.Name = "removeBlackBarsToolStripMenuItem";
-            this.removeBlackBarsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.removeBlackBarsToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.removeBlackBarsToolStripMenuItem.Text = "Auto-crop";
             this.removeBlackBarsToolStripMenuItem.Click += new System.EventHandler(this.RemoveBlackBarsToolStripMenuItem_Click);
             // 
             // denoiseToolStripMenuItem
             // 
             this.denoiseToolStripMenuItem.Name = "denoiseToolStripMenuItem";
-            this.denoiseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.denoiseToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.denoiseToolStripMenuItem.Text = "Light denoise";
             this.denoiseToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
             // strongDenoiseToolStripMenuItem
             // 
             this.strongDenoiseToolStripMenuItem.Name = "strongDenoiseToolStripMenuItem";
-            this.strongDenoiseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.strongDenoiseToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.strongDenoiseToolStripMenuItem.Text = "Strong denoise";
             this.strongDenoiseToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
             // resizeZscaleToolStripMenuItem
             // 
             this.resizeZscaleToolStripMenuItem.Name = "resizeZscaleToolStripMenuItem";
-            this.resizeZscaleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resizeZscaleToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.resizeZscaleToolStripMenuItem.Text = "Resize to 1080p (zscale spline36)";
             this.resizeZscaleToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
@@ -1553,7 +1551,7 @@
             this.openclToolStripMenuItem,
             this.vulkanToolStripMenuItem});
             this.tonemapToolStripMenuItem.Name = "tonemapToolStripMenuItem";
-            this.tonemapToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tonemapToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.tonemapToolStripMenuItem.Text = "Tonemap";
             // 
             // openclToolStripMenuItem
@@ -1605,14 +1603,14 @@
             // downmixToolStripMenuItem
             // 
             this.downmixToolStripMenuItem.Name = "downmixToolStripMenuItem";
-            this.downmixToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.downmixToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.downmixToolStripMenuItem.Text = "Downmix to 2.0";
             this.downmixToolStripMenuItem.Click += new System.EventHandler(this.DownmixToolStripMenuItem_Click);
             // 
             // normalizeToolStripMenuItem
             // 
             this.normalizeToolStripMenuItem.Name = "normalizeToolStripMenuItem";
-            this.normalizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.normalizeToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.normalizeToolStripMenuItem.Text = "Loudness normalization";
             this.normalizeToolStripMenuItem.Click += new System.EventHandler(this.NormalizeToolStripMenuItem_Click);
             // 
@@ -1822,12 +1820,10 @@
             this.audiomuteButton,
             this.toolStripSeparator9,
             this.grainButton,
-            this.zoomButton,
-            this.expandButton,
-            this.restoreButton});
-            this.toolStrip2.Location = new System.Drawing.Point(279, 0);
+            this.zoomButton});
+            this.toolStrip2.Location = new System.Drawing.Point(304, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(412, 46);
+            this.toolStrip2.Size = new System.Drawing.Size(362, 46);
             this.toolStrip2.TabIndex = 0;
             this.toolStrip2.Text = "toolStrip2";
             this.toolStrip2.MouseEnter += new System.EventHandler(this.ToolStrip2_MouseEnter);
@@ -1959,30 +1955,6 @@
             this.zoomButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.zoomButton.CheckStateChanged += new System.EventHandler(this.ZoomButton_CheckStateChanged);
             // 
-            // expandButton
-            // 
-            this.expandButton.AutoSize = false;
-            this.expandButton.Image = global::Av1ador.Properties.Resources.ViewLandscape;
-            this.expandButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.expandButton.Name = "expandButton";
-            this.expandButton.Size = new System.Drawing.Size(50, 34);
-            this.expandButton.Text = "Expand";
-            this.expandButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.expandButton.Click += new System.EventHandler(this.ExpandButton_Click);
-            // 
-            // restoreButton
-            // 
-            this.restoreButton.AutoSize = false;
-            this.restoreButton.Image = global::Av1ador.Properties.Resources.ViewFull;
-            this.restoreButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.restoreButton.Name = "restoreButton";
-            this.restoreButton.Size = new System.Drawing.Size(50, 35);
-            this.restoreButton.Text = "Restore";
-            this.restoreButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.restoreButton.ToolTipText = "Restore";
-            this.restoreButton.Visible = false;
-            this.restoreButton.Click += new System.EventHandler(this.RestoreButton_Click);
-            // 
             // tableLayoutPanel8
             // 
             this.tableLayoutPanel8.ColumnCount = 1;
@@ -1998,7 +1970,7 @@
             this.tableLayoutPanel8.RowCount = 2;
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(279, 46);
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(304, 46);
             this.tableLayoutPanel8.TabIndex = 1;
             // 
             // playtimeLabel
@@ -2031,13 +2003,13 @@
             this.tableLayoutPanel9.Controls.Add(this.estimatedLabel, 0, 0);
             this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel9.Font = new System.Drawing.Font("Unispace", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tableLayoutPanel9.Location = new System.Drawing.Point(691, 0);
+            this.tableLayoutPanel9.Location = new System.Drawing.Point(666, 0);
             this.tableLayoutPanel9.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel9.Name = "tableLayoutPanel9";
             this.tableLayoutPanel9.RowCount = 2;
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(280, 46);
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(305, 46);
             this.tableLayoutPanel9.TabIndex = 2;
             this.tableLayoutPanel9.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel9_Paint);
             // 
@@ -2045,7 +2017,7 @@
             // 
             this.statusLabel.AutoSize = true;
             this.statusLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.statusLabel.Location = new System.Drawing.Point(277, 23);
+            this.statusLabel.Location = new System.Drawing.Point(302, 23);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(0, 23);
             this.statusLabel.TabIndex = 0;
@@ -2055,7 +2027,7 @@
             // 
             this.estimatedLabel.AutoSize = true;
             this.estimatedLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.estimatedLabel.Location = new System.Drawing.Point(277, 0);
+            this.estimatedLabel.Location = new System.Drawing.Point(302, 0);
             this.estimatedLabel.Name = "estimatedLabel";
             this.estimatedLabel.Size = new System.Drawing.Size(0, 23);
             this.estimatedLabel.TabIndex = 1;
@@ -2906,7 +2878,6 @@
         private System.Windows.Forms.ToolStripButton audiounmuteButton;
         private System.Windows.Forms.ToolStripButton audiomuteButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
-        private System.Windows.Forms.ToolStripButton expandButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
@@ -2921,7 +2892,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.ToolStripButton restoreButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel9;
         private System.Windows.Forms.Timer mpvTimer;
