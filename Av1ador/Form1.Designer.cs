@@ -57,7 +57,6 @@
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.origfolderButton = new System.Windows.Forms.ToolStripButton();
             this.outfolderButton = new System.Windows.Forms.ToolStripButton();
-            this.encodelistButton = new System.Windows.Forms.ToolStripButton();
             this.deltempButton = new System.Windows.Forms.ToolStripButton();
             this.offButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
@@ -556,7 +555,6 @@
             this.toolStripSeparator7,
             this.origfolderButton,
             this.outfolderButton,
-            this.encodelistButton,
             this.deltempButton,
             this.offButton,
             this.toolStripSeparator15,
@@ -649,20 +647,6 @@
             this.outfolderButton.Text = "Folder";
             this.outfolderButton.ToolTipText = "Select output folder";
             this.outfolderButton.Click += new System.EventHandler(this.OutfolderButton_Click);
-            // 
-            // encodelistButton
-            // 
-            this.encodelistButton.Checked = true;
-            this.encodelistButton.CheckOnClick = true;
-            this.encodelistButton.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.encodelistButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.encodelistButton.Image = global::Av1ador.Properties.Resources.DebugHistorySeekToFrame2;
-            this.encodelistButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.encodelistButton.Name = "encodelistButton";
-            this.encodelistButton.Size = new System.Drawing.Size(23, 21);
-            this.encodelistButton.Text = "Encode list";
-            this.encodelistButton.ToolTipText = "Encode entire list";
-            this.encodelistButton.Click += new System.EventHandler(this.encodelistButton_Click);
             // 
             // deltempButton
             // 
@@ -2950,7 +2934,6 @@
         private System.Windows.Forms.ToolStripMenuItem deinterlaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem downmixToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem normalizeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton encodelistButton;
         private System.Windows.Forms.ToolStripButton zoomButton;
         private System.Windows.Forms.ToolStripMenuItem resizeZscaleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sharpenToolStripMenuItem;

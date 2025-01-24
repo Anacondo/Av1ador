@@ -266,14 +266,14 @@ namespace Av1ador
             bitrate = 0;
         }
 
-        public void Start_encode(string dir, Video v, bool audio, bool audioPassthru, double delay = 0, int br = 0, double spd = 1, bool unat = false)
+        public void Start_encode(string dir, Video v, bool audio, bool audioPassthru, double delay = 0, int br = 0, double spd = 1)
         {
             Split_min_time = (int)Math.Round(v.Fps);
             track_delay = delay;
             Dir = dir == "" ? Path.GetDirectoryName(v.File) + "\\" : dir + "\\";
             File = v.File;
             Name = Tempdir + Path.GetFileNameWithoutExtension(v.File);
-            unattended = unat;
+            unattended = true;
             if (!Directory.Exists(Name))
                 Directory.CreateDirectory(Name);
             else if (!unattended)

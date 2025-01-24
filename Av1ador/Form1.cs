@@ -1336,13 +1336,13 @@ namespace Av1ador
                     delay = primer_video.Tracks_delay[checkedListBox1.CheckedIndices[0]];
                 }
                 double to = primer_video.EndTime != primer_video.Duration ? primer_video.EndTime : primer_video.Duration + 1;
-                encode.Start_encode(folderBrowserDialog1.SelectedPath, primer_video, checkedListBox1.CheckedItems.Count > 0, audioPassThruCheckBox.Checked, delay, encoder.V_kbps, encoder.Out_spd, encodelistButton.Checked);
+                encode.Start_encode(folderBrowserDialog1.SelectedPath, primer_video, checkedListBox1.CheckedItems.Count > 0, audioPassThruCheckBox.Checked, delay, encoder.V_kbps, encoder.Out_spd);
                 listBox1.Refresh();
             }
             else if (encodestopButton.Enabled && encode.Finished)
             {
                 Entry.Set_status(listBox1, encode.File, encode.Elapsed, false, false, true);
-                if (!encodelistButton.Checked || !Next(listBox1, Entry.Index(primer_video.File, listBox1)))
+                if (!Next(listBox1, Entry.Index(primer_video.File, listBox1)))
                 {
                     encodestopButton.Enabled = false;
                     encodestartButton.Enabled = true;
@@ -2182,10 +2182,6 @@ namespace Av1ador
             nothingMenuItem.Checked = exitMenuItem.Checked = shutdownMenuItem.Checked = false;
             (sender as ToolStripMenuItem).Checked = true;
             offButton.Checked = exitMenuItem.Checked || shutdownMenuItem.Checked;
-        }
-
-        private void encodelistButton_Click(object sender, EventArgs e)
-        {
         }
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
