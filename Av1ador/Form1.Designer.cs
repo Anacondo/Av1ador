@@ -562,7 +562,7 @@
             this.pastetoolStripButton});
             this.toolStrip3.Location = new System.Drawing.Point(0, 0);
             this.toolStrip3.Name = "toolStrip3";
-            this.toolStrip3.Size = new System.Drawing.Size(281, 24);
+            this.toolStrip3.Size = new System.Drawing.Size(282, 24);
             this.toolStrip3.TabIndex = 0;
             this.toolStrip3.Text = "toolStrip3";
             this.toolStrip3.MouseEnter += new System.EventHandler(this.ToolStrip3_MouseEnter);
@@ -710,7 +710,7 @@
             this.listBox1.Margin = new System.Windows.Forms.Padding(0);
             this.listBox1.Name = "listBox1";
             this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBox1.Size = new System.Drawing.Size(281, 437);
+            this.listBox1.Size = new System.Drawing.Size(282, 437);
             this.listBox1.TabIndex = 1;
             this.listBox1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ListBox1_DrawItem);
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
@@ -730,7 +730,7 @@
             this.tabControl2.Margin = new System.Windows.Forms.Padding(0);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(281, 330);
+            this.tabControl2.Size = new System.Drawing.Size(282, 330);
             this.tabControl2.TabIndex = 2;
             // 
             // tabPage3
@@ -740,7 +740,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(273, 304);
+            this.tabPage3.Size = new System.Drawing.Size(274, 304);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "Settings";
             // 
@@ -1302,7 +1302,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(273, 304);
+            this.tabPage5.Size = new System.Drawing.Size(274, 304);
             this.tabPage5.TabIndex = 1;
             this.tabPage5.Text = "Parameters";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -1318,7 +1318,7 @@
             this.paramsBox.Multiline = true;
             this.paramsBox.Name = "paramsBox";
             this.paramsBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.paramsBox.Size = new System.Drawing.Size(273, 304);
+            this.paramsBox.Size = new System.Drawing.Size(274, 304);
             this.paramsBox.TabIndex = 0;
             this.paramsBox.TextChanged += new System.EventHandler(this.ParamsBox_TextChanged);
             // 
@@ -1328,7 +1328,7 @@
             this.tabPage4.Controls.Add(this.tableLayoutPanel21);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(273, 304);
+            this.tabPage4.Size = new System.Drawing.Size(274, 304);
             this.tabPage4.TabIndex = 2;
             this.tabPage4.Text = "Audio";
             // 
@@ -1344,7 +1344,7 @@
             this.tableLayoutPanel21.RowCount = 2;
             this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 90F));
             this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel21.Size = new System.Drawing.Size(273, 304);
+            this.tableLayoutPanel21.Size = new System.Drawing.Size(274, 304);
             this.tableLayoutPanel21.TabIndex = 0;
             // 
             // groupBox3
@@ -1353,7 +1353,7 @@
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(267, 267);
+            this.groupBox3.Size = new System.Drawing.Size(268, 267);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Audio";
@@ -1364,7 +1364,7 @@
             this.checkedListBox1.FormattingEnabled = true;
             this.checkedListBox1.Location = new System.Drawing.Point(3, 18);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(261, 246);
+            this.checkedListBox1.Size = new System.Drawing.Size(262, 246);
             this.checkedListBox1.TabIndex = 0;
             this.checkedListBox1.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox1_ItemCheck);
             this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.checkedListBox1_SelectedIndexChanged);
@@ -1375,7 +1375,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(273, 304);
+            this.tabPage6.Size = new System.Drawing.Size(274, 304);
             this.tabPage6.TabIndex = 3;
             this.tabPage6.Text = "Subtitles";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -1386,7 +1386,7 @@
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Location = new System.Drawing.Point(3, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(267, 298);
+            this.groupBox4.Size = new System.Drawing.Size(268, 298);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Subtitles";
@@ -1398,7 +1398,7 @@
             this.checkedListBox2.FormattingEnabled = true;
             this.checkedListBox2.Location = new System.Drawing.Point(3, 18);
             this.checkedListBox2.Name = "checkedListBox2";
-            this.checkedListBox2.Size = new System.Drawing.Size(261, 277);
+            this.checkedListBox2.Size = new System.Drawing.Size(262, 277);
             this.checkedListBox2.TabIndex = 0;
             this.checkedListBox2.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox2_ItemCheck);
             this.checkedListBox2.SelectedIndexChanged += new System.EventHandler(this.checkedListBox2_SelectedIndexChanged);
@@ -2655,9 +2655,7 @@
             // timestampsMenuItem
             // 
             this.timestampsMenuItem.AutoSize = false;
-            this.timestampsMenuItem.Checked = true;
             this.timestampsMenuItem.CheckOnClick = true;
-            this.timestampsMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.timestampsMenuItem.Name = "timestampsMenuItem";
             this.timestampsMenuItem.Size = new System.Drawing.Size(214, 22);
             this.timestampsMenuItem.Text = "Identified scenes";
@@ -2677,9 +2675,7 @@
             // audioMenuItem
             // 
             this.audioMenuItem.AutoSize = false;
-            this.audioMenuItem.Checked = true;
             this.audioMenuItem.CheckOnClick = true;
-            this.audioMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.audioMenuItem.Name = "audioMenuItem";
             this.audioMenuItem.Size = new System.Drawing.Size(214, 22);
             this.audioMenuItem.Text = "Encoded audio";

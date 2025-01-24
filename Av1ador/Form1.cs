@@ -433,7 +433,7 @@ namespace Av1ador
             {
                 settings = new Settings
                 {
-                    Delete_temp_files = 15,
+                    Delete_temp_files = 5,
                     CustomVf = new List<string>(),
                     CustomAf = new List<string>()
                 };

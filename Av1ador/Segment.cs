@@ -25,7 +25,6 @@ namespace Av1ador
         private double track_delay;
         private int[] fps = new int[0];
         private int frames_last;
-        private bool unattended;
         public string Tempdir { get; } = "temp\\";
         public string Dir { get; set; }
         public string File { get; set; }
@@ -273,20 +272,8 @@ namespace Av1ador
             Dir = dir == "" ? Path.GetDirectoryName(v.File) + "\\" : dir + "\\";
             File = v.File;
             Name = Tempdir + Path.GetFileNameWithoutExtension(v.File);
-            unattended = true;
             if (!Directory.Exists(Name))
                 Directory.CreateDirectory(Name);
-            else if (!unattended)
-            {
-                Form1.Dialogo = true;
-                string[] files = Directory.GetFiles(Name);
-                if (files.Length > 0 && MessageBox.Show("There are some files from a previous encoding, do you want to resume it?", "Resume", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No)
-                {
-                    foreach (FileInfo f in new DirectoryInfo(Name).GetFiles())
-                        f.Delete();
-                }
-                Form1.Dialogo = false;
-            }
             Spd = spd;
             bitrate = br;
             bool vbr = br > 0;
@@ -750,14 +737,12 @@ namespace Av1ador
             {
                 Failed = true;
                 Set_state(true);
-                if (unattended || MessageBox.Show(log, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
+                if (MessageBox.Show(log, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
                 {
                     Status = new List<string>
                     {
                         "Failed"
                     };
-                    if (!unattended)
-                        Failed = false;
                     Chunks = null;
                 }
             }

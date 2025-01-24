@@ -750,7 +750,7 @@ namespace Av1ador
             Settings settings = (Settings)reader.Deserialize(file);
             file.Close();
             if (settings.Delete_temp_files == 0)
-                settings.Delete_temp_files = 15;
+                settings.Delete_temp_files = 5; // keep segments and audio by default
             return settings;
         }
 
