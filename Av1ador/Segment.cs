@@ -164,7 +164,7 @@ namespace Av1ador
                 int currentProgressPercentage = (int)Math.Floor(progress); // Whole number progress
                 if (currentProgressPercentage / 10 > lastLoggedPercentage / 10)
                 {
-                    string logMessage = $"{(int)progress}%" + $" -> {video_size / 1024:F2}GB ({avgBitrate}Kbps)";
+                    string logMessage = $"{(int)progress}%" + $" -> {video_size / 1024:F2}GB ({avgBitrate:F0}Kbps)";
 
                     // Append the log message to the file
                     string logFilePath = Name + "\\size_estimation.log";

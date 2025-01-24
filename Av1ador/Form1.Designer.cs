@@ -814,7 +814,6 @@
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel11.Size = new System.Drawing.Size(267, 102);
             this.tableLayoutPanel11.TabIndex = 0;
-            this.tableLayoutPanel11.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel11_Paint);
             // 
             // trackBar1
             // 
@@ -2358,7 +2357,6 @@
             this.picBoxBarra.Size = new System.Drawing.Size(1264, 30);
             this.picBoxBarra.TabIndex = 0;
             this.picBoxBarra.TabStop = false;
-            this.picBoxBarra.Click += new System.EventHandler(this.picBoxBarra_Click);
             this.picBoxBarra.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PicBoxBarra_MouseClick);
             this.picBoxBarra.MouseLeave += new System.EventHandler(this.PicBoxBarra_MouseLeave);
             this.picBoxBarra.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PicBoxBarra_MouseMove);
