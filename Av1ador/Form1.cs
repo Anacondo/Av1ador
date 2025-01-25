@@ -1388,6 +1388,8 @@ namespace Av1ador
                     heat = Func.Heat((int)usage);
                     workersgroupBox.Refresh();
                 }
+
+                // calculation for available system resources and whether we should span a new encoding ffmpeg thread or not
                 if (!workersBox.Checked && workersUpDown.Maximum > 1 && encode.Counter == 0)
                 {
                     if (disk != null && usage < 90 && disk.NextValue() < 70 && ram.NextValue() > primer_video.Height)
