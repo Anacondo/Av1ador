@@ -1037,7 +1037,8 @@ namespace Av1ador
             gsgroupBox.Enabled = encoder.Gs > 0;
             gsUpDown.Maximum = encoder.Gs;
             workersUpDown.Maximum = encoder.Cv.Contains("nvenc") ? 2 : encoder.Cores;
-            workersUpDown.Value = workersUpDown.Maximum > 2 ? (workersBox.Checked ? (workersUpDown.Value <= workersUpDown.Maximum ? workersUpDown.Value : workersUpDown.Maximum) : 4) : 1;
+            // calculation for the default number of threads based on processor cores
+            workersUpDown.Value = workersUpDown.Maximum > 2 ? (workersBox.Checked ? (workersUpDown.Value <= workersUpDown.Maximum ? workersUpDown.Value : workersUpDown.Maximum) : 4 ) : 1;
             encoder.Predicted = false;
             grainButton.Enabled = cvComboBox.Text.Contains("AV1") && segundo_video != null;
             Entry_update(4);
@@ -1361,13 +1362,18 @@ namespace Av1ador
                     }
                 }
                 if (!workersUpDown.Enabled && workersUpDown.Value > 1)
-                    workersUpDown.Value = 2;
+                    if( !workersBox.Checked )
+                        workersUpDown.Value = 4;
             }
             else if (!encodestopButton.Enabled)
             {
                 encode.Can_run = false;
                 if (statusLabel.Text.Contains("Encoding"))
+                {
                     listBox1.Refresh();
+                    if (!workersBox.Checked)
+                        workersUpDown.Value = 4;
+                }
                 if (!statusLabel.Text.Contains("grain"))
                     statusLabel.Text = "";
                 estimatedLabel.Text = "";
@@ -2239,12 +2245,7 @@ namespace Av1ador
 
         }
 
-        private void label7_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void audioPassThruCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void AudioPassThruCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if( audioPassThruCheckBox.CheckState == CheckState.Checked)
             {
@@ -2271,7 +2272,7 @@ namespace Av1ador
 
         }
 
-        private void workersBox_CheckedChanged_1(object sender, EventArgs e)
+        private void WorkersBox_CheckedChanged(object sender, EventArgs e)
         {
             workersgroupBox.Text = workersBox.Checked ? "Threads" : "Threads (auto)";
             workersUpDown.Enabled = workersBox.Checked;
@@ -2318,6 +2319,7 @@ namespace Av1ador
 
         private void GsUpDown_ValueChanged(object sender, EventArgs e)
         {
+            gsUpDown.Value = (int)gsUpDown.Value;
             encoder.Gs_level = (int)gsUpDown.Value;
             paramsBox.Text = Func.Replace_gs(paramsBox.Text, (int)gsUpDown.Value);
             Entry_update(2);

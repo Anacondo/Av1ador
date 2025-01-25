@@ -267,7 +267,12 @@ namespace Av1ador
 
         public void Start_encode(string dir, Video v, bool audio, bool audioPassthru, double delay = 0, int br = 0, double spd = 1)
         {
-            Split_min_time = (int)Math.Round(v.Fps);
+            // determines the minimum chunk length (in seconds)
+            if (v.Duration > 7200)
+                Split_min_time = 20;
+            else
+                Split_min_time = 15;
+
             track_delay = delay;
             Dir = dir == "" ? Path.GetDirectoryName(v.File) + "\\" : dir + "\\";
             File = v.File;

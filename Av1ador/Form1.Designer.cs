@@ -1084,7 +1084,7 @@
             this.workersBox.TabIndex = 1;
             this.toolTip1.SetToolTip(this.workersBox, "Select number of threads");
             this.workersBox.UseVisualStyleBackColor = true;
-            this.workersBox.CheckedChanged += new System.EventHandler(this.workersBox_CheckedChanged_1);
+            this.workersBox.CheckedChanged += new System.EventHandler(this.WorkersBox_CheckedChanged);
             // 
             // workersUpDown
             // 
@@ -1242,7 +1242,7 @@
             this.audioPassThruCheckBox.Text = "Passthru";
             this.toolTip1.SetToolTip(this.audioPassThruCheckBox, "Copy original audio stream (without compression)");
             this.audioPassThruCheckBox.UseVisualStyleBackColor = true;
-            this.audioPassThruCheckBox.CheckedChanged += new System.EventHandler(this.audioPassThruCheckBox_CheckedChanged);
+            this.audioPassThruCheckBox.CheckedChanged += new System.EventHandler(this.AudioPassThruCheckBox_CheckedChanged);
             // 
             // panel2
             // 
@@ -1803,9 +1803,9 @@
             this.toolStripSeparator9,
             this.grainButton,
             this.zoomButton});
-            this.toolStrip2.Location = new System.Drawing.Point(241, 0);
+            this.toolStrip2.Location = new System.Drawing.Point(304, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(489, 46);
+            this.toolStrip2.Size = new System.Drawing.Size(362, 46);
             this.toolStrip2.TabIndex = 0;
             this.toolStrip2.Text = "toolStrip2";
             this.toolStrip2.MouseEnter += new System.EventHandler(this.ToolStrip2_MouseEnter);
@@ -1952,7 +1952,7 @@
             this.tableLayoutPanel8.RowCount = 2;
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(241, 46);
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(304, 46);
             this.tableLayoutPanel8.TabIndex = 1;
             // 
             // playtimeLabel
@@ -1985,13 +1985,13 @@
             this.tableLayoutPanel9.Controls.Add(this.estimatedLabel, 0, 0);
             this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel9.Font = new System.Drawing.Font("Unispace", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tableLayoutPanel9.Location = new System.Drawing.Point(730, 0);
+            this.tableLayoutPanel9.Location = new System.Drawing.Point(666, 0);
             this.tableLayoutPanel9.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel9.Name = "tableLayoutPanel9";
             this.tableLayoutPanel9.RowCount = 2;
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(241, 46);
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(305, 46);
             this.tableLayoutPanel9.TabIndex = 2;
             this.tableLayoutPanel9.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel9_Paint);
             // 
@@ -1999,7 +1999,7 @@
             // 
             this.statusLabel.AutoSize = true;
             this.statusLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.statusLabel.Location = new System.Drawing.Point(238, 23);
+            this.statusLabel.Location = new System.Drawing.Point(302, 23);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(0, 23);
             this.statusLabel.TabIndex = 0;
@@ -2009,7 +2009,7 @@
             // 
             this.estimatedLabel.AutoSize = true;
             this.estimatedLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.estimatedLabel.Location = new System.Drawing.Point(238, 0);
+            this.estimatedLabel.Location = new System.Drawing.Point(302, 0);
             this.estimatedLabel.Name = "estimatedLabel";
             this.estimatedLabel.Size = new System.Drawing.Size(0, 23);
             this.estimatedLabel.TabIndex = 1;
@@ -3002,8 +3002,8 @@
         private System.Windows.Forms.TextBox abitrateBox;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripButton moveDownButton;
-        private System.Windows.Forms.NumericUpDown gsUpDown;
         private System.Windows.Forms.ToolStripMenuItem resizePlaceboToolStripMenuItem;
+        internal System.Windows.Forms.NumericUpDown gsUpDown;
     }
 }
 
