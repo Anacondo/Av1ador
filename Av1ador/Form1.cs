@@ -1392,14 +1392,18 @@ namespace Av1ador
                 // calculation for available system resources and whether we should span a new encoding ffmpeg thread or not
                 if (!workersBox.Checked && workersUpDown.Maximum > 1 && encode.Counter == 0)
                 {
-                    if (disk != null && usage < 90 && disk.NextValue() < 70 && ram.NextValue() > primer_video.Height)
+                    // conditions to spawn new thread:
+                    // CPU usage < 100%
+                    // disk usage < 70%
+                    // available ram > 75%
+                    if (disk != null && usage < 100 && disk.NextValue() < 70 && ram.NextValue() > ((int)ram.CounterType - (int)ram.CounterType * 75 / 100))
                         underload++;
                     else
                         underload = 0;
                     if (underload > 8)
                     {
                         underload = -1;
-                        if (workersUpDown.Value + 1 <= workersUpDown.Maximum && encode.Segments_left > 0 && workersUpDown.Value < Environment.ProcessorCount * 3 / 5)
+                        if (workersUpDown.Value + 1 <= workersUpDown.Maximum && encode.Segments_left > 0 && workersUpDown.Value < Environment.ProcessorCount * 75 / 100)
                             workersUpDown.Value++;
                     }
                 }
