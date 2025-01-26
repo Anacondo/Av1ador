@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -13,7 +14,7 @@ using System.Windows.Forms;
 using Av1ador.Properties;
 
 namespace Av1ador
-{
+{ 
     public partial class Form1 : Form
     {
         [DllImport("user32.dll")]
@@ -25,7 +26,7 @@ namespace Av1ador
         [DllImport("user32.dll")]
         static extern bool GetCursorPos(ref Point point);
 
-        private readonly string title = "Av1ador 1.5.1";
+        private readonly string title = GetInfoVersion();
         private readonly Regex formatos = new Regex(".+(mkv|mp4|avi|webm|ivf|m2ts|wmv|mpg|mov|3gp|ts|mpeg|y4m|vob|m2v|m4v|flv|asf|png)$", RegexOptions.IgnoreCase);
         private Player mpv;
         private Video primer_video, segundo_video;
@@ -48,6 +49,13 @@ namespace Av1ador
         private int hover_before = -1;
 
         public static bool Dialogo { get; set; }
+
+        public static string GetInfoVersion()
+        {
+            string appName = Assembly.GetExecutingAssembly().GetName().Name;
+            string appVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+            return appName + " " + appVersion;
+        }
 
         public Form1()
         {
