@@ -1056,6 +1056,7 @@
             this.workersgroupBox.TabIndex = 4;
             this.workersgroupBox.TabStop = false;
             this.workersgroupBox.Text = "Threads (auto)";
+            this.workersgroupBox.Paint += new System.Windows.Forms.PaintEventHandler(this.WorkersgroupBox_Paint);
             // 
             // tableLayoutPanel20
             // 
