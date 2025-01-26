@@ -184,7 +184,7 @@ namespace Av1ador
                 Job = j[1];
                 Presets = new string[] { "0 (slowest)", "1", "2", "3", "*4", "5", "6", "7", "8", "9", "10", "11", "12 (fastest)" };
                 speed_str = "-preset ";
-                Params = " -svtav1-params tune=3:keyint=240:enable-qm=1:qm-min=0:qm-max=15:aq-mode=2:enable-dlf=2:enable-restoration=0:enable-tf=2:enable-cdef=0:sharpness=3:enable-variance-boost=1:variance-boost-strength=3:variance-octile=4:qp-scale-compress-strength=3:adaptive-film-grain=1:film-grain=!gs!:noise-norm-strength=1"; //:psy-rd=0.5";
+                Params = " -svtav1-params tune=0:keyint=240:enable-qm=1:qm-min=0:qm-max=15:aq-mode=2:enable-dlf=2:enable-overlays=0:enable-restoration=0:enable-tf=0:enable-cdef=0:sharpness=3:enable-variance-boost=1:variance-boost-strength=3:variance-octile=4:qp-scale-compress-strength=3:adaptive-film-grain=1:film-grain=!gs!:noise-norm-strength=1"; //:psy-rd=1.0";
                 Color = " -color_primaries 1 -color_trc 1 -colorspace 1";
                 Gs = 50;
                 Rate = 0.85;
@@ -432,8 +432,10 @@ namespace Av1ador
                 if (v == "True")
                     Vf.Insert(0, "nnedi='weights=" + resdir + "nnedi3_weights.bin:field=a'");
             }
-            else if (f == "Resize to 1080p")
-                Vf.Add("zscale=w=1920:h=-1:f=spline36");
+            else if (f == "Resize to 1080p (zscale spline36)")
+                Vf.Add("zscale=w=1920:h=-2:f=spline36");
+            else if (f == "Resize to 1080p (libplacebo mitchell)")
+                Vf.Add("libplacebo=w=1920:h=-2:force_original_aspect_ratio=decrease:normalize_sar=true:downscaler=mitchell");
             else if (f == "Light denoise")
                 Vf.Add("removegrain=1:0:0,noise=c0s=1:c0f=t");
             else if (f == "Strong denoise")
@@ -493,12 +495,7 @@ namespace Av1ador
 
             if (f == "normalize")
                 Af.Add("loudnorm=I=-16:TP=-1.5:LRA=11:measured_I=-27.61:measured_LRA=18.06:measured_TP=-4.47:measured_thresh=-39.20:offset=0.58:linear=true:print_format=summary");
-            /*if (f == "adelay")
-            {
-                Af.RemoveAll(s => s.StartsWith("adelay"));
-                if (double.Parse(v) > 0)
-                    Af.Add("adelay=" + v + ":all=true");
-            }*/
+
             if (f == "noisereduction")
                 Af.Add("arnndn=m='" + resdir + "std.rnnn':mix=0.65,afftdn=nr=3:nf=-20");
         }
@@ -753,7 +750,7 @@ namespace Av1ador
             Settings settings = (Settings)reader.Deserialize(file);
             file.Close();
             if (settings.Delete_temp_files == 0)
-                settings.Delete_temp_files = 15;
+                settings.Delete_temp_files = 5; // keep segments and audio by default
             return settings;
         }
 

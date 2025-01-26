@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -13,7 +14,7 @@ using System.Windows.Forms;
 using Av1ador.Properties;
 
 namespace Av1ador
-{
+{ 
     public partial class Form1 : Form
     {
         [DllImport("user32.dll")]
@@ -25,7 +26,7 @@ namespace Av1ador
         [DllImport("user32.dll")]
         static extern bool GetCursorPos(ref Point point);
 
-        private readonly string title = "Av1ador 1.5.0";
+        private readonly string title = GetInfoVersion();
         private readonly Regex formatos = new Regex(".+(mkv|mp4|avi|webm|ivf|m2ts|wmv|mpg|mov|3gp|ts|mpeg|y4m|vob|m2v|m4v|flv|asf|png)$", RegexOptions.IgnoreCase);
         private Player mpv;
         private Video primer_video, segundo_video;
@@ -42,15 +43,19 @@ namespace Av1ador
         private PerformanceCounter ram;
         private string[] disks;
         Settings settings;
-        private FormWindowState winstate;
-        private Size winsize;
-        private Point winpos;
         private readonly BackgroundWorker aset = new BackgroundWorker();
         private Color heat = Color.FromArgb(220, 220, 220);
         private string[] clipboard = new string[] { "", "" };
         private int hover_before = -1;
 
         public static bool Dialogo { get; set; }
+
+        public static string GetInfoVersion()
+        {
+            string appName = Assembly.GetExecutingAssembly().GetName().Name;
+            string appVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+            return appName + " " + appVersion;
+        }
 
         public Form1()
         {
@@ -436,7 +441,7 @@ namespace Av1ador
             {
                 settings = new Settings
                 {
-                    Delete_temp_files = 15,
+                    Delete_temp_files = 5,
                     CustomVf = new List<string>(),
                     CustomAf = new List<string>()
                 };
@@ -695,44 +700,6 @@ namespace Av1ador
         private void ToolStrip1_MouseEnter(object sender, EventArgs e)
         {
             toolStrip1.Focus();
-        }
-
-        private void ExpandButton_Click(object sender, EventArgs e)
-        {
-            winstate = WindowState;
-            FormBorderStyle = FormBorderStyle.None;
-            WindowState = FormWindowState.Normal;
-            winsize = Size;
-            winpos = Location;
-            Location = new Point(Screen.FromControl(this).WorkingArea.Left, Screen.FromControl(this).WorkingArea.Top);
-            Size = new Size(Screen.FromControl(this).Bounds.Width, Screen.FromControl(this).Bounds.Height);
-            tableLayoutPanel1.RowStyles[2].Height = 16;
-            tableLayoutPanel1.RowStyles[3].Height = 0;
-            tableLayoutPanel4.RowStyles[0].Height = 24;
-            syncButton.DisplayStyle = prevframeButton.DisplayStyle = playButton.DisplayStyle = pauseButton.DisplayStyle = nextframeButton.DisplayStyle = grainButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            audiomuteButton.DisplayStyle = audiounmuteButton.DisplayStyle = expandButton.DisplayStyle = restoreButton.DisplayStyle = zoomButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            restoreButton.Visible = true;
-            expandButton.Visible = false;
-            splitContainer2.Panel1Collapsed = true;
-            panel1.Height = 12;
-            UpdateLayout(true);
-        }
-
-        private void RestoreButton_Click(object sender, EventArgs e)
-        {
-            FormBorderStyle = FormBorderStyle.Sizable;
-            WindowState = winstate;
-            Size = winsize;
-            Location = winpos;
-            tableLayoutPanel1.RowStyles[2].Height = 24;
-            tableLayoutPanel1.RowStyles[3].Height = 24;
-            tableLayoutPanel4.RowStyles[0].Height = 38;
-            syncButton.DisplayStyle = prevframeButton.DisplayStyle = playButton.DisplayStyle = pauseButton.DisplayStyle = nextframeButton.DisplayStyle = grainButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-            audiomuteButton.DisplayStyle = audiounmuteButton.DisplayStyle = expandButton.DisplayStyle = restoreButton.DisplayStyle = zoomButton.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-            restoreButton.Visible = false;
-            expandButton.Visible = true;
-            splitContainer2.Panel1Collapsed = false;
-            UpdateLayout(true);
         }
 
         private void AudiounmuteButton_Click(object sender, EventArgs e)
@@ -1078,7 +1045,8 @@ namespace Av1ador
             gsgroupBox.Enabled = encoder.Gs > 0;
             gsUpDown.Maximum = encoder.Gs;
             workersUpDown.Maximum = encoder.Cv.Contains("nvenc") ? 2 : encoder.Cores;
-            workersUpDown.Value = workersUpDown.Maximum > 2 ? (workersBox.Checked ? (workersUpDown.Value <= workersUpDown.Maximum ? workersUpDown.Value : workersUpDown.Maximum) : 4) : 1;
+            // calculation for the default number of threads based on processor cores
+            workersUpDown.Value = workersUpDown.Maximum > 2 ? (workersBox.Checked ? (workersUpDown.Value <= workersUpDown.Maximum ? workersUpDown.Value : workersUpDown.Maximum) : 4 ) : 1;
             encoder.Predicted = false;
             grainButton.Enabled = cvComboBox.Text.Contains("AV1") && segundo_video != null;
             Entry_update(4);
@@ -1273,6 +1241,12 @@ namespace Av1ador
             thread.Start();
             heat = Func.Heat(0);
             workersgroupBox.Refresh();
+
+            /*
+            string size_estimation_file = encode.Name + "\\size_estimation.log";
+            if (System.IO.File.Exists(size_estimation_file))
+                System.IO.File.Delete(size_estimation_file);
+            */
         }
 
         private void Abitrate_update(bool calc)
@@ -1371,13 +1345,13 @@ namespace Av1ador
                     delay = primer_video.Tracks_delay[checkedListBox1.CheckedIndices[0]];
                 }
                 double to = primer_video.EndTime != primer_video.Duration ? primer_video.EndTime : primer_video.Duration + 1;
-                encode.Start_encode(folderBrowserDialog1.SelectedPath, primer_video, checkedListBox1.CheckedItems.Count > 0, audioPassThruCheckBox.Checked, delay, encoder.V_kbps, encoder.Out_spd, encodelistButton.Checked);
+                encode.Start_encode(folderBrowserDialog1.SelectedPath, primer_video, checkedListBox1.CheckedItems.Count > 0, audioPassThruCheckBox.Checked, delay, encoder.V_kbps, encoder.Out_spd);
                 listBox1.Refresh();
             }
             else if (encodestopButton.Enabled && encode.Finished)
             {
                 Entry.Set_status(listBox1, encode.File, encode.Elapsed, false, false, true);
-                if (!encodelistButton.Checked || !Next(listBox1, Entry.Index(primer_video.File, listBox1)))
+                if (!Next(listBox1, Entry.Index(primer_video.File, listBox1)))
                 {
                     encodestopButton.Enabled = false;
                     encodestartButton.Enabled = true;
@@ -1396,13 +1370,18 @@ namespace Av1ador
                     }
                 }
                 if (!workersUpDown.Enabled && workersUpDown.Value > 1)
-                    workersUpDown.Value = 2;
+                    if( !workersBox.Checked )
+                        workersUpDown.Value = 4;
             }
             else if (!encodestopButton.Enabled)
             {
                 encode.Can_run = false;
                 if (statusLabel.Text.Contains("Encoding"))
+                {
                     listBox1.Refresh();
+                    if (!workersBox.Checked)
+                        workersUpDown.Value = 4;
+                }
                 if (!statusLabel.Text.Contains("grain"))
                     statusLabel.Text = "";
                 estimatedLabel.Text = "";
@@ -1423,16 +1402,22 @@ namespace Av1ador
                     heat = Func.Heat((int)usage);
                     workersgroupBox.Refresh();
                 }
+
+                // calculation for available system resources and whether we should span a new encoding ffmpeg thread or not
                 if (!workersBox.Checked && workersUpDown.Maximum > 1 && encode.Counter == 0)
                 {
-                    if (disk != null && usage < 90 && disk.NextValue() < 70 && ram.NextValue() > primer_video.Height)
+                    // conditions to spawn new thread:
+                    // CPU usage < 100%
+                    // disk usage < 70%
+                    // available ram > 75%
+                    if (disk != null && usage < 100 && disk.NextValue() < 70 && ram.NextValue() > ((int)ram.CounterType - (int)ram.CounterType * 75 / 100))
                         underload++;
                     else
                         underload = 0;
                     if (underload > 8)
                     {
                         underload = -1;
-                        if (workersUpDown.Value + 1 <= workersUpDown.Maximum && encode.Segments_left > 0 && workersUpDown.Value < Environment.ProcessorCount * 3 / 5)
+                        if (workersUpDown.Value + 1 <= workersUpDown.Maximum && encode.Segments_left > 0 && workersUpDown.Value < Environment.ProcessorCount * 75 / 100)
                             workersUpDown.Value++;
                     }
                 }
@@ -1725,7 +1710,7 @@ namespace Av1ador
         private void ResizeStripMenuItem_Click(object sender, EventArgs e)
         {
             if (primer_video != null)
-                encoder.Vf_add("zscale=w=1920:h=-1:f=spline36");
+                encoder.Vf_add("zscale=w=1920:h=-2:f=spline36");
             Filter_items_update(true);
         }
 
@@ -2219,10 +2204,6 @@ namespace Av1ador
             offButton.Checked = exitMenuItem.Checked || shutdownMenuItem.Checked;
         }
 
-        private void encodelistButton_Click(object sender, EventArgs e)
-        {
-        }
-
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
@@ -2272,12 +2253,7 @@ namespace Av1ador
 
         }
 
-        private void label7_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void audioPassThruCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void AudioPassThruCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if( audioPassThruCheckBox.CheckState == CheckState.Checked)
             {
@@ -2304,7 +2280,7 @@ namespace Av1ador
 
         }
 
-        private void workersBox_CheckedChanged_1(object sender, EventArgs e)
+        private void WorkersBox_CheckedChanged(object sender, EventArgs e)
         {
             workersgroupBox.Text = workersBox.Checked ? "Threads" : "Threads (auto)";
             workersUpDown.Enabled = workersBox.Checked;
@@ -2351,6 +2327,7 @@ namespace Av1ador
 
         private void GsUpDown_ValueChanged(object sender, EventArgs e)
         {
+            gsUpDown.Value = (int)gsUpDown.Value;
             encoder.Gs_level = (int)gsUpDown.Value;
             paramsBox.Text = Func.Replace_gs(paramsBox.Text, (int)gsUpDown.Value);
             Entry_update(2);

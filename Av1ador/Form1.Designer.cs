@@ -57,7 +57,6 @@
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.origfolderButton = new System.Windows.Forms.ToolStripButton();
             this.outfolderButton = new System.Windows.Forms.ToolStripButton();
-            this.encodelistButton = new System.Windows.Forms.ToolStripButton();
             this.deltempButton = new System.Windows.Forms.ToolStripButton();
             this.offButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
@@ -85,6 +84,14 @@
             this.betterLabel = new System.Windows.Forms.Label();
             this.tableLayoutPanel19 = new System.Windows.Forms.TableLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
+            this.workersgroupBox = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel20 = new System.Windows.Forms.TableLayoutPanel();
+            this.workersBox = new System.Windows.Forms.CheckBox();
+            this.workersUpDown = new System.Windows.Forms.NumericUpDown();
+            this.gsgroupBox = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
+            this.gsUpDown = new System.Windows.Forms.NumericUpDown();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
@@ -95,14 +102,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.abitrateBox = new System.Windows.Forms.TextBox();
             this.trackBar2 = new System.Windows.Forms.TrackBar();
-            this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
-            this.workersgroupBox = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel20 = new System.Windows.Forms.TableLayoutPanel();
-            this.workersBox = new System.Windows.Forms.CheckBox();
-            this.workersUpDown = new System.Windows.Forms.NumericUpDown();
-            this.gsgroupBox = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
-            this.gsUpDown = new System.Windows.Forms.NumericUpDown();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.paramsBox = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
@@ -120,7 +119,8 @@
             this.removeBlackBarsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.denoiseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.strongDenoiseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resizeZscaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resizePlaceboToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tonemapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openclToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vulkanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -159,8 +159,6 @@
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.grainButton = new System.Windows.Forms.ToolStripButton();
             this.zoomButton = new System.Windows.Forms.ToolStripButton();
-            this.expandButton = new System.Windows.Forms.ToolStripButton();
-            this.restoreButton = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
             this.playtimeLabel = new System.Windows.Forms.Label();
             this.mediainfoLabel = new System.Windows.Forms.Label();
@@ -260,12 +258,6 @@
             this.tableLayoutPanel13.SuspendLayout();
             this.betterworsePanel.SuspendLayout();
             this.tableLayoutPanel19.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.tableLayoutPanel14.SuspendLayout();
-            this.tableLayoutPanel15.SuspendLayout();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             this.tableLayoutPanel16.SuspendLayout();
             this.workersgroupBox.SuspendLayout();
             this.tableLayoutPanel20.SuspendLayout();
@@ -273,6 +265,12 @@
             this.gsgroupBox.SuspendLayout();
             this.tableLayoutPanel17.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gsUpDown)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel14.SuspendLayout();
+            this.tableLayoutPanel15.SuspendLayout();
+            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             this.tabPage5.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tableLayoutPanel21.SuspendLayout();
@@ -313,8 +311,8 @@
             this.tableLayoutPanel1.RowCount = 4;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1264, 909);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
@@ -338,7 +336,7 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.tableLayoutPanel4);
             this.splitContainer2.Panel2MinSize = 500;
-            this.splitContainer2.Size = new System.Drawing.Size(1264, 861);
+            this.splitContainer2.Size = new System.Drawing.Size(1264, 853);
             this.splitContainer2.SplitterDistance = 289;
             this.splitContainer2.TabIndex = 3;
             this.splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.SplitContainer2_SplitterMoved);
@@ -357,7 +355,7 @@
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(289, 861);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(289, 853);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
             // toolStrip1
@@ -378,7 +376,7 @@
             this.toolStripButton2,
             this.toolStripSeparator6});
             this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.toolStrip1.Location = new System.Drawing.Point(0, 825);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 817);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(289, 36);
             this.toolStrip1.TabIndex = 0;
@@ -511,7 +509,7 @@
             this.tabControl1.Multiline = true;
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(289, 825);
+            this.tabControl1.Size = new System.Drawing.Size(289, 817);
             this.tabControl1.TabIndex = 1;
             this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabControl1_Selecting);
             // 
@@ -522,7 +520,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(281, 799);
+            this.tabPage1.Size = new System.Drawing.Size(281, 791);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Queue";
             // 
@@ -540,8 +538,8 @@
             this.tableLayoutPanel5.RowCount = 3;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 290F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(281, 799);
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 330F));
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(281, 791);
             this.tableLayoutPanel5.TabIndex = 0;
             // 
             // toolStrip3
@@ -557,7 +555,6 @@
             this.toolStripSeparator7,
             this.origfolderButton,
             this.outfolderButton,
-            this.encodelistButton,
             this.deltempButton,
             this.offButton,
             this.toolStripSeparator15,
@@ -565,7 +562,7 @@
             this.pastetoolStripButton});
             this.toolStrip3.Location = new System.Drawing.Point(0, 0);
             this.toolStrip3.Name = "toolStrip3";
-            this.toolStrip3.Size = new System.Drawing.Size(281, 24);
+            this.toolStrip3.Size = new System.Drawing.Size(282, 24);
             this.toolStrip3.TabIndex = 0;
             this.toolStrip3.Text = "toolStrip3";
             this.toolStrip3.MouseEnter += new System.EventHandler(this.ToolStrip3_MouseEnter);
@@ -651,20 +648,6 @@
             this.outfolderButton.ToolTipText = "Select output folder";
             this.outfolderButton.Click += new System.EventHandler(this.OutfolderButton_Click);
             // 
-            // encodelistButton
-            // 
-            this.encodelistButton.Checked = true;
-            this.encodelistButton.CheckOnClick = true;
-            this.encodelistButton.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.encodelistButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.encodelistButton.Image = global::Av1ador.Properties.Resources.DebugHistorySeekToFrame2;
-            this.encodelistButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.encodelistButton.Name = "encodelistButton";
-            this.encodelistButton.Size = new System.Drawing.Size(23, 21);
-            this.encodelistButton.Text = "Encode list";
-            this.encodelistButton.ToolTipText = "Encode entire list";
-            this.encodelistButton.Click += new System.EventHandler(this.encodelistButton_Click);
-            // 
             // deltempButton
             // 
             this.deltempButton.Checked = true;
@@ -727,7 +710,7 @@
             this.listBox1.Margin = new System.Windows.Forms.Padding(0);
             this.listBox1.Name = "listBox1";
             this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBox1.Size = new System.Drawing.Size(281, 485);
+            this.listBox1.Size = new System.Drawing.Size(282, 437);
             this.listBox1.TabIndex = 1;
             this.listBox1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ListBox1_DrawItem);
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
@@ -743,11 +726,11 @@
             this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl2.ItemSize = new System.Drawing.Size(54, 18);
-            this.tabControl2.Location = new System.Drawing.Point(0, 509);
+            this.tabControl2.Location = new System.Drawing.Point(0, 461);
             this.tabControl2.Margin = new System.Windows.Forms.Padding(0);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(281, 290);
+            this.tabControl2.Size = new System.Drawing.Size(282, 330);
             this.tabControl2.TabIndex = 2;
             // 
             // tabPage3
@@ -757,37 +740,37 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(273, 264);
+            this.tabPage3.Size = new System.Drawing.Size(274, 304);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "Settings";
             // 
             // tableLayoutPanel10
             // 
+            this.tableLayoutPanel10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.tableLayoutPanel10.ColumnCount = 1;
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel10.Controls.Add(this.groupBox1, 0, 0);
-            this.tableLayoutPanel10.Controls.Add(this.groupBox2, 0, 1);
             this.tableLayoutPanel10.Controls.Add(this.tableLayoutPanel16, 0, 2);
-            this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel10.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel10.Controls.Add(this.groupBox2, 0, 1);
+            this.tableLayoutPanel10.Location = new System.Drawing.Point(1, 10);
             this.tableLayoutPanel10.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel10.Name = "tableLayoutPanel10";
             this.tableLayoutPanel10.RowCount = 3;
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel10.Size = new System.Drawing.Size(273, 264);
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(273, 294);
             this.tableLayoutPanel10.TabIndex = 0;
             // 
             // groupBox1
             // 
+            this.groupBox1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox1.Controls.Add(this.tableLayoutPanel11);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(273, 124);
+            this.groupBox1.Size = new System.Drawing.Size(273, 123);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Video Options";
@@ -813,7 +796,7 @@
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel11.Size = new System.Drawing.Size(267, 103);
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(267, 102);
             this.tableLayoutPanel11.TabIndex = 0;
             // 
             // trackBar1
@@ -882,7 +865,7 @@
             this.tableLayoutPanel12.RowCount = 2;
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(140, 53);
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(140, 52);
             this.tableLayoutPanel12.TabIndex = 4;
             // 
             // label3
@@ -906,7 +889,7 @@
             this.label4.Location = new System.Drawing.Point(0, 26);
             this.label4.Margin = new System.Windows.Forms.Padding(0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(70, 27);
+            this.label4.Size = new System.Drawing.Size(70, 26);
             this.label4.TabIndex = 1;
             this.label4.Text = "Bitrate:";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -952,7 +935,7 @@
             this.tableLayoutPanel13.RowCount = 2;
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel13.Size = new System.Drawing.Size(50, 53);
+            this.tableLayoutPanel13.Size = new System.Drawing.Size(50, 52);
             this.tableLayoutPanel13.TabIndex = 5;
             // 
             // label5
@@ -976,7 +959,7 @@
             this.label6.Location = new System.Drawing.Point(0, 26);
             this.label6.Margin = new System.Windows.Forms.Padding(0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(50, 27);
+            this.label6.Size = new System.Drawing.Size(50, 26);
             this.label6.TabIndex = 1;
             this.label6.Text = "Kbps";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1026,7 +1009,7 @@
             this.tableLayoutPanel19.RowCount = 2;
             this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel19.Size = new System.Drawing.Size(70, 53);
+            this.tableLayoutPanel19.Size = new System.Drawing.Size(70, 52);
             this.tableLayoutPanel19.TabIndex = 7;
             // 
             // label2
@@ -1042,17 +1025,144 @@
             this.label2.Text = "Target size";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // tableLayoutPanel16
+            // 
+            this.tableLayoutPanel16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tableLayoutPanel16.ColumnCount = 2;
+            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54.09836F));
+            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45.90164F));
+            this.tableLayoutPanel16.Controls.Add(this.workersgroupBox, 1, 0);
+            this.tableLayoutPanel16.Controls.Add(this.gsgroupBox, 0, 0);
+            this.tableLayoutPanel16.Location = new System.Drawing.Point(0, 226);
+            this.tableLayoutPanel16.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel16.Name = "tableLayoutPanel16";
+            this.tableLayoutPanel16.RowCount = 1;
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel16.Size = new System.Drawing.Size(273, 70);
+            this.tableLayoutPanel16.TabIndex = 2;
+            this.tableLayoutPanel16.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel16_Paint);
+            // 
+            // workersgroupBox
+            // 
+            this.workersgroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.workersgroupBox.Controls.Add(this.tableLayoutPanel20);
+            this.workersgroupBox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.workersgroupBox.Location = new System.Drawing.Point(156, 0);
+            this.workersgroupBox.Margin = new System.Windows.Forms.Padding(0);
+            this.workersgroupBox.MinimumSize = new System.Drawing.Size(0, 40);
+            this.workersgroupBox.Name = "workersgroupBox";
+            this.workersgroupBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.workersgroupBox.Size = new System.Drawing.Size(117, 65);
+            this.workersgroupBox.TabIndex = 4;
+            this.workersgroupBox.TabStop = false;
+            this.workersgroupBox.Text = "Threads (auto)";
+            // 
+            // tableLayoutPanel20
+            // 
+            this.tableLayoutPanel20.ColumnCount = 2;
+            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel20.Controls.Add(this.workersBox, 0, 0);
+            this.tableLayoutPanel20.Controls.Add(this.workersUpDown, 1, 0);
+            this.tableLayoutPanel20.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel20.Location = new System.Drawing.Point(3, 18);
+            this.tableLayoutPanel20.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel20.Name = "tableLayoutPanel20";
+            this.tableLayoutPanel20.RowCount = 1;
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel20.Size = new System.Drawing.Size(111, 44);
+            this.tableLayoutPanel20.TabIndex = 0;
+            // 
+            // workersBox
+            // 
+            this.workersBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.workersBox.AutoSize = true;
+            this.workersBox.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.workersBox.Location = new System.Drawing.Point(20, 15);
+            this.workersBox.Name = "workersBox";
+            this.workersBox.Size = new System.Drawing.Size(15, 14);
+            this.workersBox.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.workersBox, "Select number of threads");
+            this.workersBox.UseVisualStyleBackColor = true;
+            this.workersBox.CheckedChanged += new System.EventHandler(this.WorkersBox_CheckedChanged);
+            // 
+            // workersUpDown
+            // 
+            this.workersUpDown.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.workersUpDown.Enabled = false;
+            this.workersUpDown.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.workersUpDown.Location = new System.Drawing.Point(64, 11);
+            this.workersUpDown.Margin = new System.Windows.Forms.Padding(0);
+            this.workersUpDown.MaximumSize = new System.Drawing.Size(40, 0);
+            this.workersUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.workersUpDown.Name = "workersUpDown";
+            this.workersUpDown.Size = new System.Drawing.Size(37, 22);
+            this.workersUpDown.TabIndex = 0;
+            this.workersUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.workersUpDown.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.workersUpDown.ValueChanged += new System.EventHandler(this.WorkersUpDown_ValueChanged);
+            // 
+            // gsgroupBox
+            // 
+            this.gsgroupBox.AutoSize = true;
+            this.gsgroupBox.Controls.Add(this.tableLayoutPanel17);
+            this.gsgroupBox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gsgroupBox.Location = new System.Drawing.Point(0, 0);
+            this.gsgroupBox.Margin = new System.Windows.Forms.Padding(0);
+            this.gsgroupBox.MinimumSize = new System.Drawing.Size(0, 40);
+            this.gsgroupBox.Name = "gsgroupBox";
+            this.gsgroupBox.Size = new System.Drawing.Size(134, 70);
+            this.gsgroupBox.TabIndex = 2;
+            this.gsgroupBox.TabStop = false;
+            this.gsgroupBox.Text = "Grain synthesis";
+            this.gsgroupBox.Enter += new System.EventHandler(this.gsgroupBox_Enter);
+            // 
+            // tableLayoutPanel17
+            // 
+            this.tableLayoutPanel17.ColumnCount = 1;
+            this.tableLayoutPanel17.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel17.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel17.Controls.Add(this.gsUpDown, 0, 0);
+            this.tableLayoutPanel17.Location = new System.Drawing.Point(6, 18);
+            this.tableLayoutPanel17.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel17.Name = "tableLayoutPanel17";
+            this.tableLayoutPanel17.RowCount = 1;
+            this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel17.Size = new System.Drawing.Size(125, 44);
+            this.tableLayoutPanel17.TabIndex = 0;
+            this.tableLayoutPanel17.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel17_Paint);
+            // 
+            // gsUpDown
+            // 
+            this.gsUpDown.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.gsUpDown.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.gsUpDown.Location = new System.Drawing.Point(40, 11);
+            this.gsUpDown.Margin = new System.Windows.Forms.Padding(0);
+            this.gsUpDown.MaximumSize = new System.Drawing.Size(45, 0);
+            this.gsUpDown.Name = "gsUpDown";
+            this.gsUpDown.Size = new System.Drawing.Size(45, 22);
+            this.gsUpDown.TabIndex = 3;
+            this.gsUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.gsUpDown.ValueChanged += new System.EventHandler(this.GsUpDown_ValueChanged);
+            // 
             // groupBox2
             // 
-            this.groupBox2.AutoSize = true;
+            this.groupBox2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.groupBox2.Controls.Add(this.tableLayoutPanel2);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(0, 124);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(0);
+            this.groupBox2.Location = new System.Drawing.Point(0, 126);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.groupBox2.MinimumSize = new System.Drawing.Size(0, 75);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(273, 75);
+            this.groupBox2.Size = new System.Drawing.Size(273, 100);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Audio Options";
@@ -1070,20 +1180,19 @@
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 54F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(267, 54);
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 79F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(267, 79);
             this.tableLayoutPanel2.TabIndex = 0;
             this.tableLayoutPanel2.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel2_Paint);
             // 
             // label1
             // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label1.AutoSize = true;
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.label1.Location = new System.Drawing.Point(0, 20);
+            this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Margin = new System.Windows.Forms.Padding(0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(76, 13);
+            this.label1.Size = new System.Drawing.Size(76, 30);
             this.label1.TabIndex = 4;
             this.label1.Text = "Target bitrate";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1092,7 +1201,6 @@
             // 
             this.tableLayoutPanel14.ColumnCount = 1;
             this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel14.Controls.Add(this.tableLayoutPanel15, 0, 1);
             this.tableLayoutPanel14.Controls.Add(this.trackBar2, 0, 0);
             this.tableLayoutPanel14.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1100,9 +1208,9 @@
             this.tableLayoutPanel14.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel14.Name = "tableLayoutPanel14";
             this.tableLayoutPanel14.RowCount = 2;
-            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel14.Size = new System.Drawing.Size(191, 54);
+            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45F));
+            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 55F));
+            this.tableLayoutPanel14.Size = new System.Drawing.Size(191, 79);
             this.tableLayoutPanel14.TabIndex = 5;
             // 
             // tableLayoutPanel15
@@ -1114,7 +1222,7 @@
             this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.89362F));
             this.tableLayoutPanel15.Controls.Add(this.audioPassThruCheckBox, 0, 0);
             this.tableLayoutPanel15.Controls.Add(this.panel2, 1, 0);
-            this.tableLayoutPanel15.Location = new System.Drawing.Point(5, 27);
+            this.tableLayoutPanel15.Location = new System.Drawing.Point(5, 43);
             this.tableLayoutPanel15.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel15.Name = "tableLayoutPanel15";
             this.tableLayoutPanel15.RowCount = 1;
@@ -1134,7 +1242,7 @@
             this.audioPassThruCheckBox.Text = "Passthru";
             this.toolTip1.SetToolTip(this.audioPassThruCheckBox, "Copy original audio stream (without compression)");
             this.audioPassThruCheckBox.UseVisualStyleBackColor = true;
-            this.audioPassThruCheckBox.CheckedChanged += new System.EventHandler(this.audioPassThruCheckBox_CheckedChanged);
+            this.audioPassThruCheckBox.CheckedChanged += new System.EventHandler(this.AudioPassThruCheckBox_CheckedChanged);
             // 
             // panel2
             // 
@@ -1176,145 +1284,18 @@
             // 
             // trackBar2
             // 
-            this.trackBar2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trackBar2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.trackBar2.LargeChange = 8;
             this.trackBar2.Location = new System.Drawing.Point(3, 3);
             this.trackBar2.Maximum = 320;
             this.trackBar2.Minimum = 16;
             this.trackBar2.Name = "trackBar2";
-            this.trackBar2.Size = new System.Drawing.Size(185, 21);
+            this.trackBar2.Size = new System.Drawing.Size(185, 29);
             this.trackBar2.TabIndex = 1;
             this.trackBar2.TickFrequency = 16;
             this.trackBar2.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBar2.Value = 192;
             this.trackBar2.Scroll += new System.EventHandler(this.TrackBar2_Scroll);
-            // 
-            // tableLayoutPanel16
-            // 
-            this.tableLayoutPanel16.ColumnCount = 2;
-            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54.09836F));
-            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45.90164F));
-            this.tableLayoutPanel16.Controls.Add(this.workersgroupBox, 1, 0);
-            this.tableLayoutPanel16.Controls.Add(this.gsgroupBox, 0, 0);
-            this.tableLayoutPanel16.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel16.Location = new System.Drawing.Point(0, 199);
-            this.tableLayoutPanel16.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel16.Name = "tableLayoutPanel16";
-            this.tableLayoutPanel16.RowCount = 1;
-            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel16.Size = new System.Drawing.Size(273, 65);
-            this.tableLayoutPanel16.TabIndex = 2;
-            this.tableLayoutPanel16.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel16_Paint);
-            // 
-            // workersgroupBox
-            // 
-            this.workersgroupBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.workersgroupBox.Controls.Add(this.tableLayoutPanel20);
-            this.workersgroupBox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.workersgroupBox.Location = new System.Drawing.Point(151, 0);
-            this.workersgroupBox.Margin = new System.Windows.Forms.Padding(0);
-            this.workersgroupBox.MinimumSize = new System.Drawing.Size(0, 40);
-            this.workersgroupBox.Name = "workersgroupBox";
-            this.workersgroupBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.workersgroupBox.Size = new System.Drawing.Size(117, 65);
-            this.workersgroupBox.TabIndex = 4;
-            this.workersgroupBox.TabStop = false;
-            this.workersgroupBox.Text = "Threads (auto)";
-            // 
-            // tableLayoutPanel20
-            // 
-            this.tableLayoutPanel20.ColumnCount = 2;
-            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel20.Controls.Add(this.workersBox, 0, 0);
-            this.tableLayoutPanel20.Controls.Add(this.workersUpDown, 1, 0);
-            this.tableLayoutPanel20.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel20.Location = new System.Drawing.Point(3, 18);
-            this.tableLayoutPanel20.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel20.Name = "tableLayoutPanel20";
-            this.tableLayoutPanel20.RowCount = 1;
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel20.Size = new System.Drawing.Size(111, 44);
-            this.tableLayoutPanel20.TabIndex = 0;
-            // 
-            // workersBox
-            // 
-            this.workersBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.workersBox.AutoSize = true;
-            this.workersBox.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.workersBox.Location = new System.Drawing.Point(20, 15);
-            this.workersBox.Name = "workersBox";
-            this.workersBox.Size = new System.Drawing.Size(15, 14);
-            this.workersBox.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.workersBox, "Select number of threads");
-            this.workersBox.UseVisualStyleBackColor = true;
-            this.workersBox.CheckedChanged += new System.EventHandler(this.workersBox_CheckedChanged_1);
-            // 
-            // workersUpDown
-            // 
-            this.workersUpDown.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.workersUpDown.Enabled = false;
-            this.workersUpDown.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.workersUpDown.Location = new System.Drawing.Point(64, 11);
-            this.workersUpDown.Margin = new System.Windows.Forms.Padding(0);
-            this.workersUpDown.MaximumSize = new System.Drawing.Size(40, 0);
-            this.workersUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.workersUpDown.Name = "workersUpDown";
-            this.workersUpDown.Size = new System.Drawing.Size(37, 22);
-            this.workersUpDown.TabIndex = 0;
-            this.workersUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.workersUpDown.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            // 
-            // gsgroupBox
-            // 
-            this.gsgroupBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.gsgroupBox.Controls.Add(this.tableLayoutPanel17);
-            this.gsgroupBox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gsgroupBox.Location = new System.Drawing.Point(0, 0);
-            this.gsgroupBox.Margin = new System.Windows.Forms.Padding(0);
-            this.gsgroupBox.MinimumSize = new System.Drawing.Size(0, 40);
-            this.gsgroupBox.Name = "gsgroupBox";
-            this.gsgroupBox.Size = new System.Drawing.Size(142, 65);
-            this.gsgroupBox.TabIndex = 2;
-            this.gsgroupBox.TabStop = false;
-            this.gsgroupBox.Text = "Grain synthesis";
-            this.gsgroupBox.Enter += new System.EventHandler(this.gsgroupBox_Enter);
-            // 
-            // tableLayoutPanel17
-            // 
-            this.tableLayoutPanel17.ColumnCount = 1;
-            this.tableLayoutPanel17.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel17.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel17.Controls.Add(this.gsUpDown, 0, 0);
-            this.tableLayoutPanel17.Location = new System.Drawing.Point(6, 18);
-            this.tableLayoutPanel17.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel17.Name = "tableLayoutPanel17";
-            this.tableLayoutPanel17.RowCount = 1;
-            this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel17.Size = new System.Drawing.Size(125, 44);
-            this.tableLayoutPanel17.TabIndex = 0;
-            this.tableLayoutPanel17.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel17_Paint);
-            // 
-            // gsUpDown
-            // 
-            this.gsUpDown.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.gsUpDown.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.gsUpDown.Location = new System.Drawing.Point(40, 11);
-            this.gsUpDown.Margin = new System.Windows.Forms.Padding(0);
-            this.gsUpDown.MaximumSize = new System.Drawing.Size(45, 0);
-            this.gsUpDown.Name = "gsUpDown";
-            this.gsUpDown.Size = new System.Drawing.Size(45, 22);
-            this.gsUpDown.TabIndex = 3;
-            this.gsUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.gsUpDown.ValueChanged += new System.EventHandler(this.GsUpDown_ValueChanged);
             // 
             // tabPage5
             // 
@@ -1322,7 +1303,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(273, 264);
+            this.tabPage5.Size = new System.Drawing.Size(274, 304);
             this.tabPage5.TabIndex = 1;
             this.tabPage5.Text = "Parameters";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -1338,7 +1319,7 @@
             this.paramsBox.Multiline = true;
             this.paramsBox.Name = "paramsBox";
             this.paramsBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.paramsBox.Size = new System.Drawing.Size(273, 264);
+            this.paramsBox.Size = new System.Drawing.Size(274, 304);
             this.paramsBox.TabIndex = 0;
             this.paramsBox.TextChanged += new System.EventHandler(this.ParamsBox_TextChanged);
             // 
@@ -1348,7 +1329,7 @@
             this.tabPage4.Controls.Add(this.tableLayoutPanel21);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(273, 264);
+            this.tabPage4.Size = new System.Drawing.Size(274, 304);
             this.tabPage4.TabIndex = 2;
             this.tabPage4.Text = "Audio";
             // 
@@ -1364,7 +1345,7 @@
             this.tableLayoutPanel21.RowCount = 2;
             this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 90F));
             this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel21.Size = new System.Drawing.Size(273, 264);
+            this.tableLayoutPanel21.Size = new System.Drawing.Size(274, 304);
             this.tableLayoutPanel21.TabIndex = 0;
             // 
             // groupBox3
@@ -1373,7 +1354,7 @@
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(267, 231);
+            this.groupBox3.Size = new System.Drawing.Size(268, 267);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Audio";
@@ -1384,7 +1365,7 @@
             this.checkedListBox1.FormattingEnabled = true;
             this.checkedListBox1.Location = new System.Drawing.Point(3, 18);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(261, 210);
+            this.checkedListBox1.Size = new System.Drawing.Size(262, 246);
             this.checkedListBox1.TabIndex = 0;
             this.checkedListBox1.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox1_ItemCheck);
             this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.checkedListBox1_SelectedIndexChanged);
@@ -1395,7 +1376,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(273, 264);
+            this.tabPage6.Size = new System.Drawing.Size(274, 304);
             this.tabPage6.TabIndex = 3;
             this.tabPage6.Text = "Subtitles";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -1406,7 +1387,7 @@
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Location = new System.Drawing.Point(3, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(267, 258);
+            this.groupBox4.Size = new System.Drawing.Size(268, 298);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Subtitles";
@@ -1418,7 +1399,7 @@
             this.checkedListBox2.FormattingEnabled = true;
             this.checkedListBox2.Location = new System.Drawing.Point(3, 18);
             this.checkedListBox2.Name = "checkedListBox2";
-            this.checkedListBox2.Size = new System.Drawing.Size(261, 237);
+            this.checkedListBox2.Size = new System.Drawing.Size(262, 277);
             this.checkedListBox2.TabIndex = 0;
             this.checkedListBox2.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox2_ItemCheck);
             this.checkedListBox2.SelectedIndexChanged += new System.EventHandler(this.checkedListBox2_SelectedIndexChanged);
@@ -1429,7 +1410,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(281, 799);
+            this.tabPage2.Size = new System.Drawing.Size(281, 791);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Filters";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1449,7 +1430,7 @@
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(281, 799);
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(281, 791);
             this.tableLayoutPanel6.TabIndex = 0;
             // 
             // clTextBox
@@ -1458,7 +1439,7 @@
             this.clTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.clTextBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.clTextBox.ForeColor = System.Drawing.SystemColors.Window;
-            this.clTextBox.Location = new System.Drawing.Point(0, 629);
+            this.clTextBox.Location = new System.Drawing.Point(0, 621);
             this.clTextBox.Margin = new System.Windows.Forms.Padding(0);
             this.clTextBox.Multiline = true;
             this.clTextBox.Name = "clTextBox";
@@ -1498,7 +1479,8 @@
             this.removeBlackBarsToolStripMenuItem,
             this.denoiseToolStripMenuItem,
             this.strongDenoiseToolStripMenuItem,
-            this.resizeToolStripMenuItem,
+            this.resizeZscaleToolStripMenuItem,
+            this.resizePlaceboToolStripMenuItem,
             this.tonemapToolStripMenuItem,
             this.toolStripSeparator16,
             this.savedToolStripMenuItem});
@@ -1512,44 +1494,46 @@
             // 
             // removeBlackBarsToolStripMenuItem
             // 
-            this.removeBlackBarsToolStripMenuItem.AutoSize = false;
             this.removeBlackBarsToolStripMenuItem.Name = "removeBlackBarsToolStripMenuItem";
-            this.removeBlackBarsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.removeBlackBarsToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.removeBlackBarsToolStripMenuItem.Text = "Auto-crop";
             this.removeBlackBarsToolStripMenuItem.Click += new System.EventHandler(this.RemoveBlackBarsToolStripMenuItem_Click);
             // 
             // denoiseToolStripMenuItem
             // 
-            this.denoiseToolStripMenuItem.AutoSize = false;
             this.denoiseToolStripMenuItem.Name = "denoiseToolStripMenuItem";
-            this.denoiseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.denoiseToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.denoiseToolStripMenuItem.Text = "Light denoise";
             this.denoiseToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
             // strongDenoiseToolStripMenuItem
             // 
-            this.strongDenoiseToolStripMenuItem.AutoSize = false;
             this.strongDenoiseToolStripMenuItem.Name = "strongDenoiseToolStripMenuItem";
-            this.strongDenoiseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.strongDenoiseToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.strongDenoiseToolStripMenuItem.Text = "Strong denoise";
             this.strongDenoiseToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
-            // resizeToolStripMenuItem
+            // resizeZscaleToolStripMenuItem
             // 
-            this.resizeToolStripMenuItem.AutoSize = false;
-            this.resizeToolStripMenuItem.Name = "resizeToolStripMenuItem";
-            this.resizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.resizeToolStripMenuItem.Text = "Resize to 1080p";
-            this.resizeToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
+            this.resizeZscaleToolStripMenuItem.Name = "resizeZscaleToolStripMenuItem";
+            this.resizeZscaleToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.resizeZscaleToolStripMenuItem.Text = "Resize to 1080p (zscale spline36)";
+            this.resizeZscaleToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
+            // 
+            // resizePlaceboToolStripMenuItem
+            // 
+            this.resizePlaceboToolStripMenuItem.Name = "resizePlaceboToolStripMenuItem";
+            this.resizePlaceboToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.resizePlaceboToolStripMenuItem.Text = "Resize to 1080p (libplacebo mitchell)";
+            this.resizePlaceboToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
             // tonemapToolStripMenuItem
             // 
-            this.tonemapToolStripMenuItem.AutoSize = false;
             this.tonemapToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openclToolStripMenuItem,
             this.vulkanToolStripMenuItem});
             this.tonemapToolStripMenuItem.Name = "tonemapToolStripMenuItem";
-            this.tonemapToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tonemapToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.tonemapToolStripMenuItem.Text = "Tonemap";
             // 
             // openclToolStripMenuItem
@@ -1572,7 +1556,7 @@
             // 
             this.toolStripSeparator16.AutoSize = false;
             this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(151, 6);
+            this.toolStripSeparator16.Size = new System.Drawing.Size(263, 6);
             // 
             // savedToolStripMenuItem
             // 
@@ -1600,17 +1584,15 @@
             // 
             // downmixToolStripMenuItem
             // 
-            this.downmixToolStripMenuItem.AutoSize = false;
             this.downmixToolStripMenuItem.Name = "downmixToolStripMenuItem";
-            this.downmixToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.downmixToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.downmixToolStripMenuItem.Text = "Downmix to 2.0";
             this.downmixToolStripMenuItem.Click += new System.EventHandler(this.DownmixToolStripMenuItem_Click);
             // 
             // normalizeToolStripMenuItem
             // 
-            this.normalizeToolStripMenuItem.AutoSize = false;
             this.normalizeToolStripMenuItem.Name = "normalizeToolStripMenuItem";
-            this.normalizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.normalizeToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.normalizeToolStripMenuItem.Text = "Loudness normalization";
             this.normalizeToolStripMenuItem.Click += new System.EventHandler(this.NormalizeToolStripMenuItem_Click);
             // 
@@ -1727,7 +1709,7 @@
             this.tableLayoutPanel18.Name = "tableLayoutPanel18";
             this.tableLayoutPanel18.RowCount = 1;
             this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel18.Size = new System.Drawing.Size(281, 605);
+            this.tableLayoutPanel18.Size = new System.Drawing.Size(281, 597);
             this.tableLayoutPanel18.TabIndex = 2;
             // 
             // vfListBox
@@ -1742,7 +1724,7 @@
             this.vfListBox.Margin = new System.Windows.Forms.Padding(0);
             this.vfListBox.Name = "vfListBox";
             this.vfListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.vfListBox.Size = new System.Drawing.Size(140, 605);
+            this.vfListBox.Size = new System.Drawing.Size(140, 597);
             this.vfListBox.TabIndex = 0;
             this.vfListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.VfListBox_DrawItem);
             this.vfListBox.SelectedIndexChanged += new System.EventHandler(this.AfListBox_SelectedIndexChanged);
@@ -1761,7 +1743,7 @@
             this.afListBox.Margin = new System.Windows.Forms.Padding(0);
             this.afListBox.Name = "afListBox";
             this.afListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.afListBox.Size = new System.Drawing.Size(141, 605);
+            this.afListBox.Size = new System.Drawing.Size(141, 597);
             this.afListBox.TabIndex = 1;
             this.afListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.AfListBox_DrawItem);
             this.afListBox.SelectedIndexChanged += new System.EventHandler(this.AfListBox_SelectedIndexChanged);
@@ -1781,7 +1763,7 @@
             this.tableLayoutPanel4.RowCount = 2;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(971, 861);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(971, 853);
             this.tableLayoutPanel4.TabIndex = 1;
             // 
             // tableLayoutPanel7
@@ -1820,12 +1802,10 @@
             this.audiomuteButton,
             this.toolStripSeparator9,
             this.grainButton,
-            this.zoomButton,
-            this.expandButton,
-            this.restoreButton});
-            this.toolStrip2.Location = new System.Drawing.Point(279, 0);
+            this.zoomButton});
+            this.toolStrip2.Location = new System.Drawing.Point(304, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(412, 46);
+            this.toolStrip2.Size = new System.Drawing.Size(362, 46);
             this.toolStrip2.TabIndex = 0;
             this.toolStrip2.Text = "toolStrip2";
             this.toolStrip2.MouseEnter += new System.EventHandler(this.ToolStrip2_MouseEnter);
@@ -1957,30 +1937,6 @@
             this.zoomButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.zoomButton.CheckStateChanged += new System.EventHandler(this.ZoomButton_CheckStateChanged);
             // 
-            // expandButton
-            // 
-            this.expandButton.AutoSize = false;
-            this.expandButton.Image = global::Av1ador.Properties.Resources.ViewLandscape;
-            this.expandButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.expandButton.Name = "expandButton";
-            this.expandButton.Size = new System.Drawing.Size(50, 34);
-            this.expandButton.Text = "Expand";
-            this.expandButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.expandButton.Click += new System.EventHandler(this.ExpandButton_Click);
-            // 
-            // restoreButton
-            // 
-            this.restoreButton.AutoSize = false;
-            this.restoreButton.Image = global::Av1ador.Properties.Resources.ViewFull;
-            this.restoreButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.restoreButton.Name = "restoreButton";
-            this.restoreButton.Size = new System.Drawing.Size(50, 35);
-            this.restoreButton.Text = "Restore";
-            this.restoreButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.restoreButton.ToolTipText = "Restore";
-            this.restoreButton.Visible = false;
-            this.restoreButton.Click += new System.EventHandler(this.RestoreButton_Click);
-            // 
             // tableLayoutPanel8
             // 
             this.tableLayoutPanel8.ColumnCount = 1;
@@ -1996,7 +1952,7 @@
             this.tableLayoutPanel8.RowCount = 2;
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(279, 46);
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(304, 46);
             this.tableLayoutPanel8.TabIndex = 1;
             // 
             // playtimeLabel
@@ -2029,13 +1985,13 @@
             this.tableLayoutPanel9.Controls.Add(this.estimatedLabel, 0, 0);
             this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel9.Font = new System.Drawing.Font("Unispace", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tableLayoutPanel9.Location = new System.Drawing.Point(691, 0);
+            this.tableLayoutPanel9.Location = new System.Drawing.Point(666, 0);
             this.tableLayoutPanel9.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel9.Name = "tableLayoutPanel9";
             this.tableLayoutPanel9.RowCount = 2;
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(280, 46);
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(305, 46);
             this.tableLayoutPanel9.TabIndex = 2;
             this.tableLayoutPanel9.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel9_Paint);
             // 
@@ -2043,7 +1999,7 @@
             // 
             this.statusLabel.AutoSize = true;
             this.statusLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.statusLabel.Location = new System.Drawing.Point(277, 23);
+            this.statusLabel.Location = new System.Drawing.Point(302, 23);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(0, 23);
             this.statusLabel.TabIndex = 0;
@@ -2053,7 +2009,7 @@
             // 
             this.estimatedLabel.AutoSize = true;
             this.estimatedLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.estimatedLabel.Location = new System.Drawing.Point(277, 0);
+            this.estimatedLabel.Location = new System.Drawing.Point(302, 0);
             this.estimatedLabel.Name = "estimatedLabel";
             this.estimatedLabel.Size = new System.Drawing.Size(0, 23);
             this.estimatedLabel.TabIndex = 1;
@@ -2067,7 +2023,7 @@
             this.mpvsPanel.Location = new System.Drawing.Point(0, 46);
             this.mpvsPanel.Margin = new System.Windows.Forms.Padding(0);
             this.mpvsPanel.Name = "mpvsPanel";
-            this.mpvsPanel.Size = new System.Drawing.Size(971, 815);
+            this.mpvsPanel.Size = new System.Drawing.Size(971, 807);
             this.mpvsPanel.TabIndex = 3;
             // 
             // splitterPanel
@@ -2080,7 +2036,7 @@
             this.splitterPanel.Location = new System.Drawing.Point(0, 0);
             this.splitterPanel.Margin = new System.Windows.Forms.Padding(0);
             this.splitterPanel.Name = "splitterPanel";
-            this.splitterPanel.Size = new System.Drawing.Size(404, 815);
+            this.splitterPanel.Size = new System.Drawing.Size(404, 807);
             this.splitterPanel.TabIndex = 0;
             this.splitterPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.SplitterPanel_DragDrop);
             this.splitterPanel.DragOver += new System.Windows.Forms.DragEventHandler(this.SplitterPanel_DragOver);
@@ -2093,7 +2049,7 @@
             this.leftPanel.Location = new System.Drawing.Point(0, 0);
             this.leftPanel.Margin = new System.Windows.Forms.Padding(0);
             this.leftPanel.Name = "leftPanel";
-            this.leftPanel.Size = new System.Drawing.Size(399, 815);
+            this.leftPanel.Size = new System.Drawing.Size(399, 807);
             this.leftPanel.TabIndex = 0;
             this.leftPanel.SizeChanged += new System.EventHandler(this.LeftPanel_SizeChanged);
             this.leftPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.SplitterPanel_DragDrop);
@@ -2108,7 +2064,7 @@
             this.rightPanel.Location = new System.Drawing.Point(375, 0);
             this.rightPanel.Margin = new System.Windows.Forms.Padding(0);
             this.rightPanel.Name = "rightPanel";
-            this.rightPanel.Size = new System.Drawing.Size(596, 815);
+            this.rightPanel.Size = new System.Drawing.Size(596, 807);
             this.rightPanel.TabIndex = 2;
             this.rightPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.SplitterPanel_DragDrop);
             this.rightPanel.DragOver += new System.Windows.Forms.DragEventHandler(this.SplitterPanel_DragOver);
@@ -2139,9 +2095,9 @@
             this.caComboBox,
             this.toolStripLabel11,
             this.chComboBox});
-            this.toolStrip4.Location = new System.Drawing.Point(0, 885);
+            this.toolStrip4.Location = new System.Drawing.Point(0, 884);
             this.toolStrip4.Name = "toolStrip4";
-            this.toolStrip4.Size = new System.Drawing.Size(1264, 24);
+            this.toolStrip4.Size = new System.Drawing.Size(1264, 25);
             this.toolStrip4.TabIndex = 2;
             this.toolStrip4.Text = "toolStrip4";
             // 
@@ -2149,7 +2105,7 @@
             // 
             this.toolStripLabel2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(47, 21);
+            this.toolStripLabel2.Size = new System.Drawing.Size(47, 22);
             this.toolStripLabel2.Text = "Format";
             // 
             // formatComboBox
@@ -2171,13 +2127,13 @@
             // toolStripSeparator11
             // 
             this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(6, 24);
+            this.toolStripSeparator11.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripLabel1
             // 
             this.toolStripLabel1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(39, 21);
+            this.toolStripLabel1.Size = new System.Drawing.Size(39, 22);
             this.toolStripLabel1.Text = "Video";
             // 
             // cvComboBox
@@ -2196,7 +2152,7 @@
             "H264 (nvenc)",
             "MPEG4 (xvid)"});
             this.cvComboBox.Name = "cvComboBox";
-            this.cvComboBox.Size = new System.Drawing.Size(85, 24);
+            this.cvComboBox.Size = new System.Drawing.Size(85, 25);
             this.cvComboBox.DropDown += new System.EventHandler(this.FormatComboBox_DropDown);
             this.cvComboBox.DropDownClosed += new System.EventHandler(this.CvComboBox_DropDownClosed);
             this.cvComboBox.SelectedIndexChanged += new System.EventHandler(this.CvComboBox_DropDownClosed);
@@ -2204,7 +2160,7 @@
             // toolStripLabel6
             // 
             this.toolStripLabel6.Name = "toolStripLabel6";
-            this.toolStripLabel6.Size = new System.Drawing.Size(39, 21);
+            this.toolStripLabel6.Size = new System.Drawing.Size(39, 22);
             this.toolStripLabel6.Text = "Speed";
             // 
             // speedComboBox
@@ -2222,7 +2178,7 @@
             // toolStripLabel3
             // 
             this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(63, 21);
+            this.toolStripLabel3.Size = new System.Drawing.Size(63, 22);
             this.toolStripLabel3.Text = "Resolution";
             // 
             // resComboBox
@@ -2253,7 +2209,7 @@
             // toolStripLabel4
             // 
             this.toolStripLabel4.Name = "toolStripLabel4";
-            this.toolStripLabel4.Size = new System.Drawing.Size(60, 21);
+            this.toolStripLabel4.Size = new System.Drawing.Size(60, 22);
             this.toolStripLabel4.Text = "Framerate";
             // 
             // fpsComboBox
@@ -2275,7 +2231,7 @@
             // toolStripLabel7
             // 
             this.toolStripLabel7.Name = "toolStripLabel7";
-            this.toolStripLabel7.Size = new System.Drawing.Size(31, 21);
+            this.toolStripLabel7.Size = new System.Drawing.Size(31, 22);
             this.toolStripLabel7.Text = "HDR";
             // 
             // hdrComboBox
@@ -2295,7 +2251,7 @@
             // toolStripLabel5
             // 
             this.toolStripLabel5.Name = "toolStripLabel5";
-            this.toolStripLabel5.Size = new System.Drawing.Size(55, 21);
+            this.toolStripLabel5.Size = new System.Drawing.Size(55, 22);
             this.toolStripLabel5.Text = "Bit depth";
             // 
             // bitsComboBox
@@ -2316,13 +2272,13 @@
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(6, 24);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripLabel8
             // 
             this.toolStripLabel8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripLabel8.Name = "toolStripLabel8";
-            this.toolStripLabel8.Size = new System.Drawing.Size(39, 21);
+            this.toolStripLabel8.Size = new System.Drawing.Size(39, 22);
             this.toolStripLabel8.Text = "Audio";
             // 
             // caComboBox
@@ -2344,7 +2300,7 @@
             // toolStripLabel11
             // 
             this.toolStripLabel11.Name = "toolStripLabel11";
-            this.toolStripLabel11.Size = new System.Drawing.Size(56, 21);
+            this.toolStripLabel11.Size = new System.Drawing.Size(56, 22);
             this.toolStripLabel11.Text = "Channels";
             // 
             // chComboBox
@@ -2368,20 +2324,22 @@
             // 
             this.panel1.Controls.Add(this.picBoxBarra);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 861);
+            this.panel1.Location = new System.Drawing.Point(0, 853);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1264, 24);
+            this.panel1.Size = new System.Drawing.Size(1264, 30);
             this.panel1.TabIndex = 4;
             // 
             // picBoxBarra
             // 
+            this.picBoxBarra.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.picBoxBarra.BackColor = System.Drawing.Color.Firebrick;
-            this.picBoxBarra.Dock = System.Windows.Forms.DockStyle.Fill;
             this.picBoxBarra.Location = new System.Drawing.Point(0, 0);
             this.picBoxBarra.Margin = new System.Windows.Forms.Padding(0);
             this.picBoxBarra.Name = "picBoxBarra";
-            this.picBoxBarra.Size = new System.Drawing.Size(1264, 24);
+            this.picBoxBarra.Size = new System.Drawing.Size(1264, 30);
             this.picBoxBarra.TabIndex = 0;
             this.picBoxBarra.TabStop = false;
             this.picBoxBarra.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PicBoxBarra_MouseClick);
@@ -2698,9 +2656,7 @@
             // timestampsMenuItem
             // 
             this.timestampsMenuItem.AutoSize = false;
-            this.timestampsMenuItem.Checked = true;
             this.timestampsMenuItem.CheckOnClick = true;
-            this.timestampsMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.timestampsMenuItem.Name = "timestampsMenuItem";
             this.timestampsMenuItem.Size = new System.Drawing.Size(214, 22);
             this.timestampsMenuItem.Text = "Identified scenes";
@@ -2720,9 +2676,7 @@
             // audioMenuItem
             // 
             this.audioMenuItem.AutoSize = false;
-            this.audioMenuItem.Checked = true;
             this.audioMenuItem.CheckOnClick = true;
-            this.audioMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.audioMenuItem.Name = "audioMenuItem";
             this.audioMenuItem.Size = new System.Drawing.Size(214, 22);
             this.audioMenuItem.Text = "Encoded audio";
@@ -2777,7 +2731,6 @@
             this.tabControl2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tableLayoutPanel10.ResumeLayout(false);
-            this.tableLayoutPanel10.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.tableLayoutPanel11.ResumeLayout(false);
             this.tableLayoutPanel11.PerformLayout();
@@ -2791,17 +2744,8 @@
             this.betterworsePanel.PerformLayout();
             this.tableLayoutPanel19.ResumeLayout(false);
             this.tableLayoutPanel19.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
-            this.tableLayoutPanel14.ResumeLayout(false);
-            this.tableLayoutPanel14.PerformLayout();
-            this.tableLayoutPanel15.ResumeLayout(false);
-            this.tableLayoutPanel15.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
             this.tableLayoutPanel16.ResumeLayout(false);
+            this.tableLayoutPanel16.PerformLayout();
             this.workersgroupBox.ResumeLayout(false);
             this.tableLayoutPanel20.ResumeLayout(false);
             this.tableLayoutPanel20.PerformLayout();
@@ -2809,6 +2753,15 @@
             this.gsgroupBox.ResumeLayout(false);
             this.tableLayoutPanel17.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gsUpDown)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel14.ResumeLayout(false);
+            this.tableLayoutPanel14.PerformLayout();
+            this.tableLayoutPanel15.ResumeLayout(false);
+            this.tableLayoutPanel15.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
             this.tabPage4.ResumeLayout(false);
@@ -2904,7 +2857,6 @@
         private System.Windows.Forms.ToolStripButton audiounmuteButton;
         private System.Windows.Forms.ToolStripButton audiomuteButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
-        private System.Windows.Forms.ToolStripButton expandButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
@@ -2919,7 +2871,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.ToolStripButton restoreButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel9;
         private System.Windows.Forms.Timer mpvTimer;
@@ -2980,9 +2931,8 @@
         private System.Windows.Forms.ToolStripMenuItem deinterlaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem downmixToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem normalizeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton encodelistButton;
         private System.Windows.Forms.ToolStripButton zoomButton;
-        private System.Windows.Forms.ToolStripMenuItem resizeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resizeZscaleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sharpenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tonemapToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openclToolStripMenuItem;
@@ -3052,7 +3002,8 @@
         private System.Windows.Forms.TextBox abitrateBox;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripButton moveDownButton;
-        private System.Windows.Forms.NumericUpDown gsUpDown;
+        private System.Windows.Forms.ToolStripMenuItem resizePlaceboToolStripMenuItem;
+        internal System.Windows.Forms.NumericUpDown gsUpDown;
     }
 }
 

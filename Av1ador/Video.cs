@@ -323,7 +323,12 @@ namespace Av1ador
                         fftracks.StartInfo.Arguments = " -loglevel quiet -select_streams a:" + i + " -show_entries frame=best_effort_timestamp_time -read_intervals %+#1 -of csv=p=0 -i \"" + file + "\"";
                         fftracks.Start();
                         string delay_str = fftracks.StandardOutput.ReadToEnd();
-                        double.TryParse(new StringReader(delay_str).ReadLine().Replace(" ", "").Replace(",", ""), out double adelay);
+                        double adelay = 0;
+                        try
+                        {
+                            double.TryParse(new StringReader(delay_str).ReadLine().Replace(" ", "").Replace(",", ""), out adelay);
+                        }
+                        catch { };
                         if (Math.Abs(adelay) > 0)
                             Tracks_delay[i] = adelay * 1000.0;
                         Tracks_delay[i] -= First_frame * 1000.0;

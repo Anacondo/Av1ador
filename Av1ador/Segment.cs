@@ -25,7 +25,6 @@ namespace Av1ador
         private double track_delay;
         private int[] fps = new int[0];
         private int frames_last;
-        private bool unattended;
         public string Tempdir { get; } = "temp\\";
         public string Dir { get; set; }
         public string File { get; set; }
@@ -158,21 +157,16 @@ namespace Av1ador
                 // Compute average bitrate so far
                 Abr = totalSize / 1024.0 * 8.0 / timeElapsed;
 
-                // Tweaked progress factors
-                double calibrationFactor = 1.25; // Decrease fallback influence slightly
-                double quadp = Math.Pow(progress / 100.0, 0.25) * calibrationFactor; // Flatter curve early on
-                double quad2p = Math.Pow(progress / 100.0, 0.65); // Slightly steeper for tighter mid-range estimates
-
                 video_size = Math.Round(avgBitrate * duration / 8 / 1024);   // simple calculation of final video size based on average bitrate calculation, with no infering
 
                 // Check if we’ve crossed the next 10% threshold
                 int currentProgressPercentage = (int)Math.Floor(progress); // Whole number progress
                 if (currentProgressPercentage / 10 > lastLoggedPercentage / 10)
                 {
-                    string logMessage = $"{(int)progress}%" + $" -> {video_size / 1024:F2} GB";
+                    string logMessage = $"{(int)progress}%" + $" -> {video_size / 1024:F2}GB ({avgBitrate:F0}Kbps)";
 
                     // Append the log message to the file
-                    string logFilePath = Name + "\\size_predictions.log";
+                    string logFilePath = Name + "\\size_estimation.log";
                     try
                     {
                         using StreamWriter writer = new StreamWriter(logFilePath, append: true);
@@ -265,33 +259,26 @@ namespace Av1ador
 
         public Encode()
         {
-            Split_min_time = 10;
             Status = new List<string>();
             watch = new Stopwatch();
             remaining = new TimeSpan();
             bitrate = 0;
         }
 
-        public void Start_encode(string dir, Video v, bool audio, bool audioPassthru, double delay = 0, int br = 0, double spd = 1, bool unat = false)
+        public void Start_encode(string dir, Video v, bool audio, bool audioPassthru, double delay = 0, int br = 0, double spd = 1)
         {
+            // determines the minimum chunk length (in seconds)
+            if (v.Duration > 7200)
+                Split_min_time = 20;
+            else
+                Split_min_time = 15;
+
             track_delay = delay;
             Dir = dir == "" ? Path.GetDirectoryName(v.File) + "\\" : dir + "\\";
             File = v.File;
             Name = Tempdir + Path.GetFileNameWithoutExtension(v.File);
-            unattended = unat;
             if (!Directory.Exists(Name))
                 Directory.CreateDirectory(Name);
-            else if (!unattended)
-            {
-                Form1.Dialogo = true;
-                string[] files = Directory.GetFiles(Name);
-                if (files.Length > 0 && MessageBox.Show("There are some files from a previous encoding, do you want to resume it?", "Resume", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No)
-                {
-                    foreach (FileInfo f in new DirectoryInfo(Name).GetFiles())
-                        f.Delete();
-                }
-                Form1.Dialogo = false;
-            }
             Spd = spd;
             bitrate = br;
             bool vbr = br > 0;
@@ -356,8 +343,12 @@ namespace Av1ador
             if (!System.IO.File.Exists(Name + "\\chunks.txt") || (vbr && !System.IO.File.Exists(Name + "\\complexity.txt")))
             {
                 Status.Add("Detecting scenes...");
-                //int workers = vbr ? 1 : Math.Max(Math.Min((int)Math.Ceiling(v.Duration / (double)(180 / ((double)v.Width / 1000))), 3), 1) + 10;
-                int workers = Environment.ProcessorCount > 16 ? 8 : Environment.ProcessorCount;
+                int workers = 0;
+                if (v.Width > 2048)
+                    workers = 4;
+                else
+                    workers = Math.Abs(Environment.ProcessorCount / 4);
+
                 double tdist = (final - v.StartTime) / (double)workers;
                 Bw = new BackgroundWorker[workers];
                 List<string>[] trim_time = new List<string>[workers];
@@ -387,6 +378,7 @@ namespace Av1ador
                         Func.Setinicial(ffmpeg, 3);
                         if ((v.Width <= 1920 || v.Kf_fixed) || vbr || Fps_filter != "")
                             ffmpeg.StartInfo.Arguments = (vbr ? " -loglevel debug" : "") + " -copyts -start_at_zero" + ss1 + " -i \"" + v.File + "\"" + ss2 + " -to " + final2.ToString() + " -filter:v \"" + Fps_filter + "select='gt(scene,0.1)+isnan(prev_selected_t)+gte(t-prev_selected_t\\," + Split_min_time.ToString() + ")',showinfo\" -an -f null - ";
+                            //ffmpeg.StartInfo.Arguments = (vbr ? " -loglevel debug" : "") + " -copyts -start_at_zero" + ss1 + " -i \"" + v.File + "\"" + ss2 + " -to " + final2.ToString() + " -filter:v \"" + Fps_filter + "select='gt(scene,0.1)',select='isnan(prev_selected_t)+gte(t-prev_selected_t\\," + Split_min_time.ToString() + ")',showinfo\" -an -f null - ";
                         else
                             ffmpeg.StartInfo.Arguments = " -copyts -start_at_zero -skip_frame nokey" + ss1 + " -i \"" + v.File + "\"" + ss2 + " -to " + final2.ToString() + " -filter:v showinfo -an -f null - ";
                         ffmpeg.Start();
@@ -512,8 +504,7 @@ namespace Av1ador
             if (Running)
                 return;
             Running = true;
-            if (Splits == null)
-                Splits = new List<string>(System.IO.File.ReadAllLines(Name + "\\chunks.txt"));
+            Splits ??= new List<string>(System.IO.File.ReadAllLines(Name + "\\chunks.txt"));
             if (bitrate > 0 && Complexity == null)
                 Complexity = new List<string>(System.IO.File.ReadAllLines(Name + "\\complexity.txt"));
             if (Chunks == null)
@@ -751,14 +742,12 @@ namespace Av1ador
             {
                 Failed = true;
                 Set_state(true);
-                if (unattended || MessageBox.Show(log, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
+                if (MessageBox.Show(log, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
                 {
                     Status = new List<string>
                     {
                         "Failed"
                     };
-                    if (!unattended)
-                        Failed = false;
                     Chunks = null;
                 }
             }
