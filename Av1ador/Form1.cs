@@ -2076,7 +2076,7 @@ namespace Av1ador
             gfx.DrawLine(pen, 1, 6, 1, Func.Rule(pt[0], pt[1], usage, e.ClipRectangle.Height - 8) + 6);
             gfx.DrawLine(pen, Func.Rule(pt[1], pt[2], usage, e.ClipRectangle.Width), e.ClipRectangle.Height - 2, 0, e.ClipRectangle.Height - 2);
             gfx.DrawLine(pen, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - Func.Rule(pt[2], pt[3], usage, e.ClipRectangle.Height - 8) - 2, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 2);
-            int line = 50 + ext;
+            int line = 56 + ext;
             gfx.DrawLine(pen, e.ClipRectangle.Width - Func.Rule(pt[3], 100, usage, e.ClipRectangle.Width - line), 6, e.ClipRectangle.Width, 6);
         }
 

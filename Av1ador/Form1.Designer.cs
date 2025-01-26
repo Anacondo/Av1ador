@@ -1084,7 +1084,7 @@
             this.workersBox.TabIndex = 1;
             this.toolTip1.SetToolTip(this.workersBox, "Select number of threads");
             this.workersBox.UseVisualStyleBackColor = true;
-            this.workersBox.CheckedChanged += new System.EventHandler(this.WorkersBox_CheckedChanged);
+            this.workersBox.CheckedChanged += new System.EventHandler(this.WorkersBox_CheckedChanged); 
             // 
             // workersUpDown
             // 
