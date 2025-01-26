@@ -2072,11 +2072,20 @@ namespace Av1ador
                 ext = 0;
                 pt = new int[4] { 3, 21, 62, 80 };
             }
+
+            // Calculate `line` normally first
+            int line = 57 + ext;
+
+            // Add 10px to the line length ONLY when workersBox is checked
+            if (workersBox.Checked)
+            {
+                line -= 4; // Reduces starting offset, lengthening the line
+            }
+
             gfx.DrawLine(pen, 8 - Func.Rule(0, pt[0], usage, 8), 6, 8, 6);
             gfx.DrawLine(pen, 1, 6, 1, Func.Rule(pt[0], pt[1], usage, e.ClipRectangle.Height - 8) + 6);
             gfx.DrawLine(pen, Func.Rule(pt[1], pt[2], usage, e.ClipRectangle.Width), e.ClipRectangle.Height - 2, 0, e.ClipRectangle.Height - 2);
             gfx.DrawLine(pen, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - Func.Rule(pt[2], pt[3], usage, e.ClipRectangle.Height - 8) - 2, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 2);
-            int line = 56 + ext;
             gfx.DrawLine(pen, e.ClipRectangle.Width - Func.Rule(pt[3], 100, usage, e.ClipRectangle.Width - line), 6, e.ClipRectangle.Width, 6);
         }
 
