@@ -321,6 +321,7 @@
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.splitContainer2.IsSplitterFixed = true;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
             this.splitContainer2.Margin = new System.Windows.Forms.Padding(0);
             this.splitContainer2.MinimumSize = new System.Drawing.Size(900, 0);
@@ -1085,7 +1086,7 @@
             this.workersBox.TabIndex = 1;
             this.toolTip1.SetToolTip(this.workersBox, "Select number of threads");
             this.workersBox.UseVisualStyleBackColor = true;
-            this.workersBox.CheckedChanged += new System.EventHandler(this.WorkersBox_CheckedChanged); 
+            this.workersBox.CheckedChanged += new System.EventHandler(this.WorkersBox_CheckedChanged);
             // 
             // workersUpDown
             // 
