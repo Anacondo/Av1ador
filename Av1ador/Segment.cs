@@ -117,7 +117,6 @@ namespace Av1ador
 
                 double totalSize = 0;
                 double completedBitrateSum = 0;
-                double peakBitrate = 0;
 
                 // Process all chunks
                 foreach (var chunk in Chunks.ToList())
@@ -130,9 +129,9 @@ namespace Av1ador
                     totalSize += chunk.Size;
 
                     // Track the highest bitrate
-                    if (chunk.Bitrate > peakBitrate)
+                    if (chunk.Bitrate > Peak_br)
                     {
-                        peakBitrate = chunk.Bitrate;
+                        Peak_br = chunk.Bitrate;
                     }
                 }
 
@@ -144,7 +143,7 @@ namespace Av1ador
                 }
 
                 // Calculate max and average sizes
-                double maxBitrateSize = (peakBitrate + (audio_size * 8.0 / duration / 1024.0)) * duration / 8.0 / 1024.0;
+                double maxBitrateSize = (Peak_br + (audio_size * 8.0 / duration / 1024.0)) * duration / 8.0 / 1024.0;
                 double avgBitrate = completedChunksCount > 0 ? completedBitrateSum / completedChunksCount : 0;
                 double avgBitrateSize = (avgBitrate + (audio_size * 8.0 / duration / 1024.0)) * duration / 8.0 / 1024.0;
 

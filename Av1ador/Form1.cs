@@ -814,6 +814,9 @@ namespace Av1ador
                     str += "finished";
                 else
                     str += "inactive";
+                // add bitrate information to the chunk tooltip
+                string bitrate_text = encode.Chunks[segment].Bitrate == 0 ? "N/A" : Math.Round(encode.Chunks[segment].Bitrate).ToString();
+                str += Environment.NewLine + "Bitrate: " + bitrate_text;
                 if (encode.Chunks[segment].Retry > 0)
                     str += " (decoding error)";
             }
