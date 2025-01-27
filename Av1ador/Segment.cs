@@ -267,10 +267,7 @@ namespace Av1ador
         public void Start_encode(string dir, Video v, bool audio, bool audioPassthru, double delay = 0, int br = 0, double spd = 1)
         {
             // determines the minimum chunk length (in seconds)
-            if (v.Duration > 7200)
-                Split_min_time = 20;
-            else
-                Split_min_time = 15;
+            Split_min_time = (int)Math.Abs(v.Fps) / 2;
 
             track_delay = delay;
             Dir = dir == "" ? Path.GetDirectoryName(v.File) + "\\" : dir + "\\";
@@ -747,7 +744,8 @@ namespace Av1ador
                     {
                         "Failed"
                     };
-                    Failed = false; // reset failed state so that we can continue encoding after ffmpeg crash 
+                    Failed = false; // reset failed state so that we can continue encoding after ffmpeg crash
+                    Can_run = true;
                     Chunks = null;
                 }
             }

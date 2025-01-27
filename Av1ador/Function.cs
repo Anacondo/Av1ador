@@ -149,7 +149,7 @@ namespace Av1ador
                 int crf = int.Parse(compare.Groups[1].Value.ToString());
                 if (crf < 51)
                 {
-                    crf = crf * 4 / 3;
+                    crf = crf * 5 / 2;  // higher CRF for credits
                     if (crf > 51)
                         crf = 51;
                 }

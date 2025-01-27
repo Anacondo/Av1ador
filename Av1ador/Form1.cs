@@ -175,7 +175,6 @@ namespace Av1ador
                     checkedListBox1.Items.AddRange(primer_video.Tracks.ToArray());
                     checkedListBox2.Items.Clear();
                     checkedListBox2.Items.AddRange(primer_video.Subtitles.ToArray());
-                    hdrComboBox.Enabled = primer_video.Hdr > 0;
                     encoder.Set_audio_codec(caComboBox.Text.Split(' ')[0], primer_video.Channels.Max());
                     encoder.SubIndex = -1;
 
@@ -2255,11 +2254,6 @@ namespace Av1ador
 
         }
 
-        private void tableLayoutPanel17_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
         {
 
@@ -2289,6 +2283,26 @@ namespace Av1ador
             }
             Entry_update(15);
             Entry.Save(listBox1);
+
+        }
+
+        private void audioOptionsGroupBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void leftPanel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel13_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void tabPage3_Click(object sender, EventArgs e)
+        {
 
         }
 

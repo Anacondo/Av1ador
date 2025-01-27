@@ -65,8 +65,25 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.otherOptionsPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.workersgroupBox = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel20 = new System.Windows.Forms.TableLayoutPanel();
+            this.workersBox = new System.Windows.Forms.CheckBox();
+            this.workersUpDown = new System.Windows.Forms.NumericUpDown();
+            this.gsgroupBox = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
+            this.gsUpDown = new System.Windows.Forms.NumericUpDown();
+            this.audioOptionsGroupBox = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel14 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
+            this.audioPassThruCheckBox = new System.Windows.Forms.CheckBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.abitrateBox = new System.Windows.Forms.TextBox();
+            this.trackBar2 = new System.Windows.Forms.TrackBar();
+            this.videoOptionsGroupBox = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.constantLabel = new System.Windows.Forms.Label();
@@ -84,24 +101,6 @@
             this.betterLabel = new System.Windows.Forms.Label();
             this.tableLayoutPanel19 = new System.Windows.Forms.TableLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
-            this.workersgroupBox = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel20 = new System.Windows.Forms.TableLayoutPanel();
-            this.workersBox = new System.Windows.Forms.CheckBox();
-            this.workersUpDown = new System.Windows.Forms.NumericUpDown();
-            this.gsgroupBox = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
-            this.gsUpDown = new System.Windows.Forms.NumericUpDown();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel14 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
-            this.audioPassThruCheckBox = new System.Windows.Forms.CheckBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.label7 = new System.Windows.Forms.Label();
-            this.abitrateBox = new System.Windows.Forms.TextBox();
-            this.trackBar2 = new System.Windows.Forms.TrackBar();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.paramsBox = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
@@ -249,8 +248,20 @@
             this.toolStrip3.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            this.tableLayoutPanel10.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.otherOptionsPanel.SuspendLayout();
+            this.workersgroupBox.SuspendLayout();
+            this.tableLayoutPanel20.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.workersUpDown)).BeginInit();
+            this.gsgroupBox.SuspendLayout();
+            this.tableLayoutPanel17.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gsUpDown)).BeginInit();
+            this.audioOptionsGroupBox.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel14.SuspendLayout();
+            this.tableLayoutPanel15.SuspendLayout();
+            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
+            this.videoOptionsGroupBox.SuspendLayout();
             this.tableLayoutPanel11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -258,19 +269,6 @@
             this.tableLayoutPanel13.SuspendLayout();
             this.betterworsePanel.SuspendLayout();
             this.tableLayoutPanel19.SuspendLayout();
-            this.tableLayoutPanel16.SuspendLayout();
-            this.workersgroupBox.SuspendLayout();
-            this.tableLayoutPanel20.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.workersUpDown)).BeginInit();
-            this.gsgroupBox.SuspendLayout();
-            this.tableLayoutPanel17.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gsUpDown)).BeginInit();
-            this.groupBox2.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.tableLayoutPanel14.SuspendLayout();
-            this.tableLayoutPanel15.SuspendLayout();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             this.tabPage5.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tableLayoutPanel21.SuspendLayout();
@@ -539,7 +537,7 @@
             this.tableLayoutPanel5.RowCount = 3;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 330F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 370F));
             this.tableLayoutPanel5.Size = new System.Drawing.Size(281, 791);
             this.tableLayoutPanel5.TabIndex = 0;
             // 
@@ -711,7 +709,7 @@
             this.listBox1.Margin = new System.Windows.Forms.Padding(0);
             this.listBox1.Name = "listBox1";
             this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBox1.Size = new System.Drawing.Size(282, 437);
+            this.listBox1.Size = new System.Drawing.Size(282, 397);
             this.listBox1.TabIndex = 1;
             this.listBox1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ListBox1_DrawItem);
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
@@ -727,333 +725,54 @@
             this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl2.ItemSize = new System.Drawing.Size(54, 18);
-            this.tabControl2.Location = new System.Drawing.Point(0, 461);
+            this.tabControl2.Location = new System.Drawing.Point(0, 421);
             this.tabControl2.Margin = new System.Windows.Forms.Padding(0);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(282, 330);
+            this.tabControl2.Size = new System.Drawing.Size(282, 370);
             this.tabControl2.TabIndex = 2;
             // 
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage3.Controls.Add(this.tableLayoutPanel10);
+            this.tabPage3.Controls.Add(this.otherOptionsPanel);
+            this.tabPage3.Controls.Add(this.audioOptionsGroupBox);
+            this.tabPage3.Controls.Add(this.videoOptionsGroupBox);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(274, 304);
+            this.tabPage3.Size = new System.Drawing.Size(274, 344);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "Settings";
+            this.tabPage3.Click += new System.EventHandler(this.tabPage3_Click);
             // 
-            // tableLayoutPanel10
+            // otherOptionsPanel
             // 
-            this.tableLayoutPanel10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tableLayoutPanel10.ColumnCount = 1;
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel10.Controls.Add(this.groupBox1, 0, 0);
-            this.tableLayoutPanel10.Controls.Add(this.tableLayoutPanel16, 0, 2);
-            this.tableLayoutPanel10.Controls.Add(this.groupBox2, 0, 1);
-            this.tableLayoutPanel10.Location = new System.Drawing.Point(1, 10);
-            this.tableLayoutPanel10.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel10.Name = "tableLayoutPanel10";
-            this.tableLayoutPanel10.RowCount = 3;
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel10.Size = new System.Drawing.Size(273, 294);
-            this.tableLayoutPanel10.TabIndex = 0;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBox1.Controls.Add(this.tableLayoutPanel11);
-            this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(273, 123);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Video Options";
-            // 
-            // tableLayoutPanel11
-            // 
-            this.tableLayoutPanel11.ColumnCount = 3;
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75F));
-            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel11.Controls.Add(this.trackBar1, 1, 0);
-            this.tableLayoutPanel11.Controls.Add(this.constantLabel, 0, 0);
-            this.tableLayoutPanel11.Controls.Add(this.numericUpDown1, 2, 0);
-            this.tableLayoutPanel11.Controls.Add(this.tableLayoutPanel12, 1, 2);
-            this.tableLayoutPanel11.Controls.Add(this.tableLayoutPanel13, 2, 2);
-            this.tableLayoutPanel11.Controls.Add(this.betterworsePanel, 1, 1);
-            this.tableLayoutPanel11.Controls.Add(this.tableLayoutPanel19, 0, 2);
-            this.tableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel11.Location = new System.Drawing.Point(3, 18);
-            this.tableLayoutPanel11.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel11.Name = "tableLayoutPanel11";
-            this.tableLayoutPanel11.RowCount = 3;
-            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel11.Size = new System.Drawing.Size(267, 102);
-            this.tableLayoutPanel11.TabIndex = 0;
-            // 
-            // trackBar1
-            // 
-            this.trackBar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trackBar1.LargeChange = 1;
-            this.trackBar1.Location = new System.Drawing.Point(70, 0);
-            this.trackBar1.Margin = new System.Windows.Forms.Padding(0);
-            this.trackBar1.Maximum = 51;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.trackBar1.Size = new System.Drawing.Size(147, 30);
-            this.trackBar1.TabIndex = 1;
-            this.trackBar1.TickFrequency = 2;
-            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBar1.Value = 27;
-            this.trackBar1.Scroll += new System.EventHandler(this.TrackBar1_Scroll);
-            // 
-            // constantLabel
-            // 
-            this.constantLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.constantLabel.AutoSize = true;
-            this.constantLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.constantLabel.Location = new System.Drawing.Point(21, 8);
-            this.constantLabel.Name = "constantLabel";
-            this.constantLabel.Size = new System.Drawing.Size(27, 13);
-            this.constantLabel.TabIndex = 0;
-            this.constantLabel.Text = "CRF";
-            this.constantLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDown1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDown1.Location = new System.Drawing.Point(217, 0);
-            this.numericUpDown1.Margin = new System.Windows.Forms.Padding(0);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numericUpDown1.MinimumSize = new System.Drawing.Size(31, 0);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(50, 22);
-            this.numericUpDown1.TabIndex = 2;
-            this.numericUpDown1.Value = new decimal(new int[] {
-            27,
-            0,
-            0,
-            0});
-            this.numericUpDown1.ValueChanged += new System.EventHandler(this.NumericUpDown1_ValueChanged);
-            // 
-            // tableLayoutPanel12
-            // 
-            this.tableLayoutPanel12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel12.ColumnCount = 2;
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel12.Controls.Add(this.label3, 0, 0);
-            this.tableLayoutPanel12.Controls.Add(this.label4, 0, 1);
-            this.tableLayoutPanel12.Controls.Add(this.totalBox, 1, 0);
-            this.tableLayoutPanel12.Controls.Add(this.bitrateBox, 1, 1);
-            this.tableLayoutPanel12.Location = new System.Drawing.Point(77, 50);
-            this.tableLayoutPanel12.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel12.Name = "tableLayoutPanel12";
-            this.tableLayoutPanel12.RowCount = 2;
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(140, 52);
-            this.tableLayoutPanel12.TabIndex = 4;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.label3.Location = new System.Drawing.Point(0, 0);
-            this.label3.Margin = new System.Windows.Forms.Padding(0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(70, 26);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Total:";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.label4.Location = new System.Drawing.Point(0, 26);
-            this.label4.Margin = new System.Windows.Forms.Padding(0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(70, 26);
-            this.label4.TabIndex = 1;
-            this.label4.Text = "Bitrate:";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // totalBox
-            // 
-            this.totalBox.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.totalBox.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.totalBox.Location = new System.Drawing.Point(91, 2);
-            this.totalBox.Margin = new System.Windows.Forms.Padding(0);
-            this.totalBox.MaxLength = 9;
-            this.totalBox.Name = "totalBox";
-            this.totalBox.Size = new System.Drawing.Size(49, 22);
-            this.totalBox.TabIndex = 2;
-            this.totalBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.totalBox.TextChanged += new System.EventHandler(this.TotalBox_TextChanged);
-            this.totalBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TotalBox_KeyPress);
-            // 
-            // bitrateBox
-            // 
-            this.bitrateBox.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.bitrateBox.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.bitrateBox.Location = new System.Drawing.Point(91, 28);
-            this.bitrateBox.Margin = new System.Windows.Forms.Padding(0);
-            this.bitrateBox.MaxLength = 9;
-            this.bitrateBox.Name = "bitrateBox";
-            this.bitrateBox.Size = new System.Drawing.Size(49, 22);
-            this.bitrateBox.TabIndex = 3;
-            this.bitrateBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.bitrateBox.TextChanged += new System.EventHandler(this.TotalBox_TextChanged);
-            this.bitrateBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TotalBox_KeyPress);
-            // 
-            // tableLayoutPanel13
-            // 
-            this.tableLayoutPanel13.ColumnCount = 1;
-            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel13.Controls.Add(this.label5, 0, 0);
-            this.tableLayoutPanel13.Controls.Add(this.label6, 0, 1);
-            this.tableLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel13.Location = new System.Drawing.Point(217, 50);
-            this.tableLayoutPanel13.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel13.Name = "tableLayoutPanel13";
-            this.tableLayoutPanel13.RowCount = 2;
-            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel13.Size = new System.Drawing.Size(50, 52);
-            this.tableLayoutPanel13.TabIndex = 5;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.label5.Location = new System.Drawing.Point(0, 0);
-            this.label5.Margin = new System.Windows.Forms.Padding(0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(50, 26);
-            this.label5.TabIndex = 0;
-            this.label5.Text = "MB";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label6.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.label6.Location = new System.Drawing.Point(0, 26);
-            this.label6.Margin = new System.Windows.Forms.Padding(0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(50, 26);
-            this.label6.TabIndex = 1;
-            this.label6.Text = "Kbps";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // betterworsePanel
-            // 
-            this.betterworsePanel.Controls.Add(this.worseLabel);
-            this.betterworsePanel.Controls.Add(this.betterLabel);
-            this.betterworsePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.betterworsePanel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.betterworsePanel.Location = new System.Drawing.Point(70, 30);
-            this.betterworsePanel.Margin = new System.Windows.Forms.Padding(0);
-            this.betterworsePanel.Name = "betterworsePanel";
-            this.betterworsePanel.Size = new System.Drawing.Size(147, 20);
-            this.betterworsePanel.TabIndex = 6;
-            // 
-            // worseLabel
-            // 
-            this.worseLabel.AutoSize = true;
-            this.worseLabel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.worseLabel.Location = new System.Drawing.Point(0, 0);
-            this.worseLabel.Name = "worseLabel";
-            this.worseLabel.Size = new System.Drawing.Size(40, 13);
-            this.worseLabel.TabIndex = 1;
-            this.worseLabel.Text = "Worse";
-            // 
-            // betterLabel
-            // 
-            this.betterLabel.AutoSize = true;
-            this.betterLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.betterLabel.Location = new System.Drawing.Point(110, 0);
-            this.betterLabel.Name = "betterLabel";
-            this.betterLabel.Size = new System.Drawing.Size(37, 13);
-            this.betterLabel.TabIndex = 0;
-            this.betterLabel.Text = "Better";
-            // 
-            // tableLayoutPanel19
-            // 
-            this.tableLayoutPanel19.ColumnCount = 1;
-            this.tableLayoutPanel19.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel19.Controls.Add(this.label2, 0, 0);
-            this.tableLayoutPanel19.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel19.Location = new System.Drawing.Point(0, 50);
-            this.tableLayoutPanel19.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel19.MinimumSize = new System.Drawing.Size(70, 0);
-            this.tableLayoutPanel19.Name = "tableLayoutPanel19";
-            this.tableLayoutPanel19.RowCount = 2;
-            this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel19.Size = new System.Drawing.Size(70, 52);
-            this.tableLayoutPanel19.TabIndex = 7;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.label2.Location = new System.Drawing.Point(0, 0);
-            this.label2.Margin = new System.Windows.Forms.Padding(0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 26);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Target size";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // tableLayoutPanel16
-            // 
-            this.tableLayoutPanel16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tableLayoutPanel16.ColumnCount = 2;
-            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54.09836F));
-            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45.90164F));
-            this.tableLayoutPanel16.Controls.Add(this.workersgroupBox, 1, 0);
-            this.tableLayoutPanel16.Controls.Add(this.gsgroupBox, 0, 0);
-            this.tableLayoutPanel16.Location = new System.Drawing.Point(0, 226);
-            this.tableLayoutPanel16.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel16.Name = "tableLayoutPanel16";
-            this.tableLayoutPanel16.RowCount = 1;
-            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel16.Size = new System.Drawing.Size(273, 70);
-            this.tableLayoutPanel16.TabIndex = 2;
-            this.tableLayoutPanel16.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel16_Paint);
+            this.otherOptionsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.otherOptionsPanel.ColumnCount = 2;
+            this.otherOptionsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.otherOptionsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.otherOptionsPanel.Controls.Add(this.workersgroupBox, 1, 0);
+            this.otherOptionsPanel.Controls.Add(this.gsgroupBox, 0, 0);
+            this.otherOptionsPanel.Location = new System.Drawing.Point(1, 276);
+            this.otherOptionsPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.otherOptionsPanel.Name = "otherOptionsPanel";
+            this.otherOptionsPanel.RowCount = 1;
+            this.otherOptionsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.otherOptionsPanel.Size = new System.Drawing.Size(273, 66);
+            this.otherOptionsPanel.TabIndex = 3;
             // 
             // workersgroupBox
             // 
             this.workersgroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.workersgroupBox.Controls.Add(this.tableLayoutPanel20);
             this.workersgroupBox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.workersgroupBox.Location = new System.Drawing.Point(156, 0);
+            this.workersgroupBox.Location = new System.Drawing.Point(136, 0);
             this.workersgroupBox.Margin = new System.Windows.Forms.Padding(0);
             this.workersgroupBox.MinimumSize = new System.Drawing.Size(0, 40);
             this.workersgroupBox.Name = "workersgroupBox";
             this.workersgroupBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.workersgroupBox.Size = new System.Drawing.Size(117, 65);
+            this.workersgroupBox.Size = new System.Drawing.Size(137, 66);
             this.workersgroupBox.TabIndex = 4;
             this.workersgroupBox.TabStop = false;
             this.workersgroupBox.Text = "Threads (auto)";
@@ -1072,7 +791,7 @@
             this.tableLayoutPanel20.Name = "tableLayoutPanel20";
             this.tableLayoutPanel20.RowCount = 1;
             this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel20.Size = new System.Drawing.Size(111, 44);
+            this.tableLayoutPanel20.Size = new System.Drawing.Size(131, 45);
             this.tableLayoutPanel20.TabIndex = 0;
             // 
             // workersBox
@@ -1080,9 +799,10 @@
             this.workersBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.workersBox.AutoSize = true;
             this.workersBox.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.workersBox.Location = new System.Drawing.Point(20, 15);
+            this.workersBox.Location = new System.Drawing.Point(15, 15);
             this.workersBox.Name = "workersBox";
-            this.workersBox.Size = new System.Drawing.Size(15, 14);
+            this.workersBox.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
+            this.workersBox.Size = new System.Drawing.Size(35, 14);
             this.workersBox.TabIndex = 1;
             this.toolTip1.SetToolTip(this.workersBox, "Select number of threads");
             this.workersBox.UseVisualStyleBackColor = true;
@@ -1093,7 +813,7 @@
             this.workersUpDown.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.workersUpDown.Enabled = false;
             this.workersUpDown.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.workersUpDown.Location = new System.Drawing.Point(64, 11);
+            this.workersUpDown.Location = new System.Drawing.Point(79, 11);
             this.workersUpDown.Margin = new System.Windows.Forms.Padding(0);
             this.workersUpDown.MaximumSize = new System.Drawing.Size(40, 0);
             this.workersUpDown.Minimum = new decimal(new int[] {
@@ -1106,7 +826,7 @@
             this.workersUpDown.TabIndex = 0;
             this.workersUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.workersUpDown.Value = new decimal(new int[] {
-            2,
+            4,
             0,
             0,
             0});
@@ -1121,11 +841,10 @@
             this.gsgroupBox.Margin = new System.Windows.Forms.Padding(0);
             this.gsgroupBox.MinimumSize = new System.Drawing.Size(0, 40);
             this.gsgroupBox.Name = "gsgroupBox";
-            this.gsgroupBox.Size = new System.Drawing.Size(134, 70);
+            this.gsgroupBox.Size = new System.Drawing.Size(134, 66);
             this.gsgroupBox.TabIndex = 2;
             this.gsgroupBox.TabStop = false;
             this.gsgroupBox.Text = "Grain synthesis";
-            this.gsgroupBox.Enter += new System.EventHandler(this.gsgroupBox_Enter);
             // 
             // tableLayoutPanel17
             // 
@@ -1138,9 +857,8 @@
             this.tableLayoutPanel17.Name = "tableLayoutPanel17";
             this.tableLayoutPanel17.RowCount = 1;
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel17.Size = new System.Drawing.Size(125, 44);
+            this.tableLayoutPanel17.Size = new System.Drawing.Size(125, 45);
             this.tableLayoutPanel17.TabIndex = 0;
-            this.tableLayoutPanel17.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel17_Paint);
             // 
             // gsUpDown
             // 
@@ -1153,21 +871,28 @@
             this.gsUpDown.Size = new System.Drawing.Size(45, 22);
             this.gsUpDown.TabIndex = 3;
             this.gsUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.gsUpDown.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             this.gsUpDown.ValueChanged += new System.EventHandler(this.GsUpDown_ValueChanged);
             // 
-            // groupBox2
+            // audioOptionsGroupBox
             // 
-            this.groupBox2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.groupBox2.Controls.Add(this.tableLayoutPanel2);
-            this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(0, 126);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
-            this.groupBox2.MinimumSize = new System.Drawing.Size(0, 75);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(273, 100);
-            this.groupBox2.TabIndex = 1;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Audio Options";
+            this.audioOptionsGroupBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.audioOptionsGroupBox.Controls.Add(this.tableLayoutPanel2);
+            this.audioOptionsGroupBox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.audioOptionsGroupBox.Location = new System.Drawing.Point(0, 181);
+            this.audioOptionsGroupBox.Margin = new System.Windows.Forms.Padding(0);
+            this.audioOptionsGroupBox.MinimumSize = new System.Drawing.Size(0, 75);
+            this.audioOptionsGroupBox.Name = "audioOptionsGroupBox";
+            this.audioOptionsGroupBox.Size = new System.Drawing.Size(273, 94);
+            this.audioOptionsGroupBox.TabIndex = 1;
+            this.audioOptionsGroupBox.TabStop = false;
+            this.audioOptionsGroupBox.Text = "Audio Options";
+            this.toolTip1.SetToolTip(this.audioOptionsGroupBox, "General audio options");
+            this.audioOptionsGroupBox.Enter += new System.EventHandler(this.audioOptionsGroupBox_Enter);
             // 
             // tableLayoutPanel2
             // 
@@ -1182,8 +907,8 @@
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 79F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(267, 79);
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 73F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(267, 73);
             this.tableLayoutPanel2.TabIndex = 0;
             this.tableLayoutPanel2.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel2_Paint);
             // 
@@ -1212,7 +937,7 @@
             this.tableLayoutPanel14.RowCount = 2;
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45F));
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 55F));
-            this.tableLayoutPanel14.Size = new System.Drawing.Size(191, 79);
+            this.tableLayoutPanel14.Size = new System.Drawing.Size(191, 73);
             this.tableLayoutPanel14.TabIndex = 5;
             // 
             // tableLayoutPanel15
@@ -1224,7 +949,7 @@
             this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.89362F));
             this.tableLayoutPanel15.Controls.Add(this.audioPassThruCheckBox, 0, 0);
             this.tableLayoutPanel15.Controls.Add(this.panel2, 1, 0);
-            this.tableLayoutPanel15.Location = new System.Drawing.Point(5, 43);
+            this.tableLayoutPanel15.Location = new System.Drawing.Point(5, 39);
             this.tableLayoutPanel15.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel15.Name = "tableLayoutPanel15";
             this.tableLayoutPanel15.RowCount = 1;
@@ -1292,12 +1017,279 @@
             this.trackBar2.Maximum = 320;
             this.trackBar2.Minimum = 16;
             this.trackBar2.Name = "trackBar2";
-            this.trackBar2.Size = new System.Drawing.Size(185, 29);
+            this.trackBar2.Size = new System.Drawing.Size(185, 26);
             this.trackBar2.TabIndex = 1;
             this.trackBar2.TickFrequency = 16;
             this.trackBar2.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBar2.Value = 192;
             this.trackBar2.Scroll += new System.EventHandler(this.TrackBar2_Scroll);
+            // 
+            // videoOptionsGroupBox
+            // 
+            this.videoOptionsGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.videoOptionsGroupBox.Controls.Add(this.tableLayoutPanel11);
+            this.videoOptionsGroupBox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.videoOptionsGroupBox.Location = new System.Drawing.Point(0, 6);
+            this.videoOptionsGroupBox.Margin = new System.Windows.Forms.Padding(0);
+            this.videoOptionsGroupBox.Name = "videoOptionsGroupBox";
+            this.videoOptionsGroupBox.Size = new System.Drawing.Size(273, 174);
+            this.videoOptionsGroupBox.TabIndex = 0;
+            this.videoOptionsGroupBox.TabStop = false;
+            this.videoOptionsGroupBox.Text = "Video Options";
+            this.toolTip1.SetToolTip(this.videoOptionsGroupBox, "General video options");
+            // 
+            // tableLayoutPanel11
+            // 
+            this.tableLayoutPanel11.ColumnCount = 3;
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 71.5736F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.4264F));
+            this.tableLayoutPanel11.Controls.Add(this.trackBar1, 1, 0);
+            this.tableLayoutPanel11.Controls.Add(this.constantLabel, 0, 0);
+            this.tableLayoutPanel11.Controls.Add(this.numericUpDown1, 2, 0);
+            this.tableLayoutPanel11.Controls.Add(this.tableLayoutPanel12, 1, 2);
+            this.tableLayoutPanel11.Controls.Add(this.tableLayoutPanel13, 2, 2);
+            this.tableLayoutPanel11.Controls.Add(this.betterworsePanel, 1, 1);
+            this.tableLayoutPanel11.Controls.Add(this.tableLayoutPanel19, 0, 2);
+            this.tableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel11.Location = new System.Drawing.Point(3, 18);
+            this.tableLayoutPanel11.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel11.Name = "tableLayoutPanel11";
+            this.tableLayoutPanel11.RowCount = 4;
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(267, 153);
+            this.tableLayoutPanel11.TabIndex = 0;
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trackBar1.LargeChange = 1;
+            this.trackBar1.Location = new System.Drawing.Point(70, 0);
+            this.trackBar1.Margin = new System.Windows.Forms.Padding(0);
+            this.trackBar1.Maximum = 51;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.trackBar1.Size = new System.Drawing.Size(140, 30);
+            this.trackBar1.TabIndex = 1;
+            this.trackBar1.TickFrequency = 2;
+            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBar1.Value = 27;
+            this.trackBar1.Scroll += new System.EventHandler(this.TrackBar1_Scroll);
+            // 
+            // constantLabel
+            // 
+            this.constantLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.constantLabel.AutoSize = true;
+            this.constantLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.constantLabel.Location = new System.Drawing.Point(21, 8);
+            this.constantLabel.Name = "constantLabel";
+            this.constantLabel.Size = new System.Drawing.Size(27, 13);
+            this.constantLabel.TabIndex = 0;
+            this.constantLabel.Text = "CRF";
+            this.constantLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numericUpDown1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDown1.Location = new System.Drawing.Point(210, 0);
+            this.numericUpDown1.Margin = new System.Windows.Forms.Padding(0);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDown1.MinimumSize = new System.Drawing.Size(31, 0);
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(57, 22);
+            this.numericUpDown1.TabIndex = 2;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            18,
+            0,
+            0,
+            0});
+            this.numericUpDown1.ValueChanged += new System.EventHandler(this.NumericUpDown1_ValueChanged);
+            // 
+            // tableLayoutPanel12
+            // 
+            this.tableLayoutPanel12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel12.ColumnCount = 2;
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel12.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel12.Controls.Add(this.label3, 0, 0);
+            this.tableLayoutPanel12.Controls.Add(this.label4, 0, 1);
+            this.tableLayoutPanel12.Controls.Add(this.totalBox, 1, 0);
+            this.tableLayoutPanel12.Controls.Add(this.bitrateBox, 1, 1);
+            this.tableLayoutPanel12.Location = new System.Drawing.Point(70, 50);
+            this.tableLayoutPanel12.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel12.Name = "tableLayoutPanel12";
+            this.tableLayoutPanel12.RowCount = 2;
+            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(140, 52);
+            this.tableLayoutPanel12.TabIndex = 4;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.label3.Location = new System.Drawing.Point(0, 0);
+            this.label3.Margin = new System.Windows.Forms.Padding(0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(70, 26);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "Total:";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.label4.Location = new System.Drawing.Point(0, 26);
+            this.label4.Margin = new System.Windows.Forms.Padding(0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(70, 26);
+            this.label4.TabIndex = 1;
+            this.label4.Text = "Bitrate:";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // totalBox
+            // 
+            this.totalBox.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.totalBox.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.totalBox.Location = new System.Drawing.Point(91, 2);
+            this.totalBox.Margin = new System.Windows.Forms.Padding(0);
+            this.totalBox.MaxLength = 9;
+            this.totalBox.Name = "totalBox";
+            this.totalBox.Size = new System.Drawing.Size(49, 22);
+            this.totalBox.TabIndex = 2;
+            this.totalBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.totalBox.TextChanged += new System.EventHandler(this.TotalBox_TextChanged);
+            this.totalBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TotalBox_KeyPress);
+            // 
+            // bitrateBox
+            // 
+            this.bitrateBox.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.bitrateBox.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.bitrateBox.Location = new System.Drawing.Point(91, 28);
+            this.bitrateBox.Margin = new System.Windows.Forms.Padding(0);
+            this.bitrateBox.MaxLength = 9;
+            this.bitrateBox.Name = "bitrateBox";
+            this.bitrateBox.Size = new System.Drawing.Size(49, 22);
+            this.bitrateBox.TabIndex = 3;
+            this.bitrateBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.bitrateBox.TextChanged += new System.EventHandler(this.TotalBox_TextChanged);
+            this.bitrateBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TotalBox_KeyPress);
+            // 
+            // tableLayoutPanel13
+            // 
+            this.tableLayoutPanel13.ColumnCount = 1;
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel13.Controls.Add(this.label5, 0, 0);
+            this.tableLayoutPanel13.Controls.Add(this.label6, 0, 1);
+            this.tableLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel13.Location = new System.Drawing.Point(210, 50);
+            this.tableLayoutPanel13.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel13.Name = "tableLayoutPanel13";
+            this.tableLayoutPanel13.RowCount = 3;
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel13.Size = new System.Drawing.Size(57, 103);
+            this.tableLayoutPanel13.TabIndex = 5;
+            this.tableLayoutPanel13.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel13_Paint);
+            // 
+            // label5
+            // 
+            this.label5.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.label5.Location = new System.Drawing.Point(0, 6);
+            this.label5.Margin = new System.Windows.Forms.Padding(0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(23, 13);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "MB";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label6
+            // 
+            this.label6.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.label6.Location = new System.Drawing.Point(0, 31);
+            this.label6.Margin = new System.Windows.Forms.Padding(0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(32, 13);
+            this.label6.TabIndex = 1;
+            this.label6.Text = "Kbps";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // betterworsePanel
+            // 
+            this.betterworsePanel.Controls.Add(this.worseLabel);
+            this.betterworsePanel.Controls.Add(this.betterLabel);
+            this.betterworsePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.betterworsePanel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.betterworsePanel.Location = new System.Drawing.Point(70, 30);
+            this.betterworsePanel.Margin = new System.Windows.Forms.Padding(0);
+            this.betterworsePanel.Name = "betterworsePanel";
+            this.betterworsePanel.Size = new System.Drawing.Size(140, 20);
+            this.betterworsePanel.TabIndex = 6;
+            // 
+            // worseLabel
+            // 
+            this.worseLabel.AutoSize = true;
+            this.worseLabel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.worseLabel.Location = new System.Drawing.Point(0, 0);
+            this.worseLabel.Name = "worseLabel";
+            this.worseLabel.Size = new System.Drawing.Size(40, 13);
+            this.worseLabel.TabIndex = 1;
+            this.worseLabel.Text = "Worse";
+            // 
+            // betterLabel
+            // 
+            this.betterLabel.AutoSize = true;
+            this.betterLabel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.betterLabel.Location = new System.Drawing.Point(103, 0);
+            this.betterLabel.Name = "betterLabel";
+            this.betterLabel.Size = new System.Drawing.Size(37, 13);
+            this.betterLabel.TabIndex = 0;
+            this.betterLabel.Text = "Better";
+            // 
+            // tableLayoutPanel19
+            // 
+            this.tableLayoutPanel19.ColumnCount = 1;
+            this.tableLayoutPanel19.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel19.Controls.Add(this.label2, 0, 0);
+            this.tableLayoutPanel19.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel19.Location = new System.Drawing.Point(0, 50);
+            this.tableLayoutPanel19.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel19.MinimumSize = new System.Drawing.Size(70, 0);
+            this.tableLayoutPanel19.Name = "tableLayoutPanel19";
+            this.tableLayoutPanel19.RowCount = 2;
+            this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel19.Size = new System.Drawing.Size(70, 103);
+            this.tableLayoutPanel19.TabIndex = 7;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.label2.Location = new System.Drawing.Point(0, 0);
+            this.label2.Margin = new System.Windows.Forms.Padding(0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(70, 51);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Target size";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tabPage5
             // 
@@ -1305,7 +1297,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(274, 304);
+            this.tabPage5.Size = new System.Drawing.Size(274, 344);
             this.tabPage5.TabIndex = 1;
             this.tabPage5.Text = "Parameters";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -1321,7 +1313,7 @@
             this.paramsBox.Multiline = true;
             this.paramsBox.Name = "paramsBox";
             this.paramsBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.paramsBox.Size = new System.Drawing.Size(274, 304);
+            this.paramsBox.Size = new System.Drawing.Size(274, 344);
             this.paramsBox.TabIndex = 0;
             this.paramsBox.TextChanged += new System.EventHandler(this.ParamsBox_TextChanged);
             // 
@@ -1331,7 +1323,7 @@
             this.tabPage4.Controls.Add(this.tableLayoutPanel21);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(274, 304);
+            this.tabPage4.Size = new System.Drawing.Size(274, 344);
             this.tabPage4.TabIndex = 2;
             this.tabPage4.Text = "Audio";
             // 
@@ -1347,7 +1339,7 @@
             this.tableLayoutPanel21.RowCount = 2;
             this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 90F));
             this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel21.Size = new System.Drawing.Size(274, 304);
+            this.tableLayoutPanel21.Size = new System.Drawing.Size(274, 344);
             this.tableLayoutPanel21.TabIndex = 0;
             // 
             // groupBox3
@@ -1356,7 +1348,7 @@
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(268, 267);
+            this.groupBox3.Size = new System.Drawing.Size(268, 303);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Audio";
@@ -1367,7 +1359,7 @@
             this.checkedListBox1.FormattingEnabled = true;
             this.checkedListBox1.Location = new System.Drawing.Point(3, 18);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(262, 246);
+            this.checkedListBox1.Size = new System.Drawing.Size(262, 282);
             this.checkedListBox1.TabIndex = 0;
             this.checkedListBox1.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox1_ItemCheck);
             this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.checkedListBox1_SelectedIndexChanged);
@@ -1378,7 +1370,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(274, 304);
+            this.tabPage6.Size = new System.Drawing.Size(274, 344);
             this.tabPage6.TabIndex = 3;
             this.tabPage6.Text = "Subtitles";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -1389,7 +1381,7 @@
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Location = new System.Drawing.Point(3, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(268, 298);
+            this.groupBox4.Size = new System.Drawing.Size(268, 338);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Subtitles";
@@ -1401,7 +1393,7 @@
             this.checkedListBox2.FormattingEnabled = true;
             this.checkedListBox2.Location = new System.Drawing.Point(3, 18);
             this.checkedListBox2.Name = "checkedListBox2";
-            this.checkedListBox2.Size = new System.Drawing.Size(262, 277);
+            this.checkedListBox2.Size = new System.Drawing.Size(262, 317);
             this.checkedListBox2.TabIndex = 0;
             this.checkedListBox2.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox2_ItemCheck);
             this.checkedListBox2.SelectedIndexChanged += new System.EventHandler(this.checkedListBox2_SelectedIndexChanged);
@@ -2056,6 +2048,7 @@
             this.leftPanel.SizeChanged += new System.EventHandler(this.LeftPanel_SizeChanged);
             this.leftPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.SplitterPanel_DragDrop);
             this.leftPanel.DragOver += new System.Windows.Forms.DragEventHandler(this.SplitterPanel_DragOver);
+            this.leftPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.leftPanel_Paint);
             // 
             // rightPanel
             // 
@@ -2732,8 +2725,25 @@
             this.toolStrip3.PerformLayout();
             this.tabControl2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
-            this.tableLayoutPanel10.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
+            this.otherOptionsPanel.ResumeLayout(false);
+            this.otherOptionsPanel.PerformLayout();
+            this.workersgroupBox.ResumeLayout(false);
+            this.tableLayoutPanel20.ResumeLayout(false);
+            this.tableLayoutPanel20.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.workersUpDown)).EndInit();
+            this.gsgroupBox.ResumeLayout(false);
+            this.tableLayoutPanel17.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gsUpDown)).EndInit();
+            this.audioOptionsGroupBox.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel14.ResumeLayout(false);
+            this.tableLayoutPanel14.PerformLayout();
+            this.tableLayoutPanel15.ResumeLayout(false);
+            this.tableLayoutPanel15.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
+            this.videoOptionsGroupBox.ResumeLayout(false);
             this.tableLayoutPanel11.ResumeLayout(false);
             this.tableLayoutPanel11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
@@ -2746,24 +2756,6 @@
             this.betterworsePanel.PerformLayout();
             this.tableLayoutPanel19.ResumeLayout(false);
             this.tableLayoutPanel19.PerformLayout();
-            this.tableLayoutPanel16.ResumeLayout(false);
-            this.tableLayoutPanel16.PerformLayout();
-            this.workersgroupBox.ResumeLayout(false);
-            this.tableLayoutPanel20.ResumeLayout(false);
-            this.tableLayoutPanel20.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.workersUpDown)).EndInit();
-            this.gsgroupBox.ResumeLayout(false);
-            this.tableLayoutPanel17.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gsUpDown)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel14.ResumeLayout(false);
-            this.tableLayoutPanel14.PerformLayout();
-            this.tableLayoutPanel15.ResumeLayout(false);
-            this.tableLayoutPanel15.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
             this.tabPage4.ResumeLayout(false);
@@ -2883,21 +2875,11 @@
         private System.Windows.Forms.TextBox paramsBox;
         private System.Windows.Forms.ToolStripButton outfolderButton;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox videoOptionsGroupBox;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Label constantLabel;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel12;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox totalBox;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel13;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox bitrateBox;
         private System.Windows.Forms.Panel betterworsePanel;
         private System.Windows.Forms.Label worseLabel;
         private System.Windows.Forms.Label betterLabel;
@@ -2911,16 +2893,9 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Timer panTimer;
         private System.Windows.Forms.Label mediainfoLabel;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel14;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel15;
-        private System.Windows.Forms.TrackBar trackBar2;
         private System.Windows.Forms.Timer infoTimer;
         private System.Windows.Forms.ToolStripLabel toolStripLabel6;
         private System.Windows.Forms.ToolStripComboBox speedComboBox;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel16;
         private System.Windows.Forms.ToolStripMenuItem delogoToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton togglefButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel18;
@@ -2939,7 +2914,6 @@
         private System.Windows.Forms.ToolStripMenuItem tonemapToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openclToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem vulkanToolStripMenuItem;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel19;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel21;
         private System.Windows.Forms.GroupBox groupBox3;
@@ -2992,20 +2966,37 @@
         private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.CheckedListBox checkedListBox2;
-        private System.Windows.Forms.GroupBox gsgroupBox;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel17;
-        private System.Windows.Forms.GroupBox workersgroupBox;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel20;
-        private System.Windows.Forms.CheckBox workersBox;
-        private System.Windows.Forms.NumericUpDown workersUpDown;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton moveDownButton;
+        private System.Windows.Forms.ToolStripMenuItem resizePlaceboToolStripMenuItem;
+        private System.Windows.Forms.GroupBox audioOptionsGroupBox;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel14;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel15;
         private System.Windows.Forms.CheckBox audioPassThruCheckBox;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox abitrateBox;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private System.Windows.Forms.ToolStripButton moveDownButton;
-        private System.Windows.Forms.ToolStripMenuItem resizePlaceboToolStripMenuItem;
+        private System.Windows.Forms.TrackBar trackBar2;
+        private System.Windows.Forms.TableLayoutPanel otherOptionsPanel;
+        private System.Windows.Forms.GroupBox workersgroupBox;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel20;
+        private System.Windows.Forms.CheckBox workersBox;
+        private System.Windows.Forms.NumericUpDown workersUpDown;
+        private System.Windows.Forms.GroupBox gsgroupBox;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel17;
         internal System.Windows.Forms.NumericUpDown gsUpDown;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel12;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox totalBox;
+        private System.Windows.Forms.TextBox bitrateBox;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel13;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel19;
+        private System.Windows.Forms.Label label2;
     }
 }
 
