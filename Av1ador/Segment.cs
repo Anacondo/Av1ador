@@ -748,6 +748,7 @@ namespace Av1ador
                     {
                         "Failed"
                     };
+                    Failed = false; // reset failed state so that we can continue encoding after ffmpeg crash 
                     Chunks = null;
                 }
             }
