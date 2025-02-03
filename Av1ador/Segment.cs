@@ -168,7 +168,7 @@ namespace Av1ador
                 if (currentProgressPercentage / 10 > lastLoggedPercentage / 10)
                 {
                     string crfValue = Param.Split(new string[] { "-crf " }, StringSplitOptions.None)[1].Split(' ')[0];
-                    string logMessage = $"{(int)progress}%" + $" -> {video_size / 1024:F2}GB (CRF {crfValue}, {totalSize / 1024.0 * 8.0 / timeElapsed:F0}Kbps)";
+                    string logMessage = $"{(int)progress}%" + $" -> {(video_size + audio_size / 1024 / 1024 / 1024 )/ 1024 * 1.05:F2} GB (CRF {crfValue}, {(totalSize / 1024.0 * 8.0 / timeElapsed) * 1.05:F0} Kbps)";
 
                     // Append the log message to the file
                     string logFilePath = Name + "\\size_estimation.log";
