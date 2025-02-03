@@ -84,10 +84,11 @@
             this.abitrateBox = new System.Windows.Forms.TextBox();
             this.trackBar2 = new System.Windows.Forms.TrackBar();
             this.videoOptionsGroupBox = new System.Windows.Forms.GroupBox();
+            this.checkBoxHDR = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.constantLabel = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.upDownCRF = new System.Windows.Forms.NumericUpDown();
             this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -176,12 +177,6 @@
             this.cvComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripLabel6 = new System.Windows.Forms.ToolStripLabel();
             this.speedComboBox = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
-            this.resComboBox = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripLabel4 = new System.Windows.Forms.ToolStripLabel();
-            this.fpsComboBox = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripLabel7 = new System.Windows.Forms.ToolStripLabel();
-            this.hdrComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripLabel5 = new System.Windows.Forms.ToolStripLabel();
             this.bitsComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -264,7 +259,7 @@
             this.videoOptionsGroupBox.SuspendLayout();
             this.tableLayoutPanel11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.upDownCRF)).BeginInit();
             this.tableLayoutPanel12.SuspendLayout();
             this.tableLayoutPanel13.SuspendLayout();
             this.betterworsePanel.SuspendLayout();
@@ -1027,6 +1022,7 @@
             // videoOptionsGroupBox
             // 
             this.videoOptionsGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.videoOptionsGroupBox.Controls.Add(this.checkBoxHDR);
             this.videoOptionsGroupBox.Controls.Add(this.tableLayoutPanel11);
             this.videoOptionsGroupBox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.videoOptionsGroupBox.Location = new System.Drawing.Point(0, 6);
@@ -1037,21 +1033,36 @@
             this.videoOptionsGroupBox.TabStop = false;
             this.videoOptionsGroupBox.Text = "Video Options";
             this.toolTip1.SetToolTip(this.videoOptionsGroupBox, "General video options");
+            this.videoOptionsGroupBox.Enter += new System.EventHandler(this.videoOptionsGroupBox_Enter);
+            // 
+            // checkBoxHDR
+            // 
+            this.checkBoxHDR.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.checkBoxHDR.Enabled = false;
+            this.checkBoxHDR.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.checkBoxHDR.Location = new System.Drawing.Point(11, 130);
+            this.checkBoxHDR.Name = "checkBoxHDR";
+            this.checkBoxHDR.Size = new System.Drawing.Size(141, 31);
+            this.checkBoxHDR.TabIndex = 6;
+            this.checkBoxHDR.Text = "Keep HDR colorspace";
+            this.toolTip1.SetToolTip(this.checkBoxHDR, "Select for HDR sources. Unselect for SDR or tonemapped output.");
+            this.checkBoxHDR.UseVisualStyleBackColor = true;
+            this.checkBoxHDR.CheckedChanged += new System.EventHandler(this.checkBoxHDR_CheckedChanged);
             // 
             // tableLayoutPanel11
             // 
+            this.tableLayoutPanel11.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.tableLayoutPanel11.ColumnCount = 3;
             this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 71.5736F));
             this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.4264F));
             this.tableLayoutPanel11.Controls.Add(this.trackBar1, 1, 0);
             this.tableLayoutPanel11.Controls.Add(this.constantLabel, 0, 0);
-            this.tableLayoutPanel11.Controls.Add(this.numericUpDown1, 2, 0);
+            this.tableLayoutPanel11.Controls.Add(this.upDownCRF, 2, 0);
             this.tableLayoutPanel11.Controls.Add(this.tableLayoutPanel12, 1, 2);
             this.tableLayoutPanel11.Controls.Add(this.tableLayoutPanel13, 2, 2);
             this.tableLayoutPanel11.Controls.Add(this.betterworsePanel, 1, 1);
             this.tableLayoutPanel11.Controls.Add(this.tableLayoutPanel19, 0, 2);
-            this.tableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel11.Location = new System.Drawing.Point(3, 18);
             this.tableLayoutPanel11.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel11.Name = "tableLayoutPanel11";
@@ -1060,7 +1071,7 @@
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel11.Size = new System.Drawing.Size(267, 153);
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(267, 103);
             this.tableLayoutPanel11.TabIndex = 0;
             // 
             // trackBar1
@@ -1091,27 +1102,27 @@
             this.constantLabel.Text = "CRF";
             this.constantLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // numericUpDown1
+            // upDownCRF
             // 
-            this.numericUpDown1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDown1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDown1.Location = new System.Drawing.Point(210, 0);
-            this.numericUpDown1.Margin = new System.Windows.Forms.Padding(0);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
+            this.upDownCRF.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.upDownCRF.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.upDownCRF.Location = new System.Drawing.Point(210, 0);
+            this.upDownCRF.Margin = new System.Windows.Forms.Padding(0);
+            this.upDownCRF.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
-            this.numericUpDown1.MinimumSize = new System.Drawing.Size(31, 0);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(57, 22);
-            this.numericUpDown1.TabIndex = 2;
-            this.numericUpDown1.Value = new decimal(new int[] {
+            this.upDownCRF.MinimumSize = new System.Drawing.Size(31, 0);
+            this.upDownCRF.Name = "upDownCRF";
+            this.upDownCRF.Size = new System.Drawing.Size(57, 22);
+            this.upDownCRF.TabIndex = 2;
+            this.upDownCRF.Value = new decimal(new int[] {
             18,
             0,
             0,
             0});
-            this.numericUpDown1.ValueChanged += new System.EventHandler(this.NumericUpDown1_ValueChanged);
+            this.upDownCRF.ValueChanged += new System.EventHandler(this.UpDownCRF_ValueChanged);
             // 
             // tableLayoutPanel12
             // 
@@ -1687,7 +1698,7 @@
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 21);
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 20);
             this.toolStripButton1.Text = "toolStripButton1";
             // 
             // tableLayoutPanel18
@@ -2077,12 +2088,6 @@
             this.cvComboBox,
             this.toolStripLabel6,
             this.speedComboBox,
-            this.toolStripLabel3,
-            this.resComboBox,
-            this.toolStripLabel4,
-            this.fpsComboBox,
-            this.toolStripLabel7,
-            this.hdrComboBox,
             this.toolStripLabel5,
             this.bitsComboBox,
             this.toolStripSeparator8,
@@ -2100,13 +2105,14 @@
             // 
             this.toolStripLabel2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(47, 22);
-            this.toolStripLabel2.Text = "Format";
+            this.toolStripLabel2.Size = new System.Drawing.Size(61, 22);
+            this.toolStripLabel2.Text = "Container";
             // 
             // formatComboBox
             // 
             this.formatComboBox.AutoSize = false;
             this.formatComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.formatComboBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.formatComboBox.ForeColor = System.Drawing.Color.SaddleBrown;
             this.formatComboBox.Items.AddRange(new object[] {
             "mp4",
@@ -2128,14 +2134,15 @@
             // 
             this.toolStripLabel1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(39, 22);
-            this.toolStripLabel1.Text = "Video";
+            this.toolStripLabel1.Size = new System.Drawing.Size(76, 22);
+            this.toolStripLabel1.Text = "Video Codec";
             // 
             // cvComboBox
             // 
             this.cvComboBox.BackColor = System.Drawing.SystemColors.Window;
             this.cvComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cvComboBox.DropDownWidth = 115;
+            this.cvComboBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.cvComboBox.ForeColor = System.Drawing.Color.SaddleBrown;
             this.cvComboBox.Items.AddRange(new object[] {
             "AV1 (aom)",
@@ -2154,14 +2161,16 @@
             // 
             // toolStripLabel6
             // 
+            this.toolStripLabel6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripLabel6.Name = "toolStripLabel6";
-            this.toolStripLabel6.Size = new System.Drawing.Size(39, 22);
-            this.toolStripLabel6.Text = "Speed";
+            this.toolStripLabel6.Size = new System.Drawing.Size(43, 22);
+            this.toolStripLabel6.Text = "Preset";
             // 
             // speedComboBox
             // 
             this.speedComboBox.AutoSize = false;
             this.speedComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.speedComboBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.speedComboBox.ForeColor = System.Drawing.Color.SaddleBrown;
             this.speedComboBox.MaxDropDownItems = 13;
             this.speedComboBox.Name = "speedComboBox";
@@ -2170,83 +2179,11 @@
             this.speedComboBox.DropDownClosed += new System.EventHandler(this.SpeedComboBox_DropDownClosed);
             this.speedComboBox.SelectedIndexChanged += new System.EventHandler(this.SpeedComboBox_DropDownClosed);
             // 
-            // toolStripLabel3
-            // 
-            this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(63, 22);
-            this.toolStripLabel3.Text = "Resolution";
-            // 
-            // resComboBox
-            // 
-            this.resComboBox.AutoSize = false;
-            this.resComboBox.BackColor = System.Drawing.SystemColors.Window;
-            this.resComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.resComboBox.ForeColor = System.Drawing.Color.SaddleBrown;
-            this.resComboBox.Items.AddRange(new object[] {
-            "4320p",
-            "2160p",
-            "1080p",
-            "900p",
-            "720p",
-            "576p",
-            "480p",
-            "360p",
-            "240p",
-            "160p"});
-            this.resComboBox.MaxDropDownItems = 10;
-            this.resComboBox.Name = "resComboBox";
-            this.resComboBox.Size = new System.Drawing.Size(60, 23);
-            this.resComboBox.DropDown += new System.EventHandler(this.FormatComboBox_DropDown);
-            this.resComboBox.DropDownClosed += new System.EventHandler(this.ResComboBox_DropDownClosed);
-            this.resComboBox.SelectedIndexChanged += new System.EventHandler(this.ResComboBox_SelectedIndexChanged);
-            this.resComboBox.Enter += new System.EventHandler(this.ResComboBox_Enter);
-            // 
-            // toolStripLabel4
-            // 
-            this.toolStripLabel4.Name = "toolStripLabel4";
-            this.toolStripLabel4.Size = new System.Drawing.Size(60, 22);
-            this.toolStripLabel4.Text = "Framerate";
-            // 
-            // fpsComboBox
-            // 
-            this.fpsComboBox.AutoSize = false;
-            this.fpsComboBox.ForeColor = System.Drawing.Color.SaddleBrown;
-            this.fpsComboBox.Items.AddRange(new object[] {
-            "Same",
-            "1/2",
-            "1/3",
-            "1/4"});
-            this.fpsComboBox.Name = "fpsComboBox";
-            this.fpsComboBox.Size = new System.Drawing.Size(60, 23);
-            this.fpsComboBox.DropDown += new System.EventHandler(this.FormatComboBox_DropDown);
-            this.fpsComboBox.DropDownClosed += new System.EventHandler(this.FpsComboBox_DropDownClosed);
-            this.fpsComboBox.SelectedIndexChanged += new System.EventHandler(this.FpsComboBox_DropDownClosed);
-            this.fpsComboBox.TextUpdate += new System.EventHandler(this.FpsComboBox_DropDownClosed);
-            // 
-            // toolStripLabel7
-            // 
-            this.toolStripLabel7.Name = "toolStripLabel7";
-            this.toolStripLabel7.Size = new System.Drawing.Size(31, 22);
-            this.toolStripLabel7.Text = "HDR";
-            // 
-            // hdrComboBox
-            // 
-            this.hdrComboBox.AutoSize = false;
-            this.hdrComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.hdrComboBox.ForeColor = System.Drawing.Color.SaddleBrown;
-            this.hdrComboBox.Items.AddRange(new object[] {
-            "No",
-            "Yes"});
-            this.hdrComboBox.Name = "hdrComboBox";
-            this.hdrComboBox.Size = new System.Drawing.Size(45, 23);
-            this.hdrComboBox.DropDown += new System.EventHandler(this.FormatComboBox_DropDown);
-            this.hdrComboBox.DropDownClosed += new System.EventHandler(this.SpeedComboBox_DropDownClosed);
-            this.hdrComboBox.SelectedIndexChanged += new System.EventHandler(this.SpeedComboBox_DropDownClosed);
-            // 
             // toolStripLabel5
             // 
+            this.toolStripLabel5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripLabel5.Name = "toolStripLabel5";
-            this.toolStripLabel5.Size = new System.Drawing.Size(55, 22);
+            this.toolStripLabel5.Size = new System.Drawing.Size(59, 22);
             this.toolStripLabel5.Text = "Bit depth";
             // 
             // bitsComboBox
@@ -2254,6 +2191,7 @@
             this.bitsComboBox.AutoSize = false;
             this.bitsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.bitsComboBox.DropDownWidth = 60;
+            this.bitsComboBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.bitsComboBox.ForeColor = System.Drawing.Color.SaddleBrown;
             this.bitsComboBox.Items.AddRange(new object[] {
             "10 bits",
@@ -2271,7 +2209,7 @@
             // 
             // toolStripLabel8
             // 
-            this.toolStripLabel8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolStripLabel8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripLabel8.Name = "toolStripLabel8";
             this.toolStripLabel8.Size = new System.Drawing.Size(39, 22);
             this.toolStripLabel8.Text = "Audio";
@@ -2280,6 +2218,7 @@
             // 
             this.caComboBox.AutoSize = false;
             this.caComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.caComboBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.caComboBox.ForeColor = System.Drawing.Color.SaddleBrown;
             this.caComboBox.Items.AddRange(new object[] {
             "aac",
@@ -2294,6 +2233,7 @@
             // 
             // toolStripLabel11
             // 
+            this.toolStripLabel11.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripLabel11.Name = "toolStripLabel11";
             this.toolStripLabel11.Size = new System.Drawing.Size(56, 22);
             this.toolStripLabel11.Text = "Channels";
@@ -2303,6 +2243,7 @@
             this.chComboBox.AutoSize = false;
             this.chComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.chComboBox.DropDownWidth = 90;
+            this.chComboBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.chComboBox.ForeColor = System.Drawing.Color.SaddleBrown;
             this.chComboBox.Items.AddRange(new object[] {
             "2 (stereo)",
@@ -2525,7 +2466,6 @@
             this.anime4kToolStripMenuItem.Name = "anime4kToolStripMenuItem";
             this.anime4kToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.anime4kToolStripMenuItem.Text = "Anime4K x1.5";
-            this.anime4kToolStripMenuItem.Click += new System.EventHandler(this.XToolStripMenuItem_Click);
             // 
             // anime4kX2ToolStripMenuItem
             // 
@@ -2533,7 +2473,6 @@
             this.anime4kX2ToolStripMenuItem.Name = "anime4kX2ToolStripMenuItem";
             this.anime4kX2ToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.anime4kX2ToolStripMenuItem.Text = "Anime4k x2";
-            this.anime4kX2ToolStripMenuItem.Click += new System.EventHandler(this.XToolStripMenuItem_Click);
             // 
             // fSRCNNXToolStripMenuItem
             // 
@@ -2541,7 +2480,6 @@
             this.fSRCNNXToolStripMenuItem.Name = "fSRCNNXToolStripMenuItem";
             this.fSRCNNXToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.fSRCNNXToolStripMenuItem.Text = "FSRCNNX x2";
-            this.fSRCNNXToolStripMenuItem.Click += new System.EventHandler(this.XToolStripMenuItem_Click);
             // 
             // openFileDialog1
             // 
@@ -2747,7 +2685,7 @@
             this.tableLayoutPanel11.ResumeLayout(false);
             this.tableLayoutPanel11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.upDownCRF)).EndInit();
             this.tableLayoutPanel12.ResumeLayout(false);
             this.tableLayoutPanel12.PerformLayout();
             this.tableLayoutPanel13.ResumeLayout(false);
@@ -2804,10 +2742,6 @@
         private System.Windows.Forms.ToolStrip toolStrip4;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripComboBox cvComboBox;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel3;
-        private System.Windows.Forms.ToolStripComboBox resComboBox;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel4;
-        private System.Windows.Forms.ToolStripComboBox fpsComboBox;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.ToolStrip toolStrip2;
         private System.Windows.Forms.ToolStripButton prevframeButton;
@@ -2841,8 +2775,6 @@
         private System.Windows.Forms.ToolStripMenuItem stabilizationToolStripMenuItem;
         private System.Windows.Forms.ToolStripLabel toolStripLabel5;
         private System.Windows.Forms.ToolStripComboBox bitsComboBox;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel7;
-        private System.Windows.Forms.ToolStripComboBox hdrComboBox;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripLabel toolStripLabel8;
         private System.Windows.Forms.ToolStripComboBox caComboBox;
@@ -2879,7 +2811,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Label constantLabel;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown upDownCRF;
         private System.Windows.Forms.Panel betterworsePanel;
         private System.Windows.Forms.Label worseLabel;
         private System.Windows.Forms.Label betterLabel;
@@ -2997,6 +2929,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel19;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox checkBoxHDR;
     }
 }
 

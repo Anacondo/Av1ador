@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace Av1ador
 {
@@ -34,6 +35,8 @@ namespace Av1ador
         public string Bv { get; set; }
         public int Track { get; set; }
         public int Subtitle { get; set; }
+        public bool HDR { get; set; }
+        //public bool DOVI { get; set; }
         public bool AudioPassthru { get; set; }
         public string Resolution { get; set; }
         public string Speed { get; set; }
@@ -189,7 +192,7 @@ namespace Av1ador
             }
         }
 
-        public static void Update(int col, Video video, ListBox list, ListBox vf, ListBox af, string gs, string cv, string bits, string param, int crf, int ba, string bv, int track, int subs, bool audioPassthru, string res, string spd)
+        public static void Update(int col, Video video, ListBox list, ListBox vf, ListBox af, string gs, string cv, string bits, string param, int crf, int ba, string bv, int track, int subs, bool audioPassthru, string spd, bool hdr)
         {
             for (int i = 0; i < list.Items.Count; i++)
             {
@@ -260,9 +263,9 @@ namespace Av1ador
                                 entry.Track = track;
                             break;
                         case 11:
-                            shouldsave = res != entry.Resolution;
+                            shouldsave = hdr != entry.HDR;
                             if (shouldsave)
-                                entry.Resolution = res;
+                                entry.HDR = hdr;
                             break;
                         case 12:
                             shouldsave = spd != entry.Speed;

@@ -37,7 +37,7 @@ namespace Av1ador
         private Encoder encoder;
         private Encode encode;
         private double scale = 1.0;
-        private int usage, prevheight;
+        private int usage;
         private PerformanceCounter cpu;
         private PerformanceCounter disk;
         private PerformanceCounter ram;
@@ -90,12 +90,10 @@ namespace Av1ador
             playtimeLabel.Text = "";
             mediainfoLabel.Text = "";
             cvComboBox.SelectedIndex = 1;
-            fpsComboBox.SelectedIndex = 0;
             bitsComboBox.SelectedIndex = 0;
-            hdrComboBox.SelectedIndex = 0;
-            caComboBox.SelectedIndex = 0;
+            caComboBox.SelectedIndex = 1; // opus by default
             chComboBox.SelectedIndex = 0;
-            formatComboBox.SelectedIndex = 0;
+            formatComboBox.SelectedIndex = 1; // mkv by default
             
             leftPanel.Width = mpvsPanel.Width;
             rightPanel.Width = Screen.FromControl(this).Bounds.Width;
@@ -178,6 +176,9 @@ namespace Av1ador
                     encoder.Set_audio_codec(caComboBox.Text.Split(' ')[0], primer_video.Channels.Max());
                     encoder.SubIndex = -1;
 
+                    checkBoxHDR.Enabled = primer_video.Hdr;
+                    checkBoxHDR.Checked = primer_video.Hdr;
+
                     Func.Update_combo(chComboBox, encoder.Channels, true);
                     caComboBox.Enabled = chComboBox.Enabled;
                     //groupBox2.Enabled = chComboBox.Enabled;
@@ -187,8 +188,6 @@ namespace Av1ador
                         encoder.Vf = Entry.Filter2List(entry.Vf);
                     if (entry.Af != null && entry.Af != "")
                         encoder.Af = Entry.Filter2List(entry.Af);
-                    Get_res(entry.Resolution);
-                    resComboBox.Text = entry.Resolution ?? resComboBox.Text;
                     primer_video.StartTime = entry.Start;
                     primer_video.EndTime = entry.End;
                     primer_video.CreditsTime = entry.Credits;
@@ -202,10 +201,10 @@ namespace Av1ador
 
                     speedComboBox.Text = entry.Speed;
                     bitsComboBox.Text = entry.Bits;
-                    if (entry.Crf > numericUpDown1.Maximum)
+                    if (entry.Crf > upDownCRF.Maximum)
                         return;
-                    numericUpDown1.Value = entry.Crf;
-                    trackBar1.Value = (int)numericUpDown1.Value;
+                    upDownCRF.Value = entry.Crf;
+                    trackBar1.Value = (int)upDownCRF.Value;
                     abitrateBox.Text = entry.Ba.ToString();
                     if (entry.Bv.Length > 0)
                     {
@@ -217,8 +216,9 @@ namespace Av1ador
                         bitrateBox.Text = totalBox.Text = "";
                     creditsendButton.Enabled = primer_video.CreditsTime > 0;
 
-//                    if (int.Parse(entry.Gs) > 0)
-//                        gscheckBox.Checked = true;
+                    if (checkBoxHDR.Enabled)
+                        checkBoxHDR.Checked = entry.HDR;
+
                     if (entry.Gs != "" && int.Parse(entry.Gs) <= gsUpDown.Maximum)
                         gsUpDown.Value = int.Parse(entry.Gs);
 
@@ -333,37 +333,6 @@ namespace Av1ador
             return false;
         }
 
-        private void Get_res(string entry_res = "")
-        {
-            if (primer_video == null)
-                return;
-            resComboBox.Items.Clear();
-            double[] ur = Func.Upscale_ratio(encoder.Vf);
-            int uh = (int)(primer_video.Height * ur[0]);
-            for (int i = 0; i < encoder.Resos.Length; i++)
-            {
-                int alto = int.Parse(encoder.Resos[i].Replace("p", ""));
-                if (alto <= uh || alto <= uh / primer_video.Sar || alto <= primer_video.Width * ur[1] * 9 / 15)
-                {
-                    resComboBox.Items.Add(encoder.Resos[i]);
-                    if (resComboBox.SelectedIndex < 0)
-                    {
-                        if (entry_res != null && entry_res != "" && entry_res != "Default" && int.Parse(entry_res.Replace("p", "")) <= alto)
-                            resComboBox.Text = entry_res;
-                        else if (alto <= Screen.FromControl(this).Bounds.Height || alto <= Screen.FromControl(this).Bounds.Height)
-                            resComboBox.Text = encoder.Resos[i];
-                        if (resComboBox.Text != "")
-                            ResComboBox_SelectedIndexChanged(new object(), new EventArgs());
-                    }
-                }
-            }
-            if (uh / primer_video.Sar > int.Parse(resComboBox.Items[0].ToString().Replace("p", "")))
-            {
-                resComboBox.Items.Insert(0, uh / primer_video.Sar + "p");
-                resComboBox.Text = resComboBox.Items[0].ToString();
-            }
-        }
-
         private void Detener()
         {
             mpvTimer.Enabled = false;
@@ -412,16 +381,14 @@ namespace Av1ador
                     formatComboBox.Text = settings.Format != "Default" ? settings.Format : formatComboBox.Text;
                     cvComboBox.Text = settings.Codec_video != "Default" ? settings.Codec_video : cvComboBox.Text;
                     speedComboBox.Text = settings.Speed != "Default" ? settings.Speed : speedComboBox.Text;
-                    resComboBox.Text = settings.Resolution != "Default" ? settings.Resolution : resComboBox.Text;
                 }
-                hdrComboBox.Text = settings.Hdr != "Default" ? settings.Hdr : hdrComboBox.Text;
                 if (before)
                     bitsComboBox.Text = settings.Bit_depth != "Default" ? settings.Bit_depth : bitsComboBox.Text;
                 int crf = 99;
                 try { crf = int.Parse(settings.Crf); }
                 catch { }
-                if (before && crf < 99 && crf >= numericUpDown1.Minimum && crf <= numericUpDown1.Maximum)
-                    numericUpDown1.Value = settings.Crf != "Default" ? crf : numericUpDown1.Value;
+                if (before && crf < 99 && crf >= upDownCRF.Minimum && crf <= upDownCRF.Maximum)
+                    upDownCRF.Value = settings.Crf != "Default" ? crf : upDownCRF.Value;
                 caComboBox.Text = settings.Codec_audio != "Default" ? settings.Codec_audio : caComboBox.Text;
                 chComboBox.Text = settings.Channels != "Default" ? settings.Channels : chComboBox.Items.Count > 1 ? chComboBox.Items[0].ToString() : chComboBox.Text.ToString();
                 if (before)
@@ -566,10 +533,9 @@ namespace Av1ador
                 Cv = cvComboBox.Text,
                 Bits = bitsComboBox.Text,
                 Param = paramsBox.Text,
-                Crf = (int)numericUpDown1.Value,
+                Crf = (int)upDownCRF.Value,
                 Ba = int.Parse(abitrateBox.Text),
                 Bv = bitrateBox.Text,
-                Resolution = settings != null ? settings.Resolution : resComboBox.Text,
                 Speed = speedComboBox.Text,
             };
             listBox1.Items.Add(entry);
@@ -829,6 +795,10 @@ namespace Av1ador
 
         private void ToolStripButton2_Click(object sender, EventArgs e)
         {
+            tabControl2.Visible = !tabControl2.Visible;
+
+            /*
+            if( tabControl2.Visible)
             if (tabControl1.SelectedIndex == 1)
             {
                 tabControl1.SelectedIndex = 0;
@@ -836,20 +806,20 @@ namespace Av1ador
             }
             else
                 tableLayoutPanel5.RowStyles[2].Height = tableLayoutPanel5.RowStyles[2].Height == 0 ? 290 : 0;
-            toolStripButton2.Checked = tableLayoutPanel5.RowStyles[2].Height != 0;
-
+            */
+            toolStripButton2.Checked = tabControl2.Visible;
         }
 
         private void TrackBar1_Scroll(object sender, EventArgs e)
         {
-            numericUpDown1.Value = trackBar1.Value;
+            upDownCRF.Value = trackBar1.Value;
         }
 
-        private void NumericUpDown1_ValueChanged(object sender, EventArgs e)
+        private void UpDownCRF_ValueChanged(object sender, EventArgs e)
         {
-            if (numericUpDown1.Focused == false && trackBar1.Focused == false)
+            if (upDownCRF.Focused == false && trackBar1.Focused == false)
                 return;
-            trackBar1.Value = (int)numericUpDown1.Value;
+            trackBar1.Value = (int)upDownCRF.Value;
             Entry_update(7);
             Entry.Save(listBox1);
         }
@@ -878,7 +848,7 @@ namespace Av1ador
                     bitrateBox.SelectionStart = bitrateBox.Text.Length;
                 }
                 trackBar1.Enabled = false;
-                numericUpDown1.Enabled = false;
+                upDownCRF.Enabled = false;
                 constantLabel.Enabled = false;
                 betterLabel.Enabled = false;
                 worseLabel.Enabled = false;
@@ -886,7 +856,7 @@ namespace Av1ador
             else
             {
                 trackBar1.Enabled = true;
-                numericUpDown1.Enabled = true;
+                upDownCRF.Enabled = true;
                 constantLabel.Enabled = true;
                 betterLabel.Enabled = true;
                 worseLabel.Enabled = true;
@@ -1038,10 +1008,10 @@ namespace Av1ador
                 paramsBox.Text = "";
             }
             trackBar1.Maximum = encoder.Max_crf;
-            numericUpDown1.Maximum = encoder.Max_crf;
-            numericUpDown1.Value = encoder.Crf;
+            upDownCRF.Maximum = encoder.Max_crf;
+            upDownCRF.Value = encoder.Crf;
             if (cvComboBox.Focused)
-                numericUpDown1.Value = encoder.Crf;
+                upDownCRF.Value = encoder.Crf;
             Func.Update_combo(speedComboBox, encoder.Presets, false);
             Dialogo = false;
             gsgroupBox.Enabled = encoder.Gs > 0;
@@ -1142,7 +1112,7 @@ namespace Av1ador
                 Dialogo = false;
             }
             else if (mpv.Mpv_loaded)
-                encoder.Save_settings(formatComboBox, cvComboBox, speedComboBox, resComboBox, hdrComboBox, bitsComboBox, numericUpDown1, caComboBox, chComboBox, abitrateBox, folderBrowserDialog1.SelectedPath, settings);
+                encoder.Save_settings(formatComboBox, cvComboBox, speedComboBox, checkBoxHDR, bitsComboBox, upDownCRF, caComboBox, chComboBox, abitrateBox, folderBrowserDialog1.SelectedPath, settings);
         }
 
         private void Exit(bool stop = false)
@@ -1181,17 +1151,11 @@ namespace Av1ador
             if (encoder != null)
             {
                 encoder.Speed = speedComboBox.Text.Split(' ')[0];
-
-                if (hdrComboBox.Text == "Yes" && hdrComboBox.Enabled)
-                    bitsComboBox.Text = int.Parse(bitsComboBox.Text) < 10 ? "10" : bitsComboBox.Text;
-                encoder.Hdr = hdrComboBox.Text == "Yes" && hdrComboBox.Enabled;
-                if (primer_video != null)
-                    //encoder.Vf_update("tonemap", hdrComboBox.Text, hdrComboBox.Enabled.ToString(), primer_video.Hdr != 2);
-                    if (speedComboBox.Focused == true)
-                    {
-                        Entry_update(12);
-                        Entry.Save(listBox1);
-                    }
+                if (speedComboBox.Focused == true)
+                {
+                    Entry_update(12);
+                    Entry.Save(listBox1);
+                }
             }
             Filter_items_update();
         }
@@ -1200,13 +1164,8 @@ namespace Av1ador
         {
             Dialogo = false;
             if (encoder != null)
-            {
-                if (int.Parse(bitsComboBox.Text) < 10 && hdrComboBox.Enabled)
-                    hdrComboBox.Text = "No";
                 encoder.Bits = int.Parse(bitsComboBox.Text);
-                //if (primer_video != null) ;
-                //encoder.Vf_update("tonemap", hdrComboBox.Text, hdrComboBox.Enabled.ToString(), primer_video.Hdr != 2);
-            }
+
             Filter_items_update();
             if (bitsComboBox.Focused == true)
             {
@@ -1219,7 +1178,7 @@ namespace Av1ador
         {
             if (primer_video == null)
                 return;
-            encoder.Save_settings(formatComboBox, cvComboBox, speedComboBox, resComboBox, hdrComboBox, bitsComboBox, numericUpDown1, caComboBox, chComboBox, abitrateBox, folderBrowserDialog1.SelectedPath, settings);
+            encoder.Save_settings(formatComboBox, cvComboBox, speedComboBox, checkBoxHDR, bitsComboBox, upDownCRF, caComboBox, chComboBox, abitrateBox, folderBrowserDialog1.SelectedPath, settings);
             encodestopButton.Enabled = true;
             encodestartButton.Enabled = false;
 
@@ -1243,12 +1202,6 @@ namespace Av1ador
             thread.Start();
             heat = Func.Heat(0);
             workersgroupBox.Refresh();
-
-            /*
-            string size_estimation_file = encode.Name + "\\size_estimation.log";
-            if (System.IO.File.Exists(size_estimation_file))
-                System.IO.File.Delete(size_estimation_file);
-            */
         }
 
         private void Abitrate_update(bool calc)
@@ -1285,157 +1238,158 @@ namespace Av1ador
             if (listBox1.Items.Count == 0 || primer_video == null)
                 return;
             Entry entry;
-            if (listBox1.SelectedItems.Count > 0)
-                entry = (Entry)listBox1.SelectedItems[0];
-            else
+            try
             {
-                int index = Entry.Index(primer_video.File, listBox1);
-                entry = index > -1 ? (Entry)listBox1.Items[index] : (Entry)listBox1.Items[0];
-            }
-
-            if (entry.File != primer_video.File)
-            {
-                Mpv_load_first();
-                return;
-            }
-            if (infoTimer.Interval == 221)
-            {
-                if (mediainfoLabel.Text.Contains("..."))
+                if (listBox1.SelectedItems.Count > 0)
+                    entry = (Entry)listBox1.SelectedItems[0];
+                else
                 {
-                    if (primer_video.Fps > 0)
-                        mediainfoLabel.Text = mediainfoLabel.Text.Replace("...", "~" + primer_video.Fps.ToString());
-                    else if (primer_video.Fps < 0)
-                        mediainfoLabel.Text = mediainfoLabel.Text.Replace(", ... fps", "");
+                    int index = Entry.Index(primer_video.File, listBox1);
+                    entry = index > -1 ? (Entry)listBox1.Items[index] : (Entry)listBox1.Items[0];
                 }
-                else if (primer_video != null)
+                if (entry.File != primer_video.File)
                 {
-                    fpsComboBox.Items.Clear();
-                    fpsComboBox.Items.Add("Same");
-                    fpsComboBox.Items.Add(Math.Round(primer_video.Fps / 2, 1) + " (1/2)");
-                    fpsComboBox.Items.Add(Math.Round(primer_video.Fps / 3, 1) + " (1/3)");
-                    fpsComboBox.Items.Add(Math.Round(primer_video.Fps / 4, 1) + " (1/4)");
-                    infoTimer.Interval = 250;
-                }
-            }
-            if (infoTimer.Interval == 250 && !encodestopButton.Enabled && bitrateBox.Text != "" && !primer_video.Gs_thread && !encoder.Predicted)
-            {
-                if (primer_video.Busy || totalBox.Focused || bitrateBox.Focused)
+                    Mpv_load_first();
                     return;
-                primer_video.Predict(statusLabel, encoder, vfListBox);
-            }
-            else if (encodestopButton.Enabled && infoTimer.Interval == 250 && !primer_video.Busy && !encode.Can_run && !encode.Failed && !primer_video.Gs_thread && (entry.Param != "" || paramsBox.Text != "") && (encoder.Vf.Count == 0 || !encoder.Vf[0].Contains("crop=D")))
-            {
-                encoder.Params = paramsBox.Text;
-                encoder.Crf = (int)numericUpDown1.Value;
-                encode = new Encode
-                {
-                    Split_min_time = 4 + (int)((primer_video.EndTime - primer_video.StartTime) / 1400.0),
-                    Can_run = true,
-                    Job = encoder.Job,
-                    Extension = formatComboBox.Text,
-                    Workers = (int)workersUpDown.Value,
-                    Param = encoder.Build_vstr(),
-                    Clean = settings.Delete_temp_files
-                };
-                encode.Set_fps_filter(encoder.Vf);
-                double delay = 0;
-                if (primer_video.Channels[0] > 0 && checkedListBox1.CheckedItems.Count > 0)
-                {
-                    encode.A_Param = encoder.Build_astr(checkedListBox1.CheckedIndices[0]);
-                    encode.A_Job = encoder.A_Job;
-                    encode.SubIndex = encoder.SubIndex;
-                    delay = primer_video.Tracks_delay[checkedListBox1.CheckedIndices[0]];
                 }
-                double to = primer_video.EndTime != primer_video.Duration ? primer_video.EndTime : primer_video.Duration + 1;
-                encode.Start_encode(folderBrowserDialog1.SelectedPath, primer_video, checkedListBox1.CheckedItems.Count > 0, audioPassThruCheckBox.Checked, delay, encoder.V_kbps, encoder.Out_spd);
-                listBox1.Refresh();
-            }
-            else if (encodestopButton.Enabled && encode.Finished)
-            {
-                Entry.Set_status(listBox1, encode.File, encode.Elapsed, false, false, true);
-                if (!Next(listBox1, Entry.Index(primer_video.File, listBox1)))
+
+                if (infoTimer.Interval == 221)
                 {
+                    if (mediainfoLabel.Text.Contains("..."))
+                    {
+                        if (primer_video.Fps > 0)
+                            mediainfoLabel.Text = mediainfoLabel.Text.Replace("...", "~" + primer_video.Fps.ToString());
+                        else if (primer_video.Fps < 0)
+                            mediainfoLabel.Text = mediainfoLabel.Text.Replace(", ... fps", "");
+                    }
+                    else if (primer_video != null)
+                    {
+                        infoTimer.Interval = 250;
+                    }
+                }
+                if (infoTimer.Interval == 250 && !encodestopButton.Enabled && bitrateBox.Text != "" && !primer_video.Gs_thread && !encoder.Predicted)
+                {
+                    if (primer_video.Busy || totalBox.Focused || bitrateBox.Focused)
+                        return;
+                    primer_video.Predict(statusLabel, encoder, vfListBox);
+                }
+                else if (encodestopButton.Enabled && infoTimer.Interval == 250 && !primer_video.Busy && !encode.Can_run && !encode.Failed && !primer_video.Gs_thread && (entry.Param != "" || paramsBox.Text != "") && (encoder.Vf.Count == 0 || !encoder.Vf[0].Contains("crop=D")))
+                {
+                    encoder.Params = paramsBox.Text;
+                    encoder.Crf = (int)upDownCRF.Value;
+                    encode = new Encode
+                    {
+                        Split_min_time = 4 + (int)((primer_video.EndTime - primer_video.StartTime) / 1400.0),
+                        Can_run = true,
+                        Job = encoder.Job,
+                        Extension = formatComboBox.Text,
+                        Workers = (int)workersUpDown.Value,
+                        Param = encoder.Build_vstr(),
+                        Clean = settings.Delete_temp_files
+                    };
+                    encode.Set_fps_filter(encoder.Vf);
+                    double delay = 0;
+                    if (primer_video.Channels[0] > 0 && checkedListBox1.CheckedItems.Count > 0)
+                    {
+                        encode.A_Param = encoder.Build_astr(checkedListBox1.CheckedIndices[0]);
+                        encode.A_Job = encoder.A_Job;
+                        encode.SubIndex = encoder.SubIndex;
+                        encode.Cv = encoder.Cv;
+                        encode.Ca = encoder.Ca;
+                        delay = primer_video.Tracks_delay[checkedListBox1.CheckedIndices[0]];
+                    }
+                    double to = primer_video.EndTime != primer_video.Duration ? primer_video.EndTime : primer_video.Duration + 1;
+                    encode.Start_encode(folderBrowserDialog1.SelectedPath, primer_video, checkedListBox1.CheckedItems.Count > 0, audioPassThruCheckBox.Checked, delay, encoder.V_kbps, encoder.Out_spd);
+                    listBox1.Refresh();
+                }
+                else if (encodestopButton.Enabled && encode.Finished)
+                {
+                    Entry.Set_status(listBox1, encode.File, encode.Elapsed, false, false, true);
+                    if (!Next(listBox1, Entry.Index(primer_video.File, listBox1)))
+                    {
+                        encodestopButton.Enabled = false;
+                        encodestartButton.Enabled = true;
+                        heat = Func.Heat(0);
+                        workersgroupBox.Refresh();
+                        Detener();
+                        if (shutdownMenuItem.Checked)
+                            Process.Start("shutdown", "/s /t 0");
+                        else if (exitMenuItem.Checked)
+                            Exit();
+                        else if (primer_video.File == encode.File)
+                        {
+                            mpv.Mpv2_load(this, encode.Dir + Path.GetFileNameWithoutExtension(encode.Name) + "_Av1ador." + encode.Extension, "set pause yes");
+                            mpv.Cmd("set pause yes;seek " + primer_video.StartTime.ToString() + " absolute+exact");
+                            Update_current_time(primer_video.StartTime);
+                        }
+                    }
+                    if (!workersUpDown.Enabled && workersUpDown.Value > 1)
+                        if (!workersBox.Checked)
+                            workersUpDown.Value = 4;
+                }
+                else if (!encodestopButton.Enabled)
+                {
+                    encode.Can_run = false;
+                    if (statusLabel.Text.Contains("Encoding"))
+                    {
+                        listBox1.Refresh();
+                        if (!workersBox.Checked)
+                            workersUpDown.Value = 4;
+                    }
+                    if (!statusLabel.Text.Contains("grain"))
+                        statusLabel.Text = "";
+                    estimatedLabel.Text = "";
+                    Entry.Set_status(listBox1, encode.File, encode.Elapsed, false, false, false);
+                }
+                else if (encode.Failed)
+                {
+                    Entry.Set_status(listBox1, encode.File, encode.Elapsed, false, true);
                     encodestopButton.Enabled = false;
                     encodestartButton.Enabled = true;
-                    heat = Func.Heat(0);
-                    workersgroupBox.Refresh();
-                    Detener();
-                    if (shutdownMenuItem.Checked)
-                        Process.Start("shutdown", "/s /t 0");
-                    else if (exitMenuItem.Checked)
-                        Exit();
-                    else if (primer_video.File == encode.File)
+                }
+                if (encodestopButton.Enabled && !statusLabel.Text.Contains("grain"))
+                {
+                    Entry.Set_status(listBox1, encode.File, encode.Elapsed, encode.Status.Count > 0, false, false, encode.Chunks != null && encode.Chunks[0].Encoding);
+                    usage = (int)cpu.NextValue();
+                    if (WindowState != FormWindowState.Minimized)
                     {
-                        mpv.Mpv2_load(this, encode.Dir + Path.GetFileNameWithoutExtension(encode.Name) + "_Av1ador." + encode.Extension, "set pause yes");
-                        mpv.Cmd("set pause yes;seek " + primer_video.StartTime.ToString() + " absolute+exact");
-                        Update_current_time(primer_video.StartTime);
+                        heat = Func.Heat((int)usage);
+                        workersgroupBox.Refresh();
                     }
-                }
-                if (!workersUpDown.Enabled && workersUpDown.Value > 1)
-                    if( !workersBox.Checked )
-                        workersUpDown.Value = 4;
-            }
-            else if (!encodestopButton.Enabled)
-            {
-                encode.Can_run = false;
-                if (statusLabel.Text.Contains("Encoding"))
-                {
-                    listBox1.Refresh();
-                    if (!workersBox.Checked)
-                        workersUpDown.Value = 4;
-                }
-                if (!statusLabel.Text.Contains("grain"))
-                    statusLabel.Text = "";
-                estimatedLabel.Text = "";
-                Entry.Set_status(listBox1, encode.File, encode.Elapsed, false, false, false);
-            }
-            else if (encode.Failed)
-            {
-                Entry.Set_status(listBox1, encode.File, encode.Elapsed, false, true);
-                encodestopButton.Enabled = false;
-                encodestartButton.Enabled = true;
-            }
-            if (encodestopButton.Enabled && !statusLabel.Text.Contains("grain"))
-            {
-                Entry.Set_status(listBox1, encode.File, encode.Elapsed, encode.Status.Count > 0, false, false, encode.Chunks != null && encode.Chunks[0].Encoding);
-                usage = (int)cpu.NextValue();
-                if (WindowState != FormWindowState.Minimized)
-                {
-                    heat = Func.Heat((int)usage);
-                    workersgroupBox.Refresh();
-                }
 
-                // calculation for available system resources and whether we should span a new encoding ffmpeg thread or not
-                if (!workersBox.Checked && workersUpDown.Maximum > 1 && encode.Counter == 0)
-                {
-                    // conditions to spawn new thread:
-                    // CPU usage < 100%
-                    // disk usage < 70%
-                    // available ram > 75%
-                    if (disk != null && usage < 100 && disk.NextValue() < 70 && ram.NextValue() > ((int)ram.CounterType - (int)ram.CounterType * 75 / 100))
-                        underload++;
-                    else
-                        underload = 0;
-                    if (underload > 8)
+                    // calculation for available system resources and whether we should span a new encoding ffmpeg thread or not
+                    if (!workersBox.Checked && workersUpDown.Maximum > 1 && encode.Counter == 0)
                     {
-                        underload = -1;
-                        if (workersUpDown.Value + 1 <= workersUpDown.Maximum && encode.Segments_left > 0 && workersUpDown.Value < Environment.ProcessorCount * 75 / 100)
-                            workersUpDown.Value++;
+                        // conditions to spawn new thread:
+                        // CPU usage < 100%
+                        // disk usage < 70%
+                        // available ram > 75%
+                        if (disk != null && usage < 100 && disk.NextValue() < 70 && ram.NextValue() > ((int)ram.CounterType - (int)ram.CounterType * 75 / 100))
+                            underload++;
+                        else
+                            underload = 0;
+                        if (underload > 8)
+                        {
+                            underload = -1;
+                            if (workersUpDown.Value + 1 <= workersUpDown.Maximum && encode.Segments_left > 0 && workersUpDown.Value < Environment.ProcessorCount * 75 / 100)
+                                workersUpDown.Value++;
+                        }
                     }
+                    double progress = encode.Progress;
+                    statusLabel.Text = string.Join("", encode.Status.ToArray()).Replace("Encoding video...", "Encoding video... " + (progress - 1 < 0 ? 0 : progress - 1) + "%");
+                    statusLabel.Text = statusLabel.Text.Replace("...,", "|");
+                    if (statusLabel.Text.Contains("Encoding video"))
+                        statusLabel.Text += $" | FPS: {encode.Speed:F2} | Avg. bitrate: {encode.Abr:F0} Kbps";
+                    double size = encode.Estimated;
+                    string t = encode.Remaining.ToString().Split('.')[0];
+                    if (t.Length < 4)
+                        t += " day" + (t == "1" ? "" : "s");
+                    estimatedLabel.Text = size > 0 ? $"Projected output size: {Func.Size_unit(size)} | Remaining time: {t}" : "Calculating output size...";
                 }
-                double progress = encode.Progress;
-                statusLabel.Text = string.Join("", encode.Status.ToArray()).Replace("Encoding video...", "Encoding video... " + (progress - 1 < 0 ? 0 : progress - 1) + "%");
-                statusLabel.Text = statusLabel.Text.Replace("...,", "|");
-                if (statusLabel.Text.Contains("Encoding video"))
-                    statusLabel.Text += $" | FPS: {encode.Speed:F2} | Avg. bitrate: {encode.Abr:F0} Kbps";
-                double size = encode.Estimated;
-                string t = encode.Remaining.ToString().Split('.')[0];
-                if (t.Length < 4)
-                    t += " day" + (t == "1" ? "" : "s");
-                estimatedLabel.Text = size > 0 ? $"Projected output size: {Func.Size_unit(size)} | Remaining time: {t}" : "Calculating output size...";
+                Text = statusLabel.Text.Contains("%") ? statusLabel.Text.Split('%')[0].Split(' ').Last() + "%" + " - " + title : title;
+                UpdateBar();
             }
-            Text = statusLabel.Text.Contains("%") ? statusLabel.Text.Split('%')[0].Split(' ').Last() + "%" + " - " + title : title;
-            UpdateBar();
+            catch { }
         }
 
         private void TogglefButton_Click(object sender, EventArgs e)
@@ -1521,7 +1475,6 @@ namespace Av1ador
         {
             if (togglefButton.Text == "Video")
             {
-                bool resize = false;
                 for (int i = vfListBox.SelectedIndices.Count - 1; i >= 0; i--)
                 {
                     string s = vfListBox.SelectedItems[i].ToString();
@@ -1530,13 +1483,9 @@ namespace Av1ador
                     if (clTextBox.Text == s)
                         clTextBox.Text = "";
                     encoder.Vf.RemoveAt(vfListBox.SelectedIndices[i]);
-                    if (s.Contains("Anime4K") || s.Contains("FSRCNNX"))
-                        resize = true;
                     if (s.StartsWith("setpts"))
                         encoder.Af.RemoveAll(ss => ss.StartsWith("atempo="));
                 }
-                if (resize)
-                    Get_res();
             }
             else
             {
@@ -1651,69 +1600,11 @@ namespace Av1ador
             clTextBox.Focus();
         }
 
-        private void FpsComboBox_DropDownClosed(object sender, EventArgs e)
-        {
-            Dialogo = false;
-            encoder.Vf_add("fps", fpsComboBox.Text);
-            int.TryParse(fpsComboBox.Text.Split(' ')[0], out int ofps);
-            encoder.Out_fps = 0;
-            if (ofps > 0)
-                encoder.Out_fps = int.Parse(fpsComboBox.Text.Split(' ')[0]);
-            encoder.Predicted = false;
-            Filter_items_update();
-        }
-
-        private void ResComboBox_Enter(object sender, EventArgs e)
-        {
-            int.TryParse(resComboBox.Text.Replace("p", ""), out prevheight);
-        }
-
-        private void ResComboBox_DropDownClosed(object sender, EventArgs e)
-        {
-            if (prevheight + "p" != resComboBox.Text)
-                encoder.Vf.RemoveAll(s => s.StartsWith("scale"));
-            ResComboBox_SelectedIndexChanged(sender, e);
-            Entry_update(11);
-            Entry.Save(listBox1);
-            ActiveControl = null;
-        }
-
-        private void ResComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            Dialogo = false;
-            if (primer_video == null)
-                return;
-            double dn = (double)16 / (double)9;
-            double h = Double.Parse(resComboBox.Text.Replace("p", "")) * (primer_video.Sar < 1 ? primer_video.Sar : 1.0);
-            scale = (double)primer_video.Width * primer_video.Sar / (double)primer_video.Height > dn ? h * dn / (double)primer_video.Width : h / (double)primer_video.Height;
-            double ow = ((double)primer_video.Width * (primer_video.Sar > 1 ? primer_video.Sar : 1.0) * scale);
-            encoder.Out_w = (int)ow;
-            encoder.Out_h = (int)(Math.Floor(((ow * (double)primer_video.Height / (double)primer_video.Width / primer_video.Sar) + (double)1) / (double)2) * 2);
-            if (segundo_video == null)
-                mpv.Scale(scale, scale);
-            if (encoder.Vf.FindIndex(s => s.StartsWith("scale")) != -1 || encoder.Vf.FindIndex(s => s.StartsWith("zscale")) != -1)
-                return;
-            if (resComboBox.SelectedIndex > 0 || ow < (double)primer_video.Width * primer_video.Sar - 1 || primer_video.Sar != 1)
-                //encoder.Vf_add("scale", ow.ToString(), encoder.Out_h.ToString(), primer_video.Width.ToString(), primer_video.Height.ToString());
-
-                //encoder.Vf_update("tonemap", hdrComboBox.Text, hdrComboBox.Enabled.ToString(), primer_video.Hdr != 2);
-                //encoder.Vf_add("deinterlace", primer_video.Interlaced.ToString());
-                //encoder.Vf_add("autocolor", primer_video.Color_matrix);
-                //encoder.Vf_add("rotate", primer_video.Rotation.ToString());
-                Filter_items_update();
-        }
 
         private void VolumeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             encoder.Af_add("volume", "");
             Filter_items_update();
-        }
-
-        private void ResizeStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (primer_video != null)
-                encoder.Vf_add("zscale=w=1920:h=-2:f=spline36");
-            Filter_items_update(true);
         }
 
         private void CropToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1829,27 +1720,6 @@ namespace Av1ador
         {
             if (togglefButton.Text == "Video")
             {
-                /*
-                bool vulkan = false;
-                bool opencl = !Encoder.Libplacebo;
-                bool tonemap = false;
-                if (encoder.Vf.Count > 0)
-                {
-                    foreach (var f in encoder.Vf)
-                    {
-                        if (f.Contains("libplacebo"))
-                            vulkan = true;
-                        if (f.Contains("tonemap"))
-                            tonemap = true;
-                        if (f.Contains("opencl"))
-                            opencl = true;
-                    }
-                }
-                denoiseToolStripMenuItem.Enabled = !vulkan;
-                openclToolStripMenuItem.Enabled = !vulkan && !tonemap && (primer_video != null && primer_video.Hdr != 2);
-                vulkanToolStripMenuItem.Enabled = !opencl && !tonemap;
-                upscaleToolStripMenuItem.Enabled = !vulkan;
-                */
                 savedToolStripMenuItem.DropDownItems.Clear();
                 if (settings.CustomVf.Count() > 0)
                 {
@@ -1870,7 +1740,6 @@ namespace Av1ador
                 else
                     savedToolStripMenuItem1.Enabled = false;
             }
-
         }
 
         private void SavedMenuItems(bool video = false)
@@ -1993,7 +1862,6 @@ namespace Av1ador
                 bw.RunWorkerCompleted += (ss, ee) =>
                 {
                     encoder.Vf.RemoveAll(s => s.StartsWith("scale"));
-                    ResComboBox_SelectedIndexChanged(sender, e);
                     Filter_items_update();
                     Filter_preview(encoder.Vf[0]);
                 };
@@ -2096,31 +1964,6 @@ namespace Av1ador
             tabControl1.SelectedIndex = 0;
         }
 
-        private void XToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            int uh = int.Parse(resComboBox.Items[0].ToString().Replace("p", ""));
-            resComboBox.Items.Clear();
-            if ((sender as ToolStripMenuItem).Text.Contains("x2"))
-            {
-                uh *= 2;
-                encoder.Vf_add((sender as ToolStripMenuItem).Text.Contains("FSRCNNX") ? "fsrcnnx" : "anime4k", "2", (bitsComboBox.Text == "10").ToString());
-            }
-            else
-            {
-                uh = uh * 3 / 2;
-                encoder.Vf_add("anime4k", "1.5", (bitsComboBox.Text == "10").ToString());
-            }
-            for (int i = 0; i < encoder.Resos.Length; i++)
-            {
-                if (int.Parse(encoder.Resos[i].Replace("p", "")) <= uh)
-                    resComboBox.Items.Add(encoder.Resos[i]);
-            }
-            if (uh > int.Parse(resComboBox.Items[0].ToString().Replace("p", "")))
-                resComboBox.Items.Insert(0, uh + "p");
-            resComboBox.SelectedIndex = 0;
-            Filter_items_update();
-        }
-
         private void CopytoolStripButton_Click(object sender, EventArgs e)
         {
             if (listBox1.SelectedItems.Count > 0 && (encoder.Vf.Count > 0 || encoder.Af.Count > 0))
@@ -2162,7 +2005,7 @@ namespace Av1ador
             if (primer_video == null)
                 encoder.Vf_add((sender as ToolStripMenuItem).Text);
             else
-                encoder.Vf_add((sender as ToolStripMenuItem).Text, (primer_video.Hdr != 2).ToString());
+                encoder.Vf_add((sender as ToolStripMenuItem).Text, (primer_video.Hdr).ToString());
             Filter_items_update();
         }
 
@@ -2306,10 +2149,34 @@ namespace Av1ador
 
         }
 
+        private void videoOptionsGroupBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripLabel3_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void WorkersBox_CheckedChanged(object sender, EventArgs e)
         {
             workersgroupBox.Text = workersBox.Checked ? "Threads" : "Threads (auto)";
             workersUpDown.Enabled = workersBox.Checked;
+        }
+
+        private void checkBoxHDR_CheckedChanged(object sender, EventArgs e)
+        {
+            if( checkBoxHDR.Enabled )
+            {
+                if( checkBoxHDR.CheckState == CheckState.Checked )
+                    encoder.Hdr = true;
+                else
+                    encoder.Hdr = false;
+
+                Entry_update(11);
+                Entry.Save(listBox1);
+            }
         }
 
         private void GrainButton_CheckStateChanged(object sender, EventArgs e)
@@ -2355,7 +2222,6 @@ namespace Av1ador
         {
             gsUpDown.Value = (int)gsUpDown.Value;
             encoder.Gs_level = (int)gsUpDown.Value;
-            paramsBox.Text = Func.Replace_gs(paramsBox.Text, (int)gsUpDown.Value);
             Entry_update(2);
             Entry.Save(listBox1);
         }
@@ -2450,7 +2316,7 @@ namespace Av1ador
             if (primer_video != null)
             {
                 listBox1.SelectedIndexChanged -= new EventHandler(ListBox1_SelectedIndexChanged);
-                Entry.Update(field, primer_video, listBox1, vfListBox, afListBox, gsUpDown.Value.ToString(), cvComboBox.Text, bitsComboBox.Text, paramsBox.Text, (int)numericUpDown1.Value, int.Parse(abitrateBox.Text), bitrateBox.Text, track, subtitle, audioPassThruCheckBox.Checked, resComboBox.Text, speedComboBox.Text);
+                Entry.Update(field, primer_video, listBox1, vfListBox, afListBox, gsUpDown.Value.ToString(), cvComboBox.Text, bitsComboBox.Text, paramsBox.Text, (int)upDownCRF.Value, int.Parse(abitrateBox.Text), bitrateBox.Text, track, subtitle, audioPassThruCheckBox.Checked, speedComboBox.Text, checkBoxHDR.Checked);
                 listBox1.SelectedIndexChanged += new EventHandler(ListBox1_SelectedIndexChanged);
             }
         }

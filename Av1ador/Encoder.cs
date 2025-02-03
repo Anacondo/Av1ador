@@ -182,10 +182,10 @@ namespace Av1ador
                 Crf = 18;
                 Bit_depth = new string[] { "10", "8" };
                 Job = j[1];
-                Presets = new string[] { "0 (slowest)", "1", "2", "3", "*4", "5", "6", "7", "8", "9", "10", "11", "12 (fastest)" };
+                Presets = new string[] { "-1 (slowest)", "0", "1", "2", "3", "*4", "5", "6", "7", "8", "9", "10", "11", "12 (fastest)" };
                 speed_str = "-preset ";
-                Params = " -svtav1-params tune=0:keyint=240:enable-qm=1:qm-min=0:qm-max=15:aq-mode=2:enable-dlf=2:enable-overlays=0:enable-restoration=0:enable-tf=0:enable-cdef=0:sharpness=3:enable-variance-boost=1:variance-boost-strength=3:variance-octile=4:qp-scale-compress-strength=3:adaptive-film-grain=1:film-grain=!gs!:noise-norm-strength=1"; //:psy-rd=1.0";
-                Color = " -color_primaries 1 -color_trc 1 -colorspace 1";
+                Params = "-svtav1-params tune=3:keyint=240:enable-qm=1:qm-min=8:qm-max=15:aq-mode=2:enable-dlf=2:enable-overlays=0:enable-restoration=0:enable-tf=2:enable-cdef=0:sharpness=3:enable-variance-boost=1:variance-boost-strength=3:variance-octile=4:qp-scale-compress-strength=3:adaptive-film-grain=1:noise-norm-strength=3:psy-rd=1.0:spy-rd=1:frame-luma-bias=15";
+                Color = ":color-primaries=1:transfer-characteristics=1:matrix-coefficients=1";
                 Gs = 50;
                 Rate = 0.85;
                 Vbr_str = "";
@@ -502,10 +502,11 @@ namespace Av1ador
 
         public string Build_vstr(bool predict = false)
         {
-            string str = " -hide_banner -copyts -start_at_zero -display_rotation 0 -y !seek! -i \"!file!\" !start! !duration!";
-            str += " -c:v:0 " + Cv;
+            string str = " -init_hw_device vulkan:" + Vkn_Device;
+            str += " -hide_banner -copyts -start_at_zero -display_rotation 0 -y !seek! -i \"!file!\" !start! !duration! -c:v:0 " + Cv;
             List<string> vf = new List<string>(Vf);
             bool always_2p = Cv == "libvpx-vp9" && Regex.Match(Params, "auto-alt-ref [1-6]").Success;
+            /*
             if (Vf.Count > 0)
             {
                 if (Vf.FindIndex(s => s.StartsWith("setpts=")) > -1)
@@ -548,6 +549,11 @@ namespace Av1ador
                 }
                 str += " -vf " + String.Join(",", vf.ToArray());
             }
+            */
+
+            if (vf.Count > 0)
+                str += " -vf " + String.Join(",", vf.ToArray());
+
             str += " -pix_fmt " + (Bits == 8 ? "yuv420p" : "yuv420p10le");
             str += " -fps_mode vfr";
             if (V_kbps > 0)
@@ -576,8 +582,17 @@ namespace Av1ador
             str += (Cv != "librav1e" ? " " : "") + Func.Replace_gs((Func.Param_replace(Params, "enable-keyframe-filtering", "")), Gs_level);
             if (V_kbps > 0 && Multipass != "" && !predict && Cv == "libx265")
                 str += ":!reuse!";
+
+            // Add values for grain synth
+            if (Gs_level > 0)
+                str += ":film-grain=" + Gs_level;
+
+            // TO-DO: fix this code and add a HDR entry in the queue.xml file, so that one of the following values is appended based on it
             if (!Hdr)
                 str += Color;
+            else
+                str += ":color-primaries=9:transfer-characteristics=16:matrix-coefficients=9";
+
             str += " -an";
             if ((V_kbps > 0 || always_2p) && Multipass != "" && !predict)
                 str = Pass(str) + " -loglevel error -f null NUL && ffmpeg" + Pass(str, 2);
@@ -688,13 +703,12 @@ namespace Av1ador
             return str;
         }
 
-        public void Save_settings(ToolStripComboBox format, ToolStripComboBox codec_video, ToolStripComboBox speed, ToolStripComboBox resolution, ToolStripComboBox hdr, ToolStripComboBox bit_depth, NumericUpDown crf, ToolStripComboBox codec_audio, ToolStripComboBox channels, TextBox ba, string output_folder, Settings s)
+        public void Save_settings(ToolStripComboBox format, ToolStripComboBox codec_video, ToolStripComboBox speed, CheckBox hdr, ToolStripComboBox bit_depth, NumericUpDown crf, ToolStripComboBox codec_audio, ToolStripComboBox channels, TextBox ba, string output_folder, Settings s)
         {
             if (Form.ActiveForm == null)
                 return;
             Settings settings;
-            string res_s = resolution.SelectedIndex > 0 || (resolution.Text != "" && int.Parse(resolution.Text.Replace("p", "")) > Screen.FromControl(Form.ActiveForm).Bounds.Height) ? resolution.Text : "Default";
-            string hdr_s = hdr.Enabled ? hdr.Text : "Default";
+            string hdr_s = hdr.Checked ? "1" : "0";
             string bit_s = bit_depth.Items.Count > 1 ? bit_depth.Text : "Default";
             string ch_s = (channels.Text != c[0] || c.Length > 2) && channels.Items.Count > 1 ? channels.Text : "Default";
             if (System.IO.File.Exists("settings.xml"))
@@ -703,11 +717,7 @@ namespace Av1ador
                 settings.Format = format.Text;
                 settings.Codec_video = codec_video.Text;
                 settings.Speed = speed.Text;
-                if (resolution.Text != "" && settings.Resolution != "Default" && int.Parse(resolution.Text.Replace("p", "")) >= int.Parse(settings.Resolution.Replace("p", "")))
-                    settings.Resolution = resolution.Text;
-                else
-                    settings.Resolution = res_s == "Default" ? settings.Resolution : res_s;
-                settings.Hdr = hdr_s == "Default" ? settings.Hdr : hdr_s;
+                settings.Hdr = hdr_s;
                 settings.Bit_depth = bit_s == "Default" ? settings.Bit_depth : bit_s;
                 settings.Crf = crf.Value.ToString();
                 settings.Codec_audio = codec_audio.Text;
@@ -723,7 +733,6 @@ namespace Av1ador
                     Format = format.Text,
                     Codec_video = codec_video.Text,
                     Speed = speed.Text,
-                    Resolution = res_s,
                     Hdr = hdr_s,
                     Bit_depth = bit_s,
                     Crf = crf.Value.ToString(),

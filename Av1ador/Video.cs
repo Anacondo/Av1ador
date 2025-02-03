@@ -54,7 +54,8 @@ namespace Av1ador
         public int Height { get; }
         public double Sar { get; }
         public double Dar { get; }
-        public int Hdr { get; }
+        public bool Hdr { get; }
+        //public bool DOVI { get; }
         public int Rotation { get; }
         public string Color_matrix { get; }
         public bool Interlaced { get; }
@@ -145,14 +146,15 @@ namespace Av1ador
             {
                 Color_matrix = compare.Groups[1].ToString();
                 if (Color_matrix.Contains("2020"))
-                    Hdr = 1;
+                    Hdr = true;
             }
             else if (Height < 580 && (Sar < 1 || Interlaced))
                 Color_matrix = "mpeg2video";
             else
                 Color_matrix = "";
-            if (Hdr == 0 && Regex.Match(info, @"Side data:[\r\n]+ *DOVI").Success)
-                Hdr = 2;
+            
+            //if (!Hdr && Regex.Match(info, @"Side data:[\r\n]+ *DOVI").Success)
+            //    DOVI = true;
 
             compare = Regex.Match(info, "rotation of (-?[0-9]{1,3})");
             int rotation = 0;
@@ -489,7 +491,7 @@ namespace Av1ador
                     break;
             }
             double size = Math.Round(new FileInfo(File).Length / 1024.0 / 1024.0, 1);
-            return str_duration + ", " + Width + "x" + Height + (Interlaced ? "i" : "p") + ", " + (Fps == 0 ? "..." : Fps.ToString()) + " fps" + (Hdr == 1 ? ", HDR" : Hdr == 2 ? ", DOVI" : "") + " - " + str_ch + " - " + Func.Size_unit(size);
+            return str_duration + ", " + Width + "x" + Height + (Interlaced ? "i" : "p") + ", " + (Fps == 0 ? "..." : Fps.ToString()) + " fps" + (Hdr ? ", HDR" : "") + " - " + str_ch + " - " + Func.Size_unit(size);
         }
 
         internal void Blackbars([Optional] Encoder enc)
@@ -499,7 +501,7 @@ namespace Av1ador
                 enc.Vf_add("crop", Letterbox.Width.ToString(), Letterbox.Height.ToString(), Letterbox.X.ToString(), Letterbox.Y.ToString());
                 return;
             }
-            string th = (Hdr > 0 ? 64 : 16).ToString();
+            string th = (Hdr ? 64 : 16).ToString();
             double ss = Duration > Kf_interval * 3 ? Duration / 2.0 : 0;
             Process ffmpeg = new Process();
             Func.Setinicial(ffmpeg, 3, " -hide_banner -ss " + ss + " -i \"" + File + "\" -vframes " + ((35 - (int)Math.Pow(Width, 1.0 / 3.0)) * (int)Fps) + " -an -vf cropdetect=limit=" + th + ":round=2 -f null NUL");
