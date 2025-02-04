@@ -168,7 +168,7 @@ namespace Av1ador
                 if (currentProgressPercentage / 10 > lastLoggedPercentage / 10)
                 {
                     string crfValue = Param.Split(new string[] { "-crf " }, StringSplitOptions.None)[1].Split(' ')[0];
-                    string logMessage = $"{(int)progress}%" + $" -> {(video_size + audio_size / 1024 / 1024 / 1024 )/ 1024 * 1.05:F2} GB (CRF {crfValue}, {(totalSize / 1024.0 * 8.0 / timeElapsed) * 1.05:F0} Kbps)";
+                    string logMessage = $"{(int)progress}%" + $" -> {(video_size + audio_size / 1024 / 1024 / 1024 )/ 1024 * Globals.overhead:F2} GB (CRF {crfValue}, {(totalSize / 1024.0 * 8.0 / timeElapsed) * Globals.overhead:F0} Kbps)";
 
                     // Append the log message to the file
                     string logFilePath = Name + "\\size_estimation.log";
@@ -740,21 +740,17 @@ namespace Av1ador
             string videoCodecParams = "-metadata VIDEO_ENCODER_PARAMS=\"" + Param.Replace("\"", "'").Replace("-y !seek! -i '!file!' !start! !duration! ", "").Replace("'!name!'", "") + "\" ";
             string audioCodecParams = "-metadata AUDIO_ENCODER_PARAMS=\"" + A_Param.Replace("\"", "'") + "\" ";
             string videoCodecVersion = GetEncoderInfo(Cv);
-            string audioCodecVersion = GetEncoderInfo(Ca, false);
 
             Regex vRegex = new Regex("SVT \\[version\\]:\\W(?<encoder_version>.*[l,L]ib*.*)");
             Regex aRegex = new Regex("encoder[ ]+: (?<audio_codec>.*lib.*)");
-            Match vCompare, aCompare;
+            Match vCompare;
 
             vCompare = vRegex.Match(videoCodecVersion);
-            aCompare = aRegex.Match(audioCodecVersion);
 
             if (vCompare.Success)
                 videoCodecVersion = "-metadata VIDEO_CODEC_VERSION=\"" + vCompare.Groups[1].ToString() + "\" ";
-            if (aCompare.Success)
-                audioCodecVersion = "-metadata AUDIO_CODEC_VERSION=\"" + aCompare.Groups[1].ToString() + "\" ";
 
-            string encoderMetadata = (videoCodecVersion + videoCodecParams + audioCodecVersion + audioCodecParams).Replace("\r", "");
+            string encoderMetadata = (videoCodecVersion + videoCodecParams + audioCodecParams).Replace("\r", "");
 
             if (System.IO.File.Exists(Name + "\\audio." + A_Job))
                 if (SubIndex > -1)

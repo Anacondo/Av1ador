@@ -2,8 +2,14 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 
+
 namespace Av1ador
 {
+    public static class Globals
+    {
+        public static double overhead = 1.025;
+    }
+
     internal static class Program
     {
         public static bool Log { get; set; }

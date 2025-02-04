@@ -1379,12 +1379,12 @@ namespace Av1ador
                     statusLabel.Text = string.Join("", encode.Status.ToArray()).Replace("Encoding video...", "Encoding video... " + (progress - 1 < 0 ? 0 : progress - 1) + "%");
                     statusLabel.Text = statusLabel.Text.Replace("...,", "|");
                     if (statusLabel.Text.Contains("Encoding video"))
-                        statusLabel.Text += $" | FPS: {encode.Speed:F2} | Avg. bitrate: {encode.Abr * 1.05:F0} Kbps";
+                        statusLabel.Text += $" | FPS: {encode.Speed:F2} | Avg. bitrate: {encode.Abr * Globals.overhead:F0} Kbps";
                     double size = encode.Estimated;
                     string t = encode.Remaining.ToString().Split('.')[0];
                     if (t.Length < 4)
                         t += " day" + (t == "1" ? "" : "s");
-                    estimatedLabel.Text = size > 0 ? $"Projected output size: {Func.Size_unit(size * 1.05)} | Remaining time: {t}" : "Calculating output size...";
+                    estimatedLabel.Text = size > 0 ? $"Projected output size: {Func.Size_unit(size * Globals.overhead)} | Remaining time: {t}" : "Calculating output size...";
                 }
                 Text = statusLabel.Text.Contains("%") ? statusLabel.Text.Split('%')[0].Split(' ').Last() + "%" + " - " + title : title;
                 UpdateBar();
