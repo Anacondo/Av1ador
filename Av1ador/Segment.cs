@@ -5,12 +5,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using static System.Net.WebRequestMethods;
 
 namespace Av1ador
 {
@@ -273,7 +271,7 @@ namespace Av1ador
         public void Start_encode(string dir, Video v, bool audio, bool audioPassthru, double delay = 0, int br = 0, double spd = 1)
         {
             // determines the minimum chunk length (in seconds)
-            Split_min_time = (int)Math.Abs(v.Fps);
+            Split_min_time = (int)Math.Round(v.Fps);
 
             track_delay = delay;
             Dir = dir == "" ? Path.GetDirectoryName(v.File) + "\\" : dir + "\\";
@@ -605,6 +603,7 @@ namespace Av1ador
                         double scene_score = Double.Parse(Complexity[i]);
                         scene_bitrate = (int)(((scene_score * 0.6 + avg_scene_score * 0.4) / avg_scene_score * (double)bitrate - (double)bitrate) / (scene_duration / min_scene_duration) + (double)bitrate);
                     }
+                    // this is where the fun begins and the parameters for the encoded chunk are created
                     Chunks[i] = new Segment
                     {
                         Arguments = Replace_times(Param, File, pathfile, Splits[i + 1], seek, start, scene_bitrate),

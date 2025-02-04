@@ -587,7 +587,6 @@ namespace Av1ador
             if (Gs_level > 0)
                 str += ":film-grain=" + Gs_level;
 
-            // TO-DO: fix this code and add a HDR entry in the queue.xml file, so that one of the following values is appended based on it
             if (!Hdr)
                 str += Color;
             else
@@ -703,12 +702,11 @@ namespace Av1ador
             return str;
         }
 
-        public void Save_settings(ToolStripComboBox format, ToolStripComboBox codec_video, ToolStripComboBox speed, CheckBox hdr, ToolStripComboBox bit_depth, NumericUpDown crf, ToolStripComboBox codec_audio, ToolStripComboBox channels, TextBox ba, string output_folder, Settings s)
+        public void Save_settings(ToolStripComboBox format, ToolStripComboBox codec_video, ToolStripComboBox speed, ToolStripComboBox bit_depth, NumericUpDown crf, ToolStripComboBox codec_audio, ToolStripComboBox channels, TextBox ba, string output_folder, Settings s)
         {
             if (Form.ActiveForm == null)
                 return;
             Settings settings;
-            string hdr_s = hdr.Checked ? "1" : "0";
             string bit_s = bit_depth.Items.Count > 1 ? bit_depth.Text : "Default";
             string ch_s = (channels.Text != c[0] || c.Length > 2) && channels.Items.Count > 1 ? channels.Text : "Default";
             if (System.IO.File.Exists("settings.xml"))
@@ -717,7 +715,6 @@ namespace Av1ador
                 settings.Format = format.Text;
                 settings.Codec_video = codec_video.Text;
                 settings.Speed = speed.Text;
-                settings.Hdr = hdr_s;
                 settings.Bit_depth = bit_s == "Default" ? settings.Bit_depth : bit_s;
                 settings.Crf = crf.Value.ToString();
                 settings.Codec_audio = codec_audio.Text;
@@ -733,7 +730,6 @@ namespace Av1ador
                     Format = format.Text,
                     Codec_video = codec_video.Text,
                     Speed = speed.Text,
-                    Hdr = hdr_s,
                     Bit_depth = bit_s,
                     Crf = crf.Value.ToString(),
                     Codec_audio = codec_audio.Text,
