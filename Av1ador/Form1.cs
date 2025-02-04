@@ -176,12 +176,15 @@ namespace Av1ador
                     encoder.Set_audio_codec(caComboBox.Text.Split(' ')[0], primer_video.Channels.Max());
                     encoder.SubIndex = -1;
 
+                    // read the HDR information from the video entry itself, not from the UI!
                     checkBoxHDR.Enabled = primer_video.Hdr;
-                    checkBoxHDR.Checked = primer_video.Hdr;
+                    if (checkBoxHDR.Enabled)
+                        checkBoxHDR.Checked = entry.HDR;
+                    else
+                        checkBoxHDR.Checked = false;
 
                     Func.Update_combo(chComboBox, encoder.Channels, true);
                     caComboBox.Enabled = chComboBox.Enabled;
-                    //groupBox2.Enabled = chComboBox.Enabled;
                     audiounmuteButton.Enabled = chComboBox.Enabled;
                     encoder.Predicted = false;
                     if (entry.Vf != "")
@@ -215,9 +218,6 @@ namespace Av1ador
                     else
                         bitrateBox.Text = totalBox.Text = "";
                     creditsendButton.Enabled = primer_video.CreditsTime > 0;
-
-                    if (checkBoxHDR.Enabled)
-                        checkBoxHDR.Checked = entry.HDR;
 
                     if (entry.Gs != "" && int.Parse(entry.Gs) <= gsUpDown.Maximum)
                         gsUpDown.Value = int.Parse(entry.Gs);
@@ -1112,7 +1112,7 @@ namespace Av1ador
                 Dialogo = false;
             }
             else if (mpv.Mpv_loaded)
-                encoder.Save_settings(formatComboBox, cvComboBox, speedComboBox, checkBoxHDR, bitsComboBox, upDownCRF, caComboBox, chComboBox, abitrateBox, folderBrowserDialog1.SelectedPath, settings);
+                encoder.Save_settings(formatComboBox, cvComboBox, speedComboBox, bitsComboBox, upDownCRF, caComboBox, chComboBox, abitrateBox, folderBrowserDialog1.SelectedPath, settings);
         }
 
         private void Exit(bool stop = false)
@@ -1178,7 +1178,7 @@ namespace Av1ador
         {
             if (primer_video == null)
                 return;
-            encoder.Save_settings(formatComboBox, cvComboBox, speedComboBox, checkBoxHDR, bitsComboBox, upDownCRF, caComboBox, chComboBox, abitrateBox, folderBrowserDialog1.SelectedPath, settings);
+            encoder.Save_settings(formatComboBox, cvComboBox, speedComboBox, bitsComboBox, upDownCRF, caComboBox, chComboBox, abitrateBox, folderBrowserDialog1.SelectedPath, settings);
             encodestopButton.Enabled = true;
             encodestartButton.Enabled = false;
 
@@ -2125,7 +2125,6 @@ namespace Av1ador
             }
             Entry_update(15);
             Entry.Save(listBox1);
-
         }
 
         private void audioOptionsGroupBox_Enter(object sender, EventArgs e)
@@ -2166,16 +2165,9 @@ namespace Av1ador
 
         private void checkBoxHDR_CheckedChanged(object sender, EventArgs e)
         {
-            if( checkBoxHDR.Enabled )
-            {
-                if( checkBoxHDR.CheckState == CheckState.Checked )
-                    encoder.Hdr = true;
-                else
-                    encoder.Hdr = false;
-
-                Entry_update(11);
-                Entry.Save(listBox1);
-            }
+            encoder.Hdr = checkBoxHDR.CheckState == CheckState.Checked;
+            Entry_update(11);
+            Entry.Save(listBox1);
         }
 
         private void GrainButton_CheckStateChanged(object sender, EventArgs e)
