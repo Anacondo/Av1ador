@@ -503,6 +503,9 @@ namespace Av1ador
         {
             // First, sort the list by key.
             sorted.Sort((a, b) => a.Key.CompareTo(b.Key));
+            // remove the last chunk (credits) from the list, as this should always be our last chunk to process
+            KeyValuePair<int, double> end_credits_chunk = sorted[sorted.Count - 1];
+            sorted.RemoveAt(sorted.Count - 1);
             int total = sorted.Count;
 
             // We'll divide the list into 16 segments.
@@ -556,6 +559,9 @@ namespace Av1ador
                 // Add its key to the final ordering.
                 finalOrder.Add(chosenItem.Key);
             }
+            // add back the end credits chunk before exiting
+            finalOrder.Add(end_credits_chunk.Key);
+
             return finalOrder;
         }
 
