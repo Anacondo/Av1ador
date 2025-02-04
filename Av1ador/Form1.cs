@@ -1279,7 +1279,6 @@ namespace Av1ador
                     encoder.Crf = (int)upDownCRF.Value;
                     encode = new Encode
                     {
-                        Split_min_time = 4 + (int)((primer_video.EndTime - primer_video.StartTime) / 1400.0),
                         Can_run = true,
                         Job = encoder.Job,
                         Extension = formatComboBox.Text,
