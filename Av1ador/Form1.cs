@@ -137,6 +137,18 @@ namespace Av1ador
             bw2.RunWorkerAsync();
         }
 
+        private void AdjustResolution()
+        {
+            double dn = (double)16 / (double)9;
+            double h = 1080 * (primer_video.Sar < 1 ? primer_video.Sar : 1.0);
+            scale = (double)primer_video.Width * primer_video.Sar / (double)primer_video.Height > dn ? h * dn / (double)primer_video.Width : h / (double)primer_video.Height;
+            double ow = ((double)primer_video.Width * (primer_video.Sar > 1 ? primer_video.Sar : 1.0) * scale);
+            encoder.Out_w = (int)ow;
+            encoder.Out_h = (int)(Math.Floor(((ow * (double)primer_video.Height / (double)primer_video.Width / primer_video.Sar) + (double)1) / (double)2) * 2);
+            if (segundo_video == null)
+                mpv.Scale(scale, scale);
+        }
+
         private void Mpv_load_first()
         {
             if (listBox1.Items.Count > 0)
@@ -271,6 +283,7 @@ namespace Av1ador
                 segundo_video = null;
                 leftPanel.Width = mpvsPanel.Width;
             }
+            AdjustResolution();
             UpdateLayout();
             Restore_settings();
         }
