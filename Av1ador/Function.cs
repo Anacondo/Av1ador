@@ -296,6 +296,7 @@ namespace Av1ador
             }
             return size.ToString() + unit;
         }
+
         public static List<string> Concat(List<string>[] list, bool sort = true)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
