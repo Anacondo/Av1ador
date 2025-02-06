@@ -272,7 +272,7 @@ namespace Av1ador
         public void Start_encode(string dir, Video v, bool audio, bool audioPassthru, double delay = 0, int br = 0, double spd = 1)
         {
             // determines the minimum chunk length (in seconds)
-            if( v.Duration > 7200)
+            if( v.Duration > 6300)
                 Split_min_time = (int)Math.Round(v.Fps);
             else
                 Split_min_time = (int)Math.Round(v.Fps) * 2/3;
@@ -298,10 +298,10 @@ namespace Av1ador
             if (audioPassthru)
                 A_Job = "mkv";   // we use mkv extension to trick ffmpeg into muxing whatever the audio codec is in the original audio
 
-            string audiofile = Name + "\\audio." + A_Job;
-
             if (audio && A_Param != "")
             {
+                string audiofile = Name + "\\audio." + A_Job;
+
                 if (!System.IO.File.Exists(audiofile))
                 {
                     Status.Add("Encoding audio + ");
@@ -746,7 +746,10 @@ namespace Av1ador
 
             // add encode information metadata to output file
             string videoCodecParams = "-metadata VIDEO_ENCODER_PARAMS=\"" + Param.Replace("\"", "'").Replace("-y !seek! -i '!file!' !start! !duration! ", "").Replace("'!name!'", "") + "\" ";
-            string audioCodecParams = "-metadata AUDIO_ENCODER_PARAMS=\"" + A_Param.Replace("\"", "'") + "\" ";
+            string audioCodecParams = "";
+            if ( A_Param != null)
+                audioCodecParams = "-metadata AUDIO_ENCODER_PARAMS=\"" + A_Param.Replace("\"", "'") + "\" ";
+            
             string videoCodecVersion = GetEncoderInfo(Cv);
 
             Regex vRegex = new Regex("SVT \\[version\\]:\\W(?<encoder_version>.*[l,L]ib*.*)");

@@ -139,14 +139,18 @@ namespace Av1ador
 
         private void AdjustResolution()
         {
-            double dn = (double)16 / (double)9;
-            double h = 1080 * (primer_video.Sar < 1 ? primer_video.Sar : 1.0);
-            scale = (double)primer_video.Width * primer_video.Sar / (double)primer_video.Height > dn ? h * dn / (double)primer_video.Width : h / (double)primer_video.Height;
-            double ow = ((double)primer_video.Width * (primer_video.Sar > 1 ? primer_video.Sar : 1.0) * scale);
-            encoder.Out_w = (int)ow;
-            encoder.Out_h = (int)(Math.Floor(((ow * (double)primer_video.Height / (double)primer_video.Width / primer_video.Sar) + (double)1) / (double)2) * 2);
-            if (segundo_video == null)
-                mpv.Scale(scale, scale);
+            if (primer_video != null)
+            {
+                double dn = (double)16 / (double)9;
+                double h = 1080 * (primer_video.Sar < 1 ? primer_video.Sar : 1.0);
+                scale = (double)primer_video.Width * primer_video.Sar / (double)primer_video.Height > dn ? h * dn / (double)primer_video.Width : h / (double)primer_video.Height;
+                double ow = ((double)primer_video.Width * (primer_video.Sar > 1 ? primer_video.Sar : 1.0) * scale);
+                encoder.Out_w = (int)ow;
+                encoder.Out_h = (int)(Math.Floor(((ow * (double)primer_video.Height / (double)primer_video.Width / primer_video.Sar) + (double)1) / (double)2) * 2);
+
+                if (segundo_video == null)
+                    mpv.Scale(scale, scale);
+            }
         }
 
         private void Mpv_load_first()
@@ -1301,14 +1305,18 @@ namespace Av1ador
                     };
                     encode.Set_fps_filter(encoder.Vf);
                     double delay = 0;
-                    if (primer_video.Channels[0] > 0 && checkedListBox1.CheckedItems.Count > 0)
+                    if (primer_video.Channels[0] > 0)
                     {
-                        encode.A_Param = encoder.Build_astr(checkedListBox1.CheckedIndices[0]);
-                        encode.A_Job = encoder.A_Job;
+                        // to allow for users to not select any audio streams
+                        if (checkedListBox1.CheckedItems.Count > 0)
+                        { 
+                            encode.Ca = encoder.Ca;
+                            encode.A_Param = encoder.Build_astr(checkedListBox1.CheckedIndices[0]);
+                            encode.A_Job = encoder.A_Job;
+                        }
                         encode.SubIndex = encoder.SubIndex;
                         encode.Cv = encoder.Cv;
-                        encode.Ca = encoder.Ca;
-                        delay = primer_video.Tracks_delay[checkedListBox1.CheckedIndices[0]];
+                        //delay = primer_video.Tracks_delay[checkedListBox1.CheckedIndices[0]];
                     }
                     double to = primer_video.EndTime != primer_video.Duration ? primer_video.EndTime : primer_video.Duration + 1;
                     encode.Start_encode(folderBrowserDialog1.SelectedPath, primer_video, checkedListBox1.CheckedItems.Count > 0, audioPassThruCheckBox.Checked, delay, encoder.V_kbps, encoder.Out_spd);
