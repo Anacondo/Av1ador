@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
+
 namespace Av1ador
 {
     internal class Encode
@@ -271,7 +272,10 @@ namespace Av1ador
         public void Start_encode(string dir, Video v, bool audio, bool audioPassthru, double delay = 0, int br = 0, double spd = 1)
         {
             // determines the minimum chunk length (in seconds)
-            Split_min_time = (int)Math.Round(v.Fps);
+            if( v.Duration > 7200)
+                Split_min_time = (int)Math.Round(v.Fps);
+            else
+                Split_min_time = (int)Math.Round(v.Fps) * 2/3;
 
             track_delay = delay;
             Dir = dir == "" ? Path.GetDirectoryName(v.File) + "\\" : dir + "\\";
@@ -484,7 +488,6 @@ namespace Av1ador
             else
                 Begin();
         }
-
 
         public void Begin()
         {
