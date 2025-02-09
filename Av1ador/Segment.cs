@@ -502,68 +502,76 @@ namespace Av1ador
 
         public static List<int> GetEvenlyDistributedOrder(List<KeyValuePair<int, double>> sorted)
         {
-            // First, sort the list by key.
+            // First, sort the list by key (assumed to represent temporal order)
             sorted.Sort((a, b) => a.Key.CompareTo(b.Key));
-            // remove the last chunk (credits) from the list, as this should always be our last chunk to process
-            KeyValuePair<int, double> end_credits_chunk = sorted[sorted.Count - 1];
+
+            // Remove the very last chunk (end credits) and hold it aside.
+            KeyValuePair<int, double> endCredit = sorted[sorted.Count - 1];
             sorted.RemoveAt(sorted.Count - 1);
-            int total = sorted.Count;
 
-            // We'll divide the list into 16 segments.
-            int segments = 16;
-            int baseCount = total / segments;
-            int remainder = total % segments;
+            // Compute the new processing order using recursive median selection.
+            List<int> order = RecursiveEvenOrder(sorted);
 
-            // Create the 16 segments.
-            // The first 'remainder' segments will have one extra element.
-            List<List<KeyValuePair<int, double>>> subareas = new List<List<KeyValuePair<int, double>>>();
-            int index = 0;
-            for (int i = 0; i < segments; i++)
+            // Append the held-out end-credit chunk as the final element.
+            order.Add(endCredit.Key);
+
+            return order;
+        }
+
+        /// <summary>
+        /// Recursively produces an ordering that picks the median element first,
+        /// then interleaves the orders from the left and right sublists.
+        /// This yields an order in which early selections are well distributed
+        /// along the timeline.
+        /// </summary>
+        private static List<int> RecursiveEvenOrder(List<KeyValuePair<int, double>> list)
+        {
+            if (list.Count == 0)
+                return new List<int>();
+            if (list.Count == 1)
+                return new List<int> { list[0].Key };
+
+            // Choose the median index; for even counts, choose the lower median.
+            int mid = (list.Count - 1) / 2;
+            var order = new List<int> { list[mid].Key };
+
+            // Divide the list into left and right halves.
+            var leftSublist = list.GetRange(0, mid);
+            var rightSublist = list.GetRange(mid + 1, list.Count - mid - 1);
+
+            // Recursively obtain orders for the sublists.
+            var leftOrder = RecursiveEvenOrder(leftSublist);
+            var rightOrder = RecursiveEvenOrder(rightSublist);
+
+            // Interleave the two orders.
+            var interleaved = InterleaveLists(leftOrder, rightOrder);
+            order.AddRange(interleaved);
+
+            return order;
+        }
+
+        /// <summary>
+        /// Interleaves two lists: taking one element from the left list,
+        /// then one from the right, and so on.
+        /// </summary>
+        private static List<int> InterleaveLists(List<int> left, List<int> right)
+        {
+            var result = new List<int>();
+            int i = 0, j = 0;
+            while (i < left.Count || j < right.Count)
             {
-                int count = baseCount + (i < remainder ? 1 : 0);
-                // Use GetRange only if count > 0; otherwise, add an empty list.
-                if (count > 0)
+                if (i < left.Count)
                 {
-                    subareas.Add(sorted.GetRange(index, count));
+                    result.Add(left[i]);
+                    i++;
                 }
-                else
+                if (j < right.Count)
                 {
-                    subareas.Add(new List<KeyValuePair<int, double>>());
+                    result.Add(right[j]);
+                    j++;
                 }
-                index += count;
             }
-
-            List<int> finalOrder = new List<int>();
-            Random rand = new Random();
-
-            // While at least one segment still contains elements:
-            while (subareas.Any(s => s.Count > 0))
-            {
-                // Get the indices of all non-empty segments.
-                List<int> availableIndices = new List<int>();
-                for (int i = 0; i < subareas.Count; i++)
-                {
-                    if (subareas[i].Count > 0)
-                        availableIndices.Add(i);
-                }
-
-                // Randomly choose one of the non-empty segments.
-                int chosenSegmentIndex = availableIndices[rand.Next(availableIndices.Count)];
-
-                // Now, randomly select an element from the chosen segment.
-                int chosenItemIndex = rand.Next(subareas[chosenSegmentIndex].Count);
-                KeyValuePair<int, double> chosenItem = subareas[chosenSegmentIndex][chosenItemIndex];
-
-                // Remove the selected element from that segment.
-                subareas[chosenSegmentIndex].RemoveAt(chosenItemIndex);
-
-                // Add its key to the final ordering.
-                finalOrder.Add(chosenItem.Key);
-            }
-            // add back the end credits chunk before exiting
-            finalOrder.Add(end_credits_chunk.Key);
-
-            return finalOrder;
+            return result;
         }
 
         public void Encoding()

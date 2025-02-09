@@ -184,8 +184,8 @@ namespace Av1ador
                 Job = j[1];
                 Presets = new string[] { "-1 (slowest)", "0", "1", "2", "3", "*4", "5", "6", "7", "8", "9", "10", "11", "12 (fastest)" };
                 speed_str = "-preset ";
-                Params = "-svtav1-params tune=3:keyint=240:enable-qm=1:qm-min=8:qm-max=15:aq-mode=2:enable-dlf=2:enable-overlays=1:enable-restoration=0:enable-tf=2:enable-cdef=1:sharpness=2:enable-variance-boost=1:qp-scale-compress-strength=3:adaptive-film-grain=1:noise-norm-strength=3:variance-boost-strength=3:variance-octile=4:psy-rd=1.0:spy-rd=1:frame-luma-bias=15";
-                Color = ":color-primaries=1:transfer-characteristics=1:matrix-coefficients=1:color-range=0";
+                Params = "-svtav1-params tune=2:keyint=240:enable-qm=1:qm-min=8:qm-max=15:aq-mode=2:enable-dlf=2:enable-overlays=1:enable-restoration=0:enable-tf=2:enable-cdef=1:sharpness=2:enable-variance-boost=1:qp-scale-compress-strength=3:adaptive-film-grain=1:noise-norm-strength=1:variance-boost-strength=3:variance-octile=4:psy-rd=0.5:spy-rd=1:frame-luma-bias=15";
+                Color = ":color-primaries=1:transfer-characteristics=1:matrix-coefficients=1";
                 Gs = 50;
                 Rate = 0.85;
                 Vbr_str = "";
