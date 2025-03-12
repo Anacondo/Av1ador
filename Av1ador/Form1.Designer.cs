@@ -120,7 +120,6 @@
             this.denoiseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.strongDenoiseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resizeZscaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resizePlaceboToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tonemapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openclToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vulkanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1485,7 +1484,6 @@
             this.denoiseToolStripMenuItem,
             this.strongDenoiseToolStripMenuItem,
             this.resizeZscaleToolStripMenuItem,
-            this.resizePlaceboToolStripMenuItem,
             this.tonemapToolStripMenuItem,
             this.toolStripSeparator16,
             this.savedToolStripMenuItem});
@@ -1500,37 +1498,30 @@
             // removeBlackBarsToolStripMenuItem
             // 
             this.removeBlackBarsToolStripMenuItem.Name = "removeBlackBarsToolStripMenuItem";
-            this.removeBlackBarsToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.removeBlackBarsToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.removeBlackBarsToolStripMenuItem.Text = "Auto-crop";
             this.removeBlackBarsToolStripMenuItem.Click += new System.EventHandler(this.RemoveBlackBarsToolStripMenuItem_Click);
             // 
             // denoiseToolStripMenuItem
             // 
             this.denoiseToolStripMenuItem.Name = "denoiseToolStripMenuItem";
-            this.denoiseToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
-            this.denoiseToolStripMenuItem.Text = "Light denoise";
+            this.denoiseToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.denoiseToolStripMenuItem.Text = "Light denoise (removegrain)";
             this.denoiseToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
             // strongDenoiseToolStripMenuItem
             // 
             this.strongDenoiseToolStripMenuItem.Name = "strongDenoiseToolStripMenuItem";
-            this.strongDenoiseToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
-            this.strongDenoiseToolStripMenuItem.Text = "Strong denoise";
+            this.strongDenoiseToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.strongDenoiseToolStripMenuItem.Text = "Strong denoise (nlmeans)";
             this.strongDenoiseToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
             // resizeZscaleToolStripMenuItem
             // 
             this.resizeZscaleToolStripMenuItem.Name = "resizeZscaleToolStripMenuItem";
-            this.resizeZscaleToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
-            this.resizeZscaleToolStripMenuItem.Text = "Resize to 1080p (zscale spline36)";
+            this.resizeZscaleToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.resizeZscaleToolStripMenuItem.Text = "Resize to 1080p (zscale lanczos)";
             this.resizeZscaleToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
-            // 
-            // resizePlaceboToolStripMenuItem
-            // 
-            this.resizePlaceboToolStripMenuItem.Name = "resizePlaceboToolStripMenuItem";
-            this.resizePlaceboToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
-            this.resizePlaceboToolStripMenuItem.Text = "Resize to 1080p (libplacebo mitchell)";
-            this.resizePlaceboToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
             // tonemapToolStripMenuItem
             // 
@@ -1538,7 +1529,7 @@
             this.openclToolStripMenuItem,
             this.vulkanToolStripMenuItem});
             this.tonemapToolStripMenuItem.Name = "tonemapToolStripMenuItem";
-            this.tonemapToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.tonemapToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.tonemapToolStripMenuItem.Text = "Tonemap";
             // 
             // openclToolStripMenuItem
@@ -1561,7 +1552,7 @@
             // 
             this.toolStripSeparator16.AutoSize = false;
             this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(263, 6);
+            this.toolStripSeparator16.Size = new System.Drawing.Size(239, 6);
             // 
             // savedToolStripMenuItem
             // 
@@ -2900,7 +2891,6 @@
         private System.Windows.Forms.CheckedListBox checkedListBox2;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripButton moveDownButton;
-        private System.Windows.Forms.ToolStripMenuItem resizePlaceboToolStripMenuItem;
         private System.Windows.Forms.GroupBox audioOptionsGroupBox;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Label label1;

@@ -57,8 +57,10 @@ namespace Av1ador
         public uint Clean { get; set; }
         public string Cv { get; set; }
         public string Ca { get; set; }
+        private bool EncodeStart { get; set; } = true;
         public static BackgroundWorker[] Bw { get; set; }
-        
+        private string LogFilePath { get; set; }
+
         public int Progress
         {
             get
@@ -88,10 +90,31 @@ namespace Av1ador
 
         private int lastLoggedPercentage = 0;
 
+        private void LogEstimatesToFile( string message )
+        {
+            try
+            {
+                using StreamWriter writer = new StreamWriter(Name + LogFilePath, append: true);
+                writer.WriteLine( message );
+            }
+            catch (Exception ex)
+            {
+                // Handle potential file writing exceptions (e.g., file access issues)
+                Console.WriteLine($"Error writing to log file: {ex.Message}");
+            }
+        }
+
         public double Estimated
         {
             get
             {
+                if (EncodeStart)
+                {
+                    LogEstimatesToFile($"[{DateTime.Now:dd-MM-yyyy HH:mm}] Encoding started...");
+                    EncodeStart = false;
+                    return 0;
+                }
+
                 if (Counter <= 5)
                 {
                     return video_size;
@@ -108,8 +131,8 @@ namespace Av1ador
                     return 0; // Fallback if duration cannot be determined
                 }
 
-                // Check if at least 5% of all chunks are completed
-                double threshold = 0.05;
+                // Check if at least 2% of all chunks are completed
+                double threshold = 0.02;
                 int totalChunks = Chunks.Count();
                 int minCompletedChunks = (int)Math.Ceiling(totalChunks * threshold);
 
@@ -163,26 +186,12 @@ namespace Av1ador
                 video_size = Math.Round(avgBitrate * duration / 8 / 1024);   // simple calculation of final video size based on average bitrate calculation, with no infering
 
                 // Check if we’ve crossed the next 10% threshold
-                int currentProgressPercentage = (int)Math.Floor(progress); // Whole number progress
+                int currentProgressPercentage = (int)Math.Floor(progress);
+
                 if (currentProgressPercentage / 10 > lastLoggedPercentage / 10)
                 {
                     string crfValue = Param.Split(new string[] { "-crf " }, StringSplitOptions.None)[1].Split(' ')[0];
-                    string logMessage = $"{(int)progress}%" + $" -> {(video_size + audio_size / 1024 / 1024 / 1024 )/ 1024 * Globals.overhead:F2} GB (CRF {crfValue}, {(totalSize / 1024.0 * 8.0 / timeElapsed) * Globals.overhead:F0} Kbps)";
-
-                    // Append the log message to the file
-                    string logFilePath = Name + "\\size_estimation.log";
-                    try
-                    {
-                        using StreamWriter writer = new StreamWriter(logFilePath, append: true);
-                        writer.WriteLine(logMessage);
-                    }
-                    catch (Exception ex)
-                    {
-                        // Handle potential file writing exceptions (e.g., file access issues)
-                        Console.WriteLine($"Error writing to log file: {ex.Message}");
-                    }
-
-                    // Update the last logged percentage
+                    LogEstimatesToFile($"[{DateTime.Now:dd-MM-yyyy HH:mm}] {(int)progress}%" + $" -> {(video_size + audio_size / 1024 / 1024 / 1024) / 1024 * Globals.overhead:F2} GB (CRF {crfValue}, {(totalSize / 1024.0 * 8.0 / timeElapsed) * Globals.overhead:F0} Kbps)");
                     lastLoggedPercentage = currentProgressPercentage;
                 }
 
@@ -266,16 +275,14 @@ namespace Av1ador
             Status = new List<string>();
             watch = new Stopwatch();
             remaining = new TimeSpan();
+            LogFilePath = Name + "\\size_estimation.log";
             bitrate = 0;
         }
 
         public void Start_encode(string dir, Video v, bool audio, bool audioPassthru, double delay = 0, int br = 0, double spd = 1)
         {
             // determines the minimum chunk length (in seconds)
-            if( v.Duration > 6300)
-                Split_min_time = (int)Math.Round(v.Fps);
-            else
-                Split_min_time = (int)Math.Round(v.Fps) * 2/3;
+            Split_min_time = 10;
 
             track_delay = delay;
             Dir = dir == "" ? Path.GetDirectoryName(v.File) + "\\" : dir + "\\";
@@ -773,11 +780,11 @@ namespace Av1ador
 
             if (System.IO.File.Exists(Name + "\\audio." + A_Job))
                 if (SubIndex > -1)
-                    ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt" + "\"" + (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\" -i \"" + File + "\" -c:v copy -c:a copy -c:s copy -map 0:v:0 -map 1:a:0 -map 2:s:" + SubIndex + " -disposition:s:0 default -metadata:s:s:0 language=eng " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
+                    ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt" + "\"" + (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\" -i \"" + File + "\" -async 1 -vsync 1 -c:v copy -c:a copy -c:s copy -map 0:v:0 -map 1:a:0 -map 2:s:" + SubIndex + " -disposition:s:0 default -metadata:s:s:0 language=eng " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
                 else
-                    ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt" + "\"" + (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\" -i \"" + File + "\" -c:v copy -c:a copy -map 0:v:0 -map 1:a:0 " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
+                    ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt" + "\"" + (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\" -i \"" + File + "\" -async 1 -vsync 1 -c:v copy -c:a copy -map 0:v:0 -map 1:a:0 " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
             else
-                ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + "  -i \"" + Tempdir + "concat.txt" + "\" -c:v copy -an -map 0:v:0 -map_metadata -1 " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileNameWithoutExtension(Name)) + "_Av1ador." + Extension + "\"";
+                ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + "  -i \"" + Tempdir + "concat.txt" + "\" -async 1 -vsync 1 -c:v copy -an -map 0:v:0 -map_metadata -1 " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileNameWithoutExtension(Name)) + "_Av1ador." + Extension + "\"";
             ffconcat.Start();
             Regex regex = new Regex("time=([0-9]{2}):([0-9]{2}):([0-9]{2}.[0-9]{2})");
             Match compare;
