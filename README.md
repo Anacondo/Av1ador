@@ -1,4 +1,4 @@
-# Av1ador
+# [EXPERIMENTAL] Av1ador
 
 AV1/HEVC/VP9/H264 parallel encoder GUI for FFmpeg with preview/comparison while transcoding.
 
