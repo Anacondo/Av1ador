@@ -769,7 +769,7 @@
             this.workersgroupBox.Size = new System.Drawing.Size(137, 66);
             this.workersgroupBox.TabIndex = 4;
             this.workersgroupBox.TabStop = false;
-            this.workersgroupBox.Text = "Threads";
+            this.workersgroupBox.Text = "Threads (auto)";
             this.workersgroupBox.Paint += new System.Windows.Forms.PaintEventHandler(this.WorkersgroupBox_Paint);
             // 
             // tableLayoutPanel20
@@ -792,8 +792,6 @@
             // 
             this.workersBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.workersBox.AutoSize = true;
-            this.workersBox.Checked = true;
-            this.workersBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.workersBox.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.workersBox.Location = new System.Drawing.Point(15, 15);
             this.workersBox.Name = "workersBox";
@@ -807,6 +805,7 @@
             // workersUpDown
             // 
             this.workersUpDown.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.workersUpDown.Enabled = false;
             this.workersUpDown.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.workersUpDown.Location = new System.Drawing.Point(79, 11);
             this.workersUpDown.Margin = new System.Windows.Forms.Padding(0);
@@ -821,7 +820,7 @@
             this.workersUpDown.TabIndex = 0;
             this.workersUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.workersUpDown.Value = new decimal(new int[] {
-            3,
+            1,
             0,
             0,
             0});

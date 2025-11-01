@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Av1ador.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,7 +12,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using Av1ador.Properties;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace Av1ador
 { 
@@ -33,7 +34,7 @@ namespace Av1ador
         private double panx, pany, panx_ratio, pany_ratio;
         private bool click_in, mouse1, moviendo_divisor, can_sync;
         private Point click_pos, mouse_pos, mouse_pos_antes, mouse_bar;
-        private int focus_id, mpv_left, me_x, underload;
+        private int focus_id, mpv_left, me_x; //underload;
         private Encoder encoder;
         private Encode encode;
         private double scale = 1.0;
@@ -83,7 +84,7 @@ namespace Av1ador
             Text = title;
 
             encoder = new Encoder();
-            workersUpDown.Maximum = encoder.Cores;
+            workersUpDown.Maximum = encoder.PhysicalCores;
             workersgroupBox.GetType().GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(workersgroupBox, true, null);
             listBox1.GetType().GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(listBox1, true, null);
 
@@ -93,6 +94,7 @@ namespace Av1ador
             bitsComboBox.SelectedIndex = 0;
             caComboBox.SelectedIndex = 1; // opus by default
             chComboBox.SelectedIndex = 0;
+            workersBox.Checked = false;
             formatComboBox.SelectedIndex = 1; // mkv by default
             
             leftPanel.Width = mpvsPanel.Width;
@@ -113,7 +115,7 @@ namespace Av1ador
                 Restore_settings(true);
                 listBox1.SelectedIndex = Entry.Index("-1", listBox1);
 
-                underload = -2;
+                //underload = -2;
                 Program.Log = true;
                 Mpv_load_first();
                 infoTimer.Enabled = true;
@@ -1033,9 +1035,18 @@ namespace Av1ador
             Dialogo = false;
             gsgroupBox.Enabled = encoder.Gs > 0;
             gsUpDown.Maximum = encoder.Gs;
-            workersUpDown.Maximum = encoder.Cv.Contains("nvenc") ? 2 : encoder.Cores;
+
             // calculation for the default number of threads based on processor cores
-            workersUpDown.Value = workersUpDown.Maximum > 2 ? (workersBox.Checked ? (workersUpDown.Value <= workersUpDown.Maximum ? workersUpDown.Value : workersUpDown.Maximum) : 4 ) : 1;
+            int defaultWorkers = Math.Max(1, encoder.Cores / 8);
+            if (encoder.PhysicalCores <= 8) 
+                defaultWorkers = 1;
+            else if (encoder.PhysicalCores <= 16) 
+                defaultWorkers = Math.Min(defaultWorkers, encoder.PhysicalCores / 4);
+
+            workersUpDown.Value = workersBox.Checked
+                ? Math.Min(workersUpDown.Value, workersUpDown.Maximum)
+                : defaultWorkers; 
+            
             encoder.Predicted = false;
             grainButton.Enabled = cvComboBox.Text.Contains("AV1") && segundo_video != null;
             Entry_update(4);
@@ -1388,24 +1399,6 @@ namespace Av1ador
                         workersgroupBox.Refresh();
                     }
 
-                    // calculation for available system resources and whether we should span a new encoding ffmpeg thread or not
-                    if (!workersBox.Checked && workersUpDown.Maximum > 1 && encode.Counter == 0)
-                    {
-                        // conditions to spawn new thread:
-                        // CPU usage < 100%
-                        // disk usage < 70%
-                        // available ram > 75%
-                        if (disk != null && usage < 100 && disk.NextValue() < 70 && ram.NextValue() > ((int)ram.CounterType - (int)ram.CounterType * 75 / 100))
-                            underload++;
-                        else
-                            underload = 0;
-                        if (underload > 8)
-                        {
-                            underload = -1;
-                            if (workersUpDown.Value + 1 <= workersUpDown.Maximum && encode.Segments_left > 0 && workersUpDown.Value < Environment.ProcessorCount * 75 / 100)
-                                workersUpDown.Value++;
-                        }
-                    }
                     double progress = encode.Progress;
                     statusLabel.Text = string.Join("", encode.Status.ToArray()).Replace("Encoding video...", "Encoding video... " + (progress - 1 < 0 ? 0 : progress - 1) + "%");
                     statusLabel.Text = statusLabel.Text.Replace("...,", "|");

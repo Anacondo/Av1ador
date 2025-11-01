@@ -26,6 +26,7 @@ namespace Av1ador
         public int Max_crf { get; set; }
         public decimal Crf { get; set; }
         public int Cores { get; }
+        public int PhysicalCores { get; }
         public int Threads { get; set; }
         public string Cv { get; set; }
         public string Ca { get; set; }
@@ -98,11 +99,25 @@ namespace Av1ador
             Resos = new string[] { "4320p", "2160p", "1080p", "900p", "720p", "576p", "540p", "480p", "360p", "240p", "160p" };
             Max_crf = 63;
             Crf = 36;
-            Cores = Environment.ProcessorCount > 16 ? 16 : Environment.ProcessorCount;
-            Threads = Cores / 2;
+
+            Cores = Environment.ProcessorCount;
+
+            try
+            {
+                using (var searcher = new ManagementObjectSearcher("SELECT NumberOfCores FROM Win32_Processor"))
+                {
+                    foreach (ManagementObject obj in searcher.Get())
+                        PhysicalCores = Convert.ToInt32(obj["NumberOfCores"]);
+                }
+            }
+            catch { }  // ignore errors
+
+            Threads = 8; // default to 8 threads per worker, sweet spot for svt-av1
+
             using (var searcher = new ManagementObjectSearcher("select * from Win32_VideoController"))
                 foreach (ManagementObject obj in searcher.Get().Cast<ManagementObject>())
                     gpu_name = obj["Name"].ToString();
+
             A_max = 320;
             Ch = "2";
             Gs_level = 0;
@@ -503,53 +518,9 @@ namespace Av1ador
         public string Build_vstr(bool predict = false)
         {
             string str = " -init_hw_device vulkan:" + Vkn_Device;
-            str += " -hide_banner -copyts -start_at_zero -display_rotation 0 -vsync -1 -y !seek! -i \"!file!\" !start! !duration! -c:v:0 " + Cv;
+            str += " -hide_banner -copyts -start_at_zero -display_rotation 0 -vsync -1 -y !seek! -threads " + Threads.ToString() + " -i \"!file!\" !start! !duration! -c:v:0 " + Cv;
             List<string> vf = new List<string>(Vf);
             bool always_2p = Cv == "libvpx-vp9" && Regex.Match(Params, "auto-alt-ref [1-6]").Success;
-            /*
-            if (Vf.Count > 0)
-            {
-                if (Vf.FindIndex(s => s.StartsWith("setpts=")) > -1)
-                {
-                    Out_spd = Func.Get_speed(Vf);
-                    vf.RemoveAll(s => s.StartsWith("setpts="));
-                }
-                int pos = vf.FindIndex(s => s.Contains("libplacebo="));
-                if (pos > -1)
-                {
-                    if (pos > 0 && vf[pos - 1].StartsWith("scale"))
-                    {
-                        string[] wh = Func.Find_w_h(new List<string>() { vf[pos - 1] });
-                        Match algo = Regex.Match(vf[pos - 1], @"flags=(bilinear|neighbor|lanczos|spline|gauss)");
-                        string downscaler = "";
-                        if (algo.Success)
-                            downscaler = ":downscaler=" + algo.Groups[1].ToString().Replace("neighbor", "nearest").Replace("spline", "spline36").Replace("gauss", "gaussian");
-                        vf[pos] = vf[pos].Replace("libplacebo=", "libplacebo=w=" + wh[0] + ":h=" + wh[1] + downscaler + ":");
-                        vf.RemoveAll(s => s.StartsWith("scale"));
-                    }
-                }
-            }
-            if (vf.Count > 0)
-            {
-                if (Vf.FindIndex(s => s.Contains("vidstabtransform")) > -1)
-                    str = " -copyts -start_at_zero -y !seek! -i \"!file!\" !start! !duration! -vf \"vidstabdetect=shakiness=10:accuracy=5:result='transforms.trf'\" -f null NUL && ffmpeg" + str;
-
-                foreach (string s in Vf)
-                {
-                    if (s.Contains("libplacebo") && Libplacebo)
-                    {
-                        str += " -init_hw_device vulkan:" + Vkn_Device;
-                        break;
-                    }
-                    if (s.Contains("opencl"))
-                    {
-                        str += " -init_hw_device opencl=" + OCL_Device + " -filter_hw_device " + OCL_Device;
-                        break;
-                    }
-                }
-                str += " -vf " + String.Join(",", vf.ToArray());
-            }
-            */
 
             if (vf.Count > 0)
                 str += " -vf " + String.Join(",", vf.ToArray());
@@ -583,14 +554,22 @@ namespace Av1ador
             if (V_kbps > 0 && Multipass != "" && !predict && Cv == "libx265")
                 str += ":!reuse!";
 
-            // Add values for grain synth
-            if (Gs_level > 0)
-                str += ":film-grain=" + Gs_level;
 
-            if (!Hdr)
-                str += Color;
-            else
-                str += ":color-primaries=9:transfer-characteristics=16:matrix-coefficients=9";
+            if (Cv == "libsvtav1")
+            {
+                // Add values for grain synth
+                if (Gs_level > 0)
+                    str += ":film-grain=" + Gs_level;
+
+                // for levels of parallelism
+                str += ":lp=" + Threads;
+
+                // for color and HDR handling
+                if (!Hdr)
+                    str += Color;
+                else
+                    str += ":color-primaries=9:transfer-characteristics=16:matrix-coefficients=9";
+            }
 
             str += " -an";
             if ((V_kbps > 0 || always_2p) && Multipass != "" && !predict)
