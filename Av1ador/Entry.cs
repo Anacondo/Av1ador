@@ -30,7 +30,7 @@ namespace Av1ador
         public string Cv { get; set; }
         public string Bits { get; set; }
         public string Param { get; set; }
-        public int Crf { get; set; }
+        public decimal Crf { get; set; }
         public int Ba { get; set; }
         public string Bv { get; set; }
         public int Track { get; set; }
@@ -90,7 +90,8 @@ namespace Av1ador
                     int x = e.Bounds.Right - 52;
                     int y = e.Bounds.Bottom - 16;
                     e.Graphics.FillRectangle(Brush_bg(isItemSelected, e.Index, entry.Status), x, y, 51, 15);
-                    TimeSpan t = (entry.Status == 1 ? ts - TimeSpan.FromMilliseconds(Lastsave) : new TimeSpan(0)) + TimeSpan.FromMilliseconds(entry.Elapsed);
+                    TimeSpan delta = TimeSpan.FromMilliseconds(Math.Max(0, ts.TotalMilliseconds - Lastsave));
+                    TimeSpan t = (entry.Status == 1 ? delta : TimeSpan.Zero) + TimeSpan.FromMilliseconds(entry.Elapsed);
                     e.Graphics.DrawString("[" + ((int)t.TotalHours).ToString("00") + ":" + t.Minutes.ToString("00") + ":" + t.Seconds.ToString("00") + "]", e.Font, Brushes.Black, x, y);
                 }
             }
@@ -127,14 +128,17 @@ namespace Av1ador
                 if (entry.File == file)
                 {
                     if (restart)
-                        entry.Elapsed = Lastsave = 0;
+                    {
+                        entry.Elapsed = 0;
+                        Lastsave = 0;
+                    }
                     int status = entry.Status;
                     entry.Status = running ? 1 : failed ? -1 : finished ? 2 : status != -1 && status != 2 ? 0 : entry.Status;
                     if (status != entry.Status)
                     {
                         if (entry.Status == 2 || entry.Status == -1 || (status == 1 && entry.Status == 0))
                         {
-                            entry.Elapsed += lastupdate;// > Lastsave ? lastupdate - Lastsave : 0;
+                            entry.Elapsed += lastupdate > Lastsave ? lastupdate - Lastsave : 0;
                             Lastsave = 0;
                         }
                         Save(list, true);
@@ -192,7 +196,7 @@ namespace Av1ador
             }
         }
 
-        public static void Update(int col, Video video, ListBox list, ListBox vf, ListBox af, string gs, string cv, string bits, string param, int crf, int ba, string bv, int track, int subs, bool audioPassthru, string spd, bool hdr)
+        public static void Update(int col, Video video, ListBox list, ListBox vf, ListBox af, string gs, string cv, string bits, string param, decimal crf, int ba, string bv, int track, int subs, bool audioPassthru, string spd, bool hdr)
         {
             for (int i = 0; i < list.Items.Count; i++)
             {

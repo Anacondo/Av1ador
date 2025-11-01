@@ -24,7 +24,7 @@ namespace Av1ador
         public static string Vkn_Device { get; set; }
         public string[] Resos { get; set; }
         public int Max_crf { get; set; }
-        public int Crf { get; set; }
+        public decimal Crf { get; set; }
         public int Cores { get; }
         public int Threads { get; set; }
         public string Cv { get; set; }
@@ -184,7 +184,7 @@ namespace Av1ador
                 Job = j[1];
                 Presets = new string[] { "-1 (slowest)", "0", "1", "2", "3", "*4", "5", "6", "7", "8", "9", "10", "11", "12 (fastest)" };
                 speed_str = "-preset ";
-                Params = "-svtav1-params tune=2:keyint=240:enable-qm=1:qm-min=8:qm-max=15:aq-mode=2:enable-dlf=2:enable-overlays=1:enable-restoration=0:enable-tf=2:enable-cdef=1:sharpness=1:enable-variance-boost=1:qp-scale-compress-strength=3:adaptive-film-grain=1:noise-norm-strength=1:variance-boost-strength=3:variance-octile=4:psy-rd=0.5:spy-rd=1:frame-luma-bias=15";
+                Params = "-svtav1-params tune=3:keyint=240:enable-qm=1:qm-min=8:qm-max=15:aq-mode=2:enable-dlf=2:enable-overlays=1:enable-restoration=0:enable-tf=2:tf-strength=1:enable-cdef=1:sharpness=1:enable-variance-boost=1:qp-scale-compress-strength=3:noise-norm-strength=3:psy-rd=1.0:spy-rd=1:luminance-qp-bias=10:hbd-mds=1:complex-hvs=1:sharp-tx=1:variance-boost-strength=3:variance-octile=4";
                 Color = ":color-primaries=1:transfer-characteristics=1:matrix-coefficients=1";
                 Gs = 50;
                 Rate = 0.85;
@@ -312,14 +312,14 @@ namespace Av1ador
                 else
                     Ca = "aac";
                 Channels = new string[] { c[0], c[1], c[2], c[3] };
-                A_kbps = 192;
+                A_kbps = 160;
                 A_min = 2;
                 A_Job = "m4a";
             }
             else if (codec == a[1])
             {
                 Ca = "libopus";
-                A_kbps = 192;
+                A_kbps = 160;
                 A_min = 5;
                 A_Job = "ogg";
                 Channels = new string[] { c[0], c[3] };
@@ -327,7 +327,7 @@ namespace Av1ador
             else if (codec == a[2])
             {
                 Ca = "libvorbis";
-                A_kbps = 192;
+                A_kbps = 160;
                 A_min = 48;
                 A_Job = "ogg";
                 Channels = new string[] { c[0], c[1], c[2], c[3] };
@@ -335,7 +335,7 @@ namespace Av1ador
             else
             {
                 Ca = "libmp3lame";
-                A_kbps = 192;
+                A_kbps = 160;
                 A_min = 32;
                 A_Job = "mp3";
                 Channels = new string[] { c[0], c[3] };
@@ -432,14 +432,16 @@ namespace Av1ador
                 if (v == "True")
                     Vf.Insert(0, "nnedi='weights=" + resdir + "nnedi3_weights.bin:field=a'");
             }
-            else if (f == "Resize to 1080p (zscale lanczos)")
-                Vf.Add("zscale=w=1920:h=-2:f=lanczos");
+            else if (f == "Resize to 1080p")
+                Vf.Add("scale=1920:-2:flags=lanczos+accurate_rnd+full_chroma_int");
             else if (f == "Light denoise (removegrain)")
-                Vf.Add("removegrain=1:0:0,noise=c0s=1:c0f=t");
-            else if (f == "Strong denoise (nlmeans)")
-                Vf.Add("nlmeans=1:7:5:3:3");
+                Vf.Add("removegrain=1:1:1");
+            else if (f == "Strong denoise (bm3d)")
+                Vf.Add("bm3d=sigma=3");
             else if (f == "Vulkan")
-                Vf.Add("\"" + Bit_Format(10) + ",hwupload,libplacebo=percentile=99.6:gamut_mode=relative:tonemapping=hable:range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709:" + Bit_Format() + ",hwdownload," + Bit_Format() + "\"");
+                Vf.Add("\"" + Bit_Format(10) + ",hwupload,libplacebo=percentile=99.6:gamut_mode=relative:tonemapping=bt.2446a:range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709:" + Bit_Format() + ",hwdownload," + Bit_Format() + "\"");
+            else if (f == "General movies")
+                Vf.Add("\"" + Bit_Format(10) + ",hwupload,libplacebo=brightness=0.035:saturation=0.9:contrast=1.06:percentile=99.6:gamut_mode=perceptual:tonemapping=bt.2446a:range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709:" + Bit_Format() + ",hwdownload," + Bit_Format() + "\"");
         }
 
         public void Vf_update(string f, [Optional] string v, [Optional] string a, [Optional] bool b)
@@ -474,7 +476,7 @@ namespace Av1ador
                     if (Libplacebo)
                         Vf_add("Vulkan", "0");
                     else if (b)
-                        Vf_add("OpenCL", "");
+                        Vf_add("General movies", "");
                 }
             }
             else if (f.Contains("setpts="))
@@ -501,7 +503,7 @@ namespace Av1ador
         public string Build_vstr(bool predict = false)
         {
             string str = " -init_hw_device vulkan:" + Vkn_Device;
-            str += " -hide_banner -copyts -start_at_zero -display_rotation 0 -y !seek! -i \"!file!\" !start! !duration! -c:v:0 " + Cv;
+            str += " -hide_banner -copyts -start_at_zero -display_rotation 0 -vsync -1 -y !seek! -i \"!file!\" !start! !duration! -c:v:0 " + Cv;
             List<string> vf = new List<string>(Vf);
             bool always_2p = Cv == "libvpx-vp9" && Regex.Match(Params, "auto-alt-ref [1-6]").Success;
             /*
@@ -602,7 +604,7 @@ namespace Av1ador
             string astr;
             if (AudioPassthru)
             {
-                astr = " -vn -async 1 -c:a copy -map 0:a:" + track;
+                astr = " -vn -async -1 -c:a copy -map 0:a:" + track;
             }
             else
             {

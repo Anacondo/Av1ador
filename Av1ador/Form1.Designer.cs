@@ -769,7 +769,7 @@
             this.workersgroupBox.Size = new System.Drawing.Size(137, 66);
             this.workersgroupBox.TabIndex = 4;
             this.workersgroupBox.TabStop = false;
-            this.workersgroupBox.Text = "Threads (auto)";
+            this.workersgroupBox.Text = "Threads";
             this.workersgroupBox.Paint += new System.Windows.Forms.PaintEventHandler(this.WorkersgroupBox_Paint);
             // 
             // tableLayoutPanel20
@@ -792,6 +792,8 @@
             // 
             this.workersBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.workersBox.AutoSize = true;
+            this.workersBox.Checked = true;
+            this.workersBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.workersBox.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.workersBox.Location = new System.Drawing.Point(15, 15);
             this.workersBox.Name = "workersBox";
@@ -805,7 +807,6 @@
             // workersUpDown
             // 
             this.workersUpDown.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.workersUpDown.Enabled = false;
             this.workersUpDown.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.workersUpDown.Location = new System.Drawing.Point(79, 11);
             this.workersUpDown.Margin = new System.Windows.Forms.Padding(0);
@@ -820,7 +821,7 @@
             this.workersUpDown.TabIndex = 0;
             this.workersUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.workersUpDown.Value = new decimal(new int[] {
-            4,
+            3,
             0,
             0,
             0});
@@ -1015,7 +1016,7 @@
             this.trackBar2.TabIndex = 1;
             this.trackBar2.TickFrequency = 16;
             this.trackBar2.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBar2.Value = 192;
+            this.trackBar2.Value = 160;
             this.trackBar2.Scroll += new System.EventHandler(this.TrackBar2_Scroll);
             // 
             // videoOptionsGroupBox
@@ -1086,7 +1087,7 @@
             this.trackBar1.TabIndex = 1;
             this.trackBar1.TickFrequency = 2;
             this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBar1.Value = 27;
+            this.trackBar1.Value = 18;
             this.trackBar1.Scroll += new System.EventHandler(this.TrackBar1_Scroll);
             // 
             // constantLabel
@@ -1103,24 +1104,35 @@
             // 
             // upDownCRF
             // 
+            this.upDownCRF.DecimalPlaces = 1;
             this.upDownCRF.Dock = System.Windows.Forms.DockStyle.Fill;
             this.upDownCRF.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.upDownCRF.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
             this.upDownCRF.Location = new System.Drawing.Point(210, 0);
             this.upDownCRF.Margin = new System.Windows.Forms.Padding(0);
             this.upDownCRF.Maximum = new decimal(new int[] {
-            255,
+            2550,
             0,
             0,
-            0});
+            65536});
+            this.upDownCRF.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            65536});
             this.upDownCRF.MinimumSize = new System.Drawing.Size(31, 0);
             this.upDownCRF.Name = "upDownCRF";
             this.upDownCRF.Size = new System.Drawing.Size(57, 22);
             this.upDownCRF.TabIndex = 2;
             this.upDownCRF.Value = new decimal(new int[] {
-            18,
+            180,
             0,
             0,
-            0});
+            65536});
             this.upDownCRF.ValueChanged += new System.EventHandler(this.UpDownCRF_ValueChanged);
             // 
             // tableLayoutPanel12
@@ -1498,29 +1510,29 @@
             // removeBlackBarsToolStripMenuItem
             // 
             this.removeBlackBarsToolStripMenuItem.Name = "removeBlackBarsToolStripMenuItem";
-            this.removeBlackBarsToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.removeBlackBarsToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.removeBlackBarsToolStripMenuItem.Text = "Auto-crop";
             this.removeBlackBarsToolStripMenuItem.Click += new System.EventHandler(this.RemoveBlackBarsToolStripMenuItem_Click);
             // 
             // denoiseToolStripMenuItem
             // 
             this.denoiseToolStripMenuItem.Name = "denoiseToolStripMenuItem";
-            this.denoiseToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.denoiseToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.denoiseToolStripMenuItem.Text = "Light denoise (removegrain)";
             this.denoiseToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
             // strongDenoiseToolStripMenuItem
             // 
             this.strongDenoiseToolStripMenuItem.Name = "strongDenoiseToolStripMenuItem";
-            this.strongDenoiseToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
-            this.strongDenoiseToolStripMenuItem.Text = "Strong denoise (nlmeans)";
+            this.strongDenoiseToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.strongDenoiseToolStripMenuItem.Text = "Strong denoise (bm3d)";
             this.strongDenoiseToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
             // resizeZscaleToolStripMenuItem
             // 
             this.resizeZscaleToolStripMenuItem.Name = "resizeZscaleToolStripMenuItem";
-            this.resizeZscaleToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
-            this.resizeZscaleToolStripMenuItem.Text = "Resize to 1080p (zscale lanczos)";
+            this.resizeZscaleToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.resizeZscaleToolStripMenuItem.Text = "Resize to 1080p";
             this.resizeZscaleToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
             // tonemapToolStripMenuItem
@@ -1529,7 +1541,7 @@
             this.openclToolStripMenuItem,
             this.vulkanToolStripMenuItem});
             this.tonemapToolStripMenuItem.Name = "tonemapToolStripMenuItem";
-            this.tonemapToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.tonemapToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.tonemapToolStripMenuItem.Text = "Tonemap";
             // 
             // openclToolStripMenuItem
@@ -1537,7 +1549,7 @@
             this.openclToolStripMenuItem.AutoSize = false;
             this.openclToolStripMenuItem.Name = "openclToolStripMenuItem";
             this.openclToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.openclToolStripMenuItem.Text = "OpenCL";
+            this.openclToolStripMenuItem.Text = "General movies";
             this.openclToolStripMenuItem.Click += new System.EventHandler(this.VulkanToolStripMenuItem_Click);
             // 
             // vulkanToolStripMenuItem
@@ -1552,7 +1564,7 @@
             // 
             this.toolStripSeparator16.AutoSize = false;
             this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(239, 6);
+            this.toolStripSeparator16.Size = new System.Drawing.Size(220, 6);
             // 
             // savedToolStripMenuItem
             // 
@@ -1689,7 +1701,7 @@
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 20);
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 21);
             this.toolStripButton1.Text = "toolStripButton1";
             // 
             // tableLayoutPanel18
@@ -1965,6 +1977,7 @@
             // 
             this.mediainfoLabel.AutoSize = true;
             this.mediainfoLabel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.mediainfoLabel.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mediainfoLabel.Location = new System.Drawing.Point(3, 0);
             this.mediainfoLabel.Name = "mediainfoLabel";
             this.mediainfoLabel.Size = new System.Drawing.Size(70, 23);
@@ -1980,7 +1993,7 @@
             this.tableLayoutPanel9.Controls.Add(this.statusLabel, 0, 1);
             this.tableLayoutPanel9.Controls.Add(this.estimatedLabel, 0, 0);
             this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel9.Font = new System.Drawing.Font("Unispace", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tableLayoutPanel9.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tableLayoutPanel9.Location = new System.Drawing.Point(666, 0);
             this.tableLayoutPanel9.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel9.Name = "tableLayoutPanel9";
@@ -2103,7 +2116,6 @@
             // 
             this.formatComboBox.AutoSize = false;
             this.formatComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.formatComboBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.formatComboBox.ForeColor = System.Drawing.Color.SaddleBrown;
             this.formatComboBox.Items.AddRange(new object[] {
             "mp4",
@@ -2133,7 +2145,6 @@
             this.cvComboBox.BackColor = System.Drawing.SystemColors.Window;
             this.cvComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cvComboBox.DropDownWidth = 115;
-            this.cvComboBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.cvComboBox.ForeColor = System.Drawing.Color.SaddleBrown;
             this.cvComboBox.Items.AddRange(new object[] {
             "AV1 (aom)",
@@ -2161,7 +2172,6 @@
             // 
             this.speedComboBox.AutoSize = false;
             this.speedComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.speedComboBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.speedComboBox.ForeColor = System.Drawing.Color.SaddleBrown;
             this.speedComboBox.MaxDropDownItems = 13;
             this.speedComboBox.Name = "speedComboBox";
@@ -2182,7 +2192,6 @@
             this.bitsComboBox.AutoSize = false;
             this.bitsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.bitsComboBox.DropDownWidth = 60;
-            this.bitsComboBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.bitsComboBox.ForeColor = System.Drawing.Color.SaddleBrown;
             this.bitsComboBox.Items.AddRange(new object[] {
             "10 bits",
@@ -2209,7 +2218,6 @@
             // 
             this.caComboBox.AutoSize = false;
             this.caComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.caComboBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.caComboBox.ForeColor = System.Drawing.Color.SaddleBrown;
             this.caComboBox.Items.AddRange(new object[] {
             "aac",
@@ -2234,7 +2242,6 @@
             this.chComboBox.AutoSize = false;
             this.chComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.chComboBox.DropDownWidth = 90;
-            this.chComboBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.chComboBox.ForeColor = System.Drawing.Color.SaddleBrown;
             this.chComboBox.Items.AddRange(new object[] {
             "2 (stereo)",

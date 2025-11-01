@@ -749,10 +749,13 @@ namespace Av1ador
                 Thread.Sleep(500);
             }
             Status.Add("Merging chunks...");
+
             var files = new List<string>();
+
             for (int i = 0; i < Chunks.Length; i++)
                 files.Add("file '" + Name.Replace(Tempdir, "").Replace("'", "\'\\'\'") + "\\" + i.ToString("00000").ToString() + "." + Job + "'");
             System.IO.File.WriteAllLines(Tempdir + "concat.txt", files.ToArray());
+            
             Process ffconcat = new Process();
             Func.Setinicial(ffconcat, 3);
             string b = A_Job == "m4a" ? "-bsf:a aac_adtstoasc " : "";
@@ -775,16 +778,19 @@ namespace Av1ador
 
             if (vCompare.Success)
                 videoCodecVersion = "-metadata VIDEO_CODEC_VERSION=\"" + vCompare.Groups[1].ToString() + "\" ";
+            else
+                videoCodecVersion = "-metadata VIDEO_CODEC_VERSION=\"\" ";
 
             string encoderMetadata = (videoCodecVersion + videoCodecParams + audioCodecParams).Replace("\r", "");
 
             if (System.IO.File.Exists(Name + "\\audio." + A_Job))
-                if (SubIndex > -1)
-                    ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt" + "\"" + (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\" -i \"" + File + "\" -async 1 -vsync 1 -c:v copy -c:a copy -c:s copy -map 0:v:0 -map 1:a:0 -map 2:s:" + SubIndex + " -disposition:s:0 default -metadata:s:s:0 language=eng " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
-                else
-                    ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt" + "\"" + (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\" -i \"" + File + "\" -async 1 -vsync 1 -c:v copy -c:a copy -map 0:v:0 -map 1:a:0 " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
-            else
-                ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + "  -i \"" + Tempdir + "concat.txt" + "\" -async 1 -vsync 1 -c:v copy -an -map 0:v:0 -map_metadata -1 " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileNameWithoutExtension(Name)) + "_Av1ador." + Extension + "\"";
+                if (SubIndex > -1) // if we have subtitles as well
+                    ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt" + "\"" + (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\" -i \"" + File + "\" -vsync -1 -async -1 -c:v copy -c:a copy -c:s copy -map 0:v:0 -map 1:a:0 -map 2:s:" + SubIndex + " -disposition:s:0 default -metadata:s:s:0 language=eng " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
+                else // we don't have subtitles, so don't map them
+                    ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt" + "\"" + (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\" -i \"" + File + "\" -vsync -1 -async -1 -c:v copy -c:a copy -map 0:v:0 -map 1:a:0 " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
+            else // in case there's no audio
+                ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + "  -i \"" + Tempdir + "concat.txt" + "\" -vsync -1 -c:v copy -an -map 0:v:0 -map_metadata -1 " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileNameWithoutExtension(Name)) + "_Av1ador." + Extension + "\"";
+
             ffconcat.Start();
             Regex regex = new Regex("time=([0-9]{2}):([0-9]{2}):([0-9]{2}.[0-9]{2})");
             Match compare;

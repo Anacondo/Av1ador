@@ -550,7 +550,7 @@ namespace Av1ador
                 Cv = cvComboBox.Text,
                 Bits = bitsComboBox.Text,
                 Param = paramsBox.Text,
-                Crf = (int)upDownCRF.Value,
+                Crf = upDownCRF.Value,
                 Ba = int.Parse(abitrateBox.Text),
                 Bv = bitrateBox.Text,
                 Speed = speedComboBox.Text,
@@ -1208,6 +1208,9 @@ namespace Av1ador
             catch { }
 
             encode?.Set_state();
+            encode.Cv = encoder.Cv;
+            encode.Ca = encoder.Ca;
+
             Filter_remove();
         }
 
@@ -1219,6 +1222,14 @@ namespace Av1ador
             thread.Start();
             heat = Func.Heat(0);
             workersgroupBox.Refresh();
+
+            try
+            {
+                Entry entry;
+                entry = (Entry)listBox1.SelectedItems[0];
+                entry.Elapsed = 0;
+            }
+            catch { }
         }
 
         private void Abitrate_update(bool calc)
@@ -1293,7 +1304,7 @@ namespace Av1ador
                 else if (encodestopButton.Enabled && infoTimer.Interval == 250 && !primer_video.Busy && !encode.Can_run && !encode.Failed && !primer_video.Gs_thread && (entry.Param != "" || paramsBox.Text != "") && (encoder.Vf.Count == 0 || !encoder.Vf[0].Contains("crop=D")))
                 {
                     encoder.Params = paramsBox.Text;
-                    encoder.Crf = (int)upDownCRF.Value;
+                    encoder.Crf = upDownCRF.Value;
                     encode = new Encode
                     {
                         Can_run = true,
@@ -2328,7 +2339,7 @@ namespace Av1ador
             if (primer_video != null)
             {
                 listBox1.SelectedIndexChanged -= new EventHandler(ListBox1_SelectedIndexChanged);
-                Entry.Update(field, primer_video, listBox1, vfListBox, afListBox, gsUpDown.Value.ToString(), cvComboBox.Text, bitsComboBox.Text, paramsBox.Text, (int)upDownCRF.Value, int.Parse(abitrateBox.Text), bitrateBox.Text, track, subtitle, audioPassThruCheckBox.Checked, speedComboBox.Text, checkBoxHDR.Checked);
+                Entry.Update(field, primer_video, listBox1, vfListBox, afListBox, gsUpDown.Value.ToString(), cvComboBox.Text, bitsComboBox.Text, paramsBox.Text, upDownCRF.Value, int.Parse(abitrateBox.Text), bitrateBox.Text, track, subtitle, audioPassThruCheckBox.Checked, speedComboBox.Text, checkBoxHDR.Checked);
                 listBox1.SelectedIndexChanged += new EventHandler(ListBox1_SelectedIndexChanged);
             }
         }
