@@ -36,7 +36,6 @@ namespace Av1ador
         public int Track { get; set; }
         public int Subtitle { get; set; }
         public bool HDR { get; set; }
-        //public bool DOVI { get; set; }
         public bool AudioPassthru { get; set; }
         public string Resolution { get; set; }
         public string Speed { get; set; }

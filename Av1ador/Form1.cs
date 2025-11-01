@@ -1693,6 +1693,7 @@ namespace Av1ador
                 }
             }
             encoder.Threads = (int)Math.Ceiling((double)encoder.Cores / (double)workersUpDown.Value);
+            // add logic to actually modify the THREADS and LP values for ffmpeg and svt-av1 encoder so that in the next chunk file creation and write the params are updated
         }
 
         private void DeinterlaceToolStripMenuItem_Click(object sender, EventArgs e)
