@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-
+using System.Threading;
 
 namespace Av1ador
 {
@@ -13,13 +13,22 @@ namespace Av1ador
     internal static class Program
     {
         public static bool Log { get; set; }
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        private static Mutex mutex = null;
+
         [STAThread]
         static void Main()
         {
-            if (!Debugger.IsAttached)
+            const string appMutex = "Av1adorSingleInstance";
+            mutex = new Mutex( true, appMutex, out bool createdNew );
+
+            if( !createdNew )
+            {
+                MessageBox.Show("Av1ador is already running! Only one instance is allowed.", "Error: Application already running",
+                    MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
+
+            if( !Debugger.IsAttached )
             {
                 AppDomain.CurrentDomain.UnhandledException += AllUnhandledExceptions;
                 Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
@@ -27,6 +36,8 @@ namespace Av1ador
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
+
+            GC.KeepAlive( mutex );
         }
         private static void AllUnhandledExceptions(object sender, UnhandledExceptionEventArgs e)
         {
