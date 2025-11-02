@@ -1365,9 +1365,11 @@ namespace Av1ador
                             Update_current_time(primer_video.StartTime);
                         }
                     }
+                    /*
                     if (!workersUpDown.Enabled && workersUpDown.Value > 1)
                         if (!workersBox.Checked)
                             workersUpDown.Value = 4;
+                    */
                 }
                 else if (!encodestopButton.Enabled)
                 {
@@ -1375,8 +1377,10 @@ namespace Av1ador
                     if (statusLabel.Text.Contains("Encoding"))
                     {
                         listBox1.Refresh();
+                        /*
                         if (!workersBox.Checked)
                             workersUpDown.Value = 4;
+                        */
                     }
                     if (!statusLabel.Text.Contains("grain"))
                         statusLabel.Text = "";
