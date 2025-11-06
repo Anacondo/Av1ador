@@ -449,14 +449,16 @@ namespace Av1ador
             }
             else if (f == "Resize to 1080p")
                 Vf.Add("scale=1920:-2:flags=lanczos+accurate_rnd+full_chroma_int");
-            else if (f == "Light denoise (removegrain)")
+            else if (f == "removegrain")
                 Vf.Add("removegrain=1:1:1");
-            else if (f == "Strong denoise (bm3d)")
-                Vf.Add("bm3d=sigma=3");
-            else if (f == "Vulkan")
+            else if (f == "bm3d")
+                Vf.Add("bm3d=sigma=4");
+            else if (f == "atadenoise")
+                Vf.Add("atadenoise=0a=0.02:0b=0.04:1a=0.02:1b=0.04:2a=0.02:2b=0.04");
+            else if (f == "hqdn3d")
+                Vf.Add("hqdn3d=luma_spatial=2:chroma_spatial=2:luma_tmp=3:chroma_tmp=3");
+            else if (f == "bt.2446a")
                 Vf.Add("\"" + Bit_Format(10) + ",hwupload,libplacebo=percentile=99.6:gamut_mode=relative:tonemapping=bt.2446a:range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709:" + Bit_Format() + ",hwdownload," + Bit_Format() + "\"");
-            else if (f == "General movies")
-                Vf.Add("\"" + Bit_Format(10) + ",hwupload,libplacebo=brightness=0.035:saturation=0.9:contrast=1.06:percentile=99.6:gamut_mode=perceptual:tonemapping=bt.2446a:range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709:" + Bit_Format() + ",hwdownload," + Bit_Format() + "\"");
         }
 
         public void Vf_update(string f, [Optional] string v, [Optional] string a, [Optional] bool b)

@@ -1679,6 +1679,8 @@ namespace Av1ador
 
         private void WorkersUpDown_ValueChanged(object sender, EventArgs e)
         {
+            encoder.Threads = (int)Math.Ceiling((double)encoder.Cores / (double)workersUpDown.Value);
+
             if (encode != null)
             {
                 encode.Workers = (int)workersUpDown.Value;
@@ -1686,8 +1688,12 @@ namespace Av1ador
                 {
                     foreach (Segment segment in encode.Chunks)
                     {
+                        // apply new threads parameters to all chunks
+                        segment.Arguments = Func.AdjustThreads(segment.Arguments, encoder.Threads);
+
                         if (encode.Running)
                             break;
+
                         if (segment.Encoding && encodestopButton.Enabled)
                         {
                             encode.Encoding();
@@ -1696,8 +1702,6 @@ namespace Av1ador
                     }
                 }
             }
-            encoder.Threads = (int)Math.Ceiling((double)encoder.Cores / (double)workersUpDown.Value);
-            // TO-DO: add logic to actually modify the THREADS and LP values for ffmpeg and svt-av1 encoder so that in the next chunk file creation and write the params are updated
         }
 
         private void DeinterlaceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2202,13 +2206,28 @@ namespace Av1ador
 
         private void GrainButton_CheckStateChanged(object sender, EventArgs e)
         {
-            if (!mpv.Mpv2_loaded)
+           if (!mpv.Mpv2_loaded)
                 return;
             grainButton.ToolTipText = grainButton.Checked ? "Disable AV1 grain synthesis" : "Enable AV1 grain synthesis";
             mpv.Cmd("{ \"command\": [\"set_property\", \"vd-lavc-film-grain\", \"" + (grainButton.Checked ? "cpu" : "gpu") + "\"] }", 2);
             mpv.Cmd("playlist-play-index current", 2);
             mpv.Wait_mpv();
             PauseButton_Click(new object(), new EventArgs());
+        }
+
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void denoiseMenuItem1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tonemapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void FilterdownButton_Click(object sender, EventArgs e)

@@ -117,11 +117,13 @@
             this.toolStrip5 = new System.Windows.Forms.ToolStrip();
             this.filteraddDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
             this.removeBlackBarsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.denoiseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.strongDenoiseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resizeZscaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.denoiseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.denoiseMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.denoiseMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.denoiseMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.denoiseMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.tonemapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openclToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vulkanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this.savedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -185,6 +187,7 @@
             this.chComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.picBoxBarra = new System.Windows.Forms.PictureBox();
+            this.hqdn3dToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.noiseReductionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.volumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cropToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -229,6 +232,7 @@
             this.audioMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.opentempMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.remove2 = new System.Windows.Forms.ToolStripDropDownMenu();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -1492,9 +1496,8 @@
             this.filteraddDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.filteraddDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.removeBlackBarsToolStripMenuItem,
-            this.denoiseToolStripMenuItem,
-            this.strongDenoiseToolStripMenuItem,
             this.resizeZscaleToolStripMenuItem,
+            this.denoiseToolStripMenuItem,
             this.tonemapToolStripMenuItem,
             this.toolStripSeparator16,
             this.savedToolStripMenuItem});
@@ -1509,61 +1512,79 @@
             // removeBlackBarsToolStripMenuItem
             // 
             this.removeBlackBarsToolStripMenuItem.Name = "removeBlackBarsToolStripMenuItem";
-            this.removeBlackBarsToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.removeBlackBarsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.removeBlackBarsToolStripMenuItem.Text = "Auto-crop";
             this.removeBlackBarsToolStripMenuItem.Click += new System.EventHandler(this.RemoveBlackBarsToolStripMenuItem_Click);
-            // 
-            // denoiseToolStripMenuItem
-            // 
-            this.denoiseToolStripMenuItem.Name = "denoiseToolStripMenuItem";
-            this.denoiseToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.denoiseToolStripMenuItem.Text = "Light denoise (removegrain)";
-            this.denoiseToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
-            // 
-            // strongDenoiseToolStripMenuItem
-            // 
-            this.strongDenoiseToolStripMenuItem.Name = "strongDenoiseToolStripMenuItem";
-            this.strongDenoiseToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
-            this.strongDenoiseToolStripMenuItem.Text = "Strong denoise (bm3d)";
-            this.strongDenoiseToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
             // resizeZscaleToolStripMenuItem
             // 
             this.resizeZscaleToolStripMenuItem.Name = "resizeZscaleToolStripMenuItem";
-            this.resizeZscaleToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.resizeZscaleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.resizeZscaleToolStripMenuItem.Text = "Resize to 1080p";
             this.resizeZscaleToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
+            // 
+            // denoiseToolStripMenuItem
+            // 
+            this.denoiseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.denoiseMenuItem1,
+            this.denoiseMenuItem2,
+            this.denoiseMenuItem3,
+            this.denoiseMenuItem4});
+            this.denoiseToolStripMenuItem.Name = "denoiseToolStripMenuItem";
+            this.denoiseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.denoiseToolStripMenuItem.Text = "Denoise";
+            this.denoiseToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
+            // 
+            // denoiseMenuItem1
+            // 
+            this.denoiseMenuItem1.Name = "denoiseMenuItem1";
+            this.denoiseMenuItem1.Size = new System.Drawing.Size(141, 22);
+            this.denoiseMenuItem1.Text = "bm3d";
+            this.denoiseMenuItem1.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
+            // 
+            // denoiseMenuItem2
+            // 
+            this.denoiseMenuItem2.Name = "denoiseMenuItem2";
+            this.denoiseMenuItem2.Size = new System.Drawing.Size(141, 22);
+            this.denoiseMenuItem2.Text = "atadenoise";
+            this.denoiseMenuItem2.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
+            // 
+            // denoiseMenuItem3
+            // 
+            this.denoiseMenuItem3.Name = "denoiseMenuItem3";
+            this.denoiseMenuItem3.Size = new System.Drawing.Size(141, 22);
+            this.denoiseMenuItem3.Text = "hqdn3d";
+            this.denoiseMenuItem3.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
+            // 
+            // denoiseMenuItem4
+            // 
+            this.denoiseMenuItem4.Name = "denoiseMenuItem4";
+            this.denoiseMenuItem4.Size = new System.Drawing.Size(141, 22);
+            this.denoiseMenuItem4.Text = "removegrain";
+            this.denoiseMenuItem4.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
             // tonemapToolStripMenuItem
             // 
             this.tonemapToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openclToolStripMenuItem,
             this.vulkanToolStripMenuItem});
             this.tonemapToolStripMenuItem.Name = "tonemapToolStripMenuItem";
-            this.tonemapToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.tonemapToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.tonemapToolStripMenuItem.Text = "Tonemap";
-            // 
-            // openclToolStripMenuItem
-            // 
-            this.openclToolStripMenuItem.AutoSize = false;
-            this.openclToolStripMenuItem.Name = "openclToolStripMenuItem";
-            this.openclToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.openclToolStripMenuItem.Text = "General movies";
-            this.openclToolStripMenuItem.Click += new System.EventHandler(this.VulkanToolStripMenuItem_Click);
+            this.tonemapToolStripMenuItem.Click += new System.EventHandler(this.tonemapToolStripMenuItem_Click);
             // 
             // vulkanToolStripMenuItem
             // 
             this.vulkanToolStripMenuItem.AutoSize = false;
             this.vulkanToolStripMenuItem.Name = "vulkanToolStripMenuItem";
             this.vulkanToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.vulkanToolStripMenuItem.Text = "Vulkan";
+            this.vulkanToolStripMenuItem.Text = "bt.2446a";
             this.vulkanToolStripMenuItem.Click += new System.EventHandler(this.VulkanToolStripMenuItem_Click);
             // 
             // toolStripSeparator16
             // 
             this.toolStripSeparator16.AutoSize = false;
             this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(220, 6);
+            this.toolStripSeparator16.Size = new System.Drawing.Size(177, 6);
             // 
             // savedToolStripMenuItem
             // 
@@ -1700,7 +1721,7 @@
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 21);
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 20);
             this.toolStripButton1.Text = "toolStripButton1";
             // 
             // tableLayoutPanel18
@@ -2279,6 +2300,13 @@
             this.picBoxBarra.MouseLeave += new System.EventHandler(this.PicBoxBarra_MouseLeave);
             this.picBoxBarra.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PicBoxBarra_MouseMove);
             // 
+            // hqdn3dToolStripMenuItem
+            // 
+            this.hqdn3dToolStripMenuItem.Name = "hqdn3dToolStripMenuItem";
+            this.hqdn3dToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
+            this.hqdn3dToolStripMenuItem.Text = "Fast denoise (hqdn3d)";
+            this.hqdn3dToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
+            // 
             // noiseReductionToolStripMenuItem
             // 
             this.noiseReductionToolStripMenuItem.AutoSize = false;
@@ -2627,6 +2655,12 @@
             this.opentempMenuItem.Text = "Open temp folder...";
             this.opentempMenuItem.Click += new System.EventHandler(this.OpentempMenuItem_Click);
             // 
+            // remove2
+            // 
+            this.remove2.AutoClose = false;
+            this.remove2.Name = "remove2";
+            this.remove2.Size = new System.Drawing.Size(61, 4);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2754,7 +2788,6 @@
         private System.Windows.Forms.ToolStripButton syncButton;
         private System.Windows.Forms.ToolStripButton filternewButton;
         private System.Windows.Forms.ToolStripButton filterremoveButton;
-        private System.Windows.Forms.ToolStripDropDownButton filteraddDropDownButton;
         private System.Windows.Forms.ToolStripButton filterupButton;
         private System.Windows.Forms.ToolStripButton filterdownButton;
         private System.Windows.Forms.ToolStripButton encodestopButton;
@@ -2763,12 +2796,11 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem debandToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem denoiseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem upscaleToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem cropToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem strongDenoiseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hqdn3dToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stabilizationToolStripMenuItem;
         private System.Windows.Forms.ToolStripLabel toolStripLabel5;
         private System.Windows.Forms.ToolStripComboBox bitsComboBox;
@@ -2838,18 +2870,13 @@
         private System.Windows.Forms.ToolStripMenuItem downmixToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem normalizeToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton zoomButton;
-        private System.Windows.Forms.ToolStripMenuItem resizeZscaleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sharpenToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tonemapToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openclToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem vulkanToolStripMenuItem;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel21;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckedListBox checkedListBox1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
         private System.Windows.Forms.ToolStripButton filterdocButton;
-        private System.Windows.Forms.ToolStripMenuItem removeBlackBarsToolStripMenuItem;
         private System.Windows.Forms.Timer mouseTimer;
         private System.Windows.Forms.ToolStripMenuItem noiseReductionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem anime4kToolStripMenuItem;
@@ -2876,8 +2903,6 @@
         private System.Windows.Forms.ContextMenuStrip FilterContextMenu;
         private System.Windows.Forms.ToolStripMenuItem SaveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem RemoveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
-        private System.Windows.Forms.ToolStripMenuItem savedToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
         private System.Windows.Forms.ToolStripMenuItem savedToolStripMenuItem1;
         private System.Windows.Forms.ToolStripButton deltempButton;
@@ -2926,6 +2951,19 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel19;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox checkBoxHDR;
+        private System.Windows.Forms.ToolStripDropDownButton filteraddDropDownButton;
+        private System.Windows.Forms.ToolStripMenuItem removeBlackBarsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resizeZscaleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem denoiseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem denoiseMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem denoiseMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem denoiseMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem denoiseMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem tonemapToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem vulkanToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
+        private System.Windows.Forms.ToolStripMenuItem savedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripDropDownMenu remove2;
     }
 }
 
