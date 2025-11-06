@@ -159,16 +159,11 @@ namespace Av1ador
         }
         public static string AdjustThreads( string param, int threads )
         {
-            if( param.Contains( "-threads" ) && param.Contains( ":lp=" ) )
+            if( param.Contains( "-threads" ) )
             {
-                Regex r1 = new Regex("-threads ([0-9]+)");
-                Regex r2 = new Regex(":lp=([0-9]+)");
-
-                Match comp1 = r1.Match(param);
-                Match comp2 = r1.Match(param);
-
+                Regex r = new Regex("-threads ([0-9]+)");
+                Match comp = r.Match(param);
                 param = Regex.Replace(param, "(-threads )[0-9]+", m => m.Groups[1].Value + threads.ToString());
-                param = Regex.Replace(param, "(:lp=)[0-9]+", m => m.Groups[1].Value + threads.ToString());
             }
 
             return param;
