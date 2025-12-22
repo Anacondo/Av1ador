@@ -153,8 +153,8 @@ namespace Av1ador
             else
                 Color_matrix = "";
             
-            //if (!Hdr && Regex.Match(info, @"Side data:[\r\n]+ *DOVI").Success)
-            //    DOVI = true;
+            if (!Hdr && Regex.Match(info, @"Side data:[\r\n]+ *DOVI").Success)
+                Hdr = true;
 
             compare = Regex.Match(info, "rotation of (-?[0-9]{1,3})");
             int rotation = 0;
