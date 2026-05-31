@@ -1679,7 +1679,7 @@ namespace Av1ador
 
         private void WorkersUpDown_ValueChanged(object sender, EventArgs e)
         {
-            encoder.Threads = (int)Math.Ceiling((double)encoder.Cores / (double)workersUpDown.Value);
+            encoder.Threads = 6; // (int)Math.Ceiling((double)encoder.Cores / (double)workersUpDown.Value);
 
             if (encode != null)
             {

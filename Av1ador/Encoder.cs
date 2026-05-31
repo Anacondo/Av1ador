@@ -112,7 +112,7 @@ namespace Av1ador
             }
             catch { }  // ignore errors
 
-            Threads = 8; // default to 8 threads per worker, sweet spot for svt-av1
+            Threads = 6; // default to 8 threads per worker, sweet spot for svt-av1
 
             using (var searcher = new ManagementObjectSearcher("select * from Win32_VideoController"))
                 foreach (ManagementObject obj in searcher.Get().Cast<ManagementObject>())
@@ -199,7 +199,7 @@ namespace Av1ador
                 Job = j[1];
                 Presets = new string[] { "-1 (slowest)", "0", "1", "2", "3", "*4", "5", "6", "7", "8", "9", "10", "11", "12 (fastest)" };
                 speed_str = "-preset ";
-                Params = "-svtav1-params tune=0:keyint=240:enable-qm=1:qm-min=8:qm-max=15:aq-mode=2:enable-dlf=2:enable-overlays=1:enable-restoration=0:enable-tf=0:tf-strength=1:enable-cdef=0:sharpness=1:enable-variance-boost=1:variance-boost-curve=0:qp-scale-compress-strength=3:noise-norm-strength=3:ac-bias=1.0:tx-bias=1:luminance-qp-bias=5:hbd-mds=1:complex-hvs=1:sharp-tx=1";
+                Params = "-svtav1-params tune=3:keyint=240:enable-qm=1:qm-min=8:qm-max=15:aq-mode=2:enable-dlf=2:enable-overlays=0:enable-restoration=0:enable-tf=0:tf-strength=0:enable-cdef=0:sharpness=2:enable-variance-boost=1:qp-scale-compress-strength=2:noise-norm-strength=1:psy-rd=2.0:spy-rd=1:luminance-qp-bias=5:hbd-mds=1:complex-hvs=1:sharp-tx=1:noise-adaptive-filtering=0";
                 Color = ":color-primaries=1:transfer-characteristics=1:matrix-coefficients=1";
                 Gs = 50;
                 Rate = 0.85;
@@ -456,7 +456,7 @@ namespace Av1ador
             else if (f == "atadenoise")
                 Vf.Add("atadenoise=0a=0.02:0b=0.04:1a=0.02:1b=0.04:2a=0.02:2b=0.04");
             else if (f == "hqdn3d")
-                Vf.Add("hqdn3d=luma_spatial=2:chroma_spatial=2:luma_tmp=3:chroma_tmp=3");
+                Vf.Add("hqdn3d=3:3:3:3");
             else if (f == "bt.2446a")
                 Vf.Add("\"" + Bit_Format(10) + ",hwupload,libplacebo=percentile=99.6:gamut_mode=relative:tonemapping=bt.2446a:range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709:" + Bit_Format() + ",hwdownload," + Bit_Format() + "\"");
         }
@@ -504,14 +504,14 @@ namespace Av1ador
         {
             if (f == "sofalizer")
             {
-                Af.Add("\"pan=stereo|FL = 0.414*FL + 0.293*FC + 0.293*SL|FR = 0.414*FR + 0.293*FC + 0.293*SR,loudnorm=I=-16:TP=-1.5:LRA=11:measured_I=-27.61:measured_LRA=18.06:measured_TP=-4.47:measured_thresh=-39.20:offset=0.58:linear=true:print_format=summary,asetpts=PTS-STARTPTS,aresample=async=1\"");
+                Af.Add("\"pan=stereo|FL = 0.414*FL + 0.293*FC + 0.293*SL|FR = 0.414*FR + 0.293*FC + 0.293*SR,loudnorm=I=-16:TP=-1.5:LRA=11:print_format=summary,asetpts=PTS-STARTPTS,aresample=async=1:min_hard_comp=0.1:first_pts=0\"");
             }
 
             if (f == "volume")
                 Af.Add("volume=1.3");
 
             if (f == "normalize")
-                Af.Add("loudnorm=I=-16:TP=-1.5:LRA=11:measured_I=-27.61:measured_LRA=18.06:measured_TP=-4.47:measured_thresh=-39.20:offset=0.58:linear=true:print_format=summary,asetpts=PTS-STARTPTS,aresample=async=1");
+                Af.Add("\"loudnorm=I=-16:TP=-1.5:LRA=11:print_format=summary,asetpts=PTS-STARTPTS,aresample=async=1:min_hard_comp=0.1:first_pts=0\"");
 
             if (f == "noisereduction")
                 Af.Add("arnndn=m='" + resdir + "std.rnnn':mix=0.65,afftdn=nr=3:nf=-20");

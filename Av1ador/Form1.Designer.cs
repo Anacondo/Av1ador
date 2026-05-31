@@ -1084,6 +1084,7 @@
             this.trackBar1.Location = new System.Drawing.Point(70, 0);
             this.trackBar1.Margin = new System.Windows.Forms.Padding(0);
             this.trackBar1.Maximum = 51;
+            this.trackBar1.Minimum = 1;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.trackBar1.Size = new System.Drawing.Size(140, 30);
@@ -1512,14 +1513,14 @@
             // removeBlackBarsToolStripMenuItem
             // 
             this.removeBlackBarsToolStripMenuItem.Name = "removeBlackBarsToolStripMenuItem";
-            this.removeBlackBarsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.removeBlackBarsToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.removeBlackBarsToolStripMenuItem.Text = "Auto-crop";
             this.removeBlackBarsToolStripMenuItem.Click += new System.EventHandler(this.RemoveBlackBarsToolStripMenuItem_Click);
             // 
             // resizeZscaleToolStripMenuItem
             // 
             this.resizeZscaleToolStripMenuItem.Name = "resizeZscaleToolStripMenuItem";
-            this.resizeZscaleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resizeZscaleToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.resizeZscaleToolStripMenuItem.Text = "Resize to 1080p";
             this.resizeZscaleToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
@@ -1531,7 +1532,7 @@
             this.denoiseMenuItem3,
             this.denoiseMenuItem4});
             this.denoiseToolStripMenuItem.Name = "denoiseToolStripMenuItem";
-            this.denoiseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.denoiseToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.denoiseToolStripMenuItem.Text = "Denoise";
             this.denoiseToolStripMenuItem.Click += new System.EventHandler(this.MultiToolStripMenuItem_Click);
             // 
@@ -1568,7 +1569,7 @@
             this.tonemapToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.vulkanToolStripMenuItem});
             this.tonemapToolStripMenuItem.Name = "tonemapToolStripMenuItem";
-            this.tonemapToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tonemapToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.tonemapToolStripMenuItem.Text = "Tonemap";
             this.tonemapToolStripMenuItem.Click += new System.EventHandler(this.tonemapToolStripMenuItem_Click);
             // 
@@ -1584,7 +1585,7 @@
             // 
             this.toolStripSeparator16.AutoSize = false;
             this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator16.Size = new System.Drawing.Size(151, 6);
             // 
             // savedToolStripMenuItem
             // 
@@ -1721,7 +1722,7 @@
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 20);
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 21);
             this.toolStripButton1.Text = "toolStripButton1";
             // 
             // tableLayoutPanel18
