@@ -1041,6 +1041,8 @@
             // checkBoxHDR
             // 
             this.checkBoxHDR.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.checkBoxHDR.Checked = true;
+            this.checkBoxHDR.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxHDR.Enabled = false;
             this.checkBoxHDR.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.checkBoxHDR.Location = new System.Drawing.Point(11, 130);

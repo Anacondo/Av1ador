@@ -45,6 +45,7 @@ namespace Av1ador
         public string Job { get; set; }
         public string A_Job { get; set; }
         public int SubIndex { get; set; }
+        public string SubCodec { get; set; } = "copy";
         public bool Finished { get; set; }
         public double Merge { get; set; }
         public string Fps_filter { get; set; }
@@ -787,7 +788,7 @@ namespace Av1ador
 
             if (System.IO.File.Exists(Name + "\\audio." + A_Job))
                 if (SubIndex > -1) // if we have subtitles as well
-                    ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt" + "\"" + (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\" -i \"" + File + "\" -vsync -1 -async -1 -c:v copy -c:a copy -c:s copy -map 0:v:0 -map 1:a:0 -map 2:s:" + SubIndex + " -codec:s:" + SubIndex + " srt -disposition:s:0 default -metadata:s:s:0 language=eng " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
+                    ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt" + "\"" + (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\" -i \"" + File + "\" -vsync -1 -async -1 -c:v copy -c:a copy -c:s " + SubCodec + " -map 0:v:0 -map 1:a:0 -map 2:s:" + SubIndex + " -disposition:s:0 default -metadata:s:s:0 language=eng " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
                 else // we don't have subtitles, so don't map them
                     ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt" + "\"" + (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\" -i \"" + File + "\" -vsync -1 -async -1 -c:v copy -c:a copy -map 0:v:0 -map 1:a:0 " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
             else // in case there's no audio

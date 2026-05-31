@@ -196,10 +196,8 @@ namespace Av1ador
 
                     // read the HDR information from the video entry itself, not from the UI!
                     checkBoxHDR.Enabled = primer_video.Hdr;
-                    if (checkBoxHDR.Enabled)
-                        checkBoxHDR.Checked = entry.HDR;
-                    else
-                        checkBoxHDR.Checked = false;
+                    checkBoxHDR.Checked = primer_video.Hdr;
+                    entry.HDR = primer_video.Hdr;
 
                     Func.Update_combo(chComboBox, encoder.Channels, true);
                     caComboBox.Enabled = chComboBox.Enabled;
@@ -1337,6 +1335,7 @@ namespace Av1ador
                             encode.A_Job = encoder.A_Job;
                         }
                         encode.SubIndex = encoder.SubIndex;
+                        encode.SubCodec = encoder.SubCodec;
                         encode.Cv = encoder.Cv;
                         //delay = primer_video.Tracks_delay[checkedListBox1.CheckedIndices[0]];
                     }
@@ -1862,11 +1861,17 @@ namespace Av1ador
             if (e.NewValue == CheckState.Unchecked && checkedListBox2.CheckedItems.Count == 1)
             {
                 encoder.SubIndex = -1;
+                encoder.SubCodec = "copy"; // Reset back to default
                 Entry_update(14, -1, -1);
             }
             else if (encoder != null)
             {
                 encoder.SubIndex = e.Index;
+
+                // Analyze the pre-parsed subtitle string from Video.cs
+                string selectedSub = primer_video.Subtitles[e.Index].ToLower();
+                encoder.SubCodec = (selectedSub.Contains("tx3g") || selectedSub.Contains("mov_text")) ? "srt" : "copy";
+
                 Entry_update(14, -1, e.Index);
             }
 

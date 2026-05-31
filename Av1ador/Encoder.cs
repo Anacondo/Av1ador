@@ -39,6 +39,7 @@ namespace Av1ador
         public string Job { get; set; }
         public string A_Job { get; set; }
         public int SubIndex { get; set; }
+        public string SubCodec { get; set; } = "copy";
         public string Speed { get; set; }
         public bool Hdr { get; set; }
         public int Bits { get; set; }
