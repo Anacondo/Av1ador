@@ -198,6 +198,7 @@ namespace Av1ador
                     checkBoxHDR.Enabled = primer_video.Hdr;
                     checkBoxHDR.Checked = primer_video.Hdr;
                     entry.HDR = primer_video.Hdr;
+                    encoder.Hdr = primer_video.Hdr;
 
                     Func.Update_combo(chComboBox, encoder.Channels, true);
                     caComboBox.Enabled = chComboBox.Enabled;
