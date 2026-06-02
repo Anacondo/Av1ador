@@ -850,7 +850,7 @@ namespace Av1ador
             {
                 args += " -i \"" + ExtractedSubtitleFile + "\"";
                 mapArgs += " -map " + inputIndex + ":s:0";
-                codecArgs += " -c:s copy -disposition:s:0 default -metadata:s:s:0 language=eng";
+                codecArgs += " -c:s copy -disposition:s:0 default";
                 inputIndex++;
             }
 
