@@ -33,6 +33,7 @@ namespace Av1ador
         public string Extension { get; set; }
         public int Split_min_time { get; set; }
         public bool Can_run { get; set; }
+        public string ExtractedSubtitleFile { get; set; }
         public bool Failed { get; set; }
         public List<string> Splits { get; set; }
         public List<string> Complexity { get; set; }
@@ -291,6 +292,7 @@ namespace Av1ador
             Dir = dir == "" ? Path.GetDirectoryName(v.File) + "\\" : dir + "\\";
             File = v.File;
             Name = Tempdir + Path.GetFileNameWithoutExtension(v.File);
+            ExtractedSubtitleFile = null;
             if (!Directory.Exists(Name))
                 Directory.CreateDirectory(Name);
             Spd = spd;
@@ -306,57 +308,101 @@ namespace Av1ador
             double ato = (to - v.StartTime) * Spd;
 
             if (audioPassthru)
-                A_Job = "mkv";   // we use mkv extension to trick ffmpeg into muxing whatever the audio codec is in the original audio
+                A_Job = "mkv";
 
-            if (audio && A_Param != "")
+            // Unified extraction: audio (if needed) + subtitles (if selected) in one ffmpeg command, full file, no trimming
+            string audiofile = Name + "\\audio." + A_Job;
+            string subFile = (SubIndex > -1 && !audioPassthru) ? Name + "\\subtitles.mkv" : null;
+            bool audioMissing = (audio && A_Param != "" && !System.IO.File.Exists(audiofile));
+            bool subMissing = (subFile != null && !System.IO.File.Exists(subFile));
+
+            if (audioMissing || subMissing)
             {
-                string audiofile = Name + "\\audio." + A_Job;
+                Status.Add((audioMissing ? "Encoding audio | " : "") +
+                           (audioMissing && subMissing ? "Extracting subtitles | " : "") +
+                           (!audioMissing && subMissing ? "Extracting subtitles | " : ""));
+                Process ffproc = new Process();
+                Func.Setinicial(ffproc, 3);
+                string args = $"-analyzeduration 100M -probesize 100M -i \"{v.File}\"";
 
-                if (!System.IO.File.Exists(audiofile))
-                {
-                    Status.Add("Encoding audio + ");
-                    string ssa = v.StartTime > 0 ? " -ss " + v.StartTime.ToString() : "";
-                    double toa = (to - v.StartTime) * Spd;
-                    Process ffaudio = new Process();
-                    Func.Setinicial(ffaudio, 3, " -y" + ssa + " -i \"" + v.File + "\" -t " + toa.ToString() + A_Param + " \"" + audiofile + "\"");
-                    ffaudio.Start();
-                    string aout = ffaudio.StartInfo.Arguments + Environment.NewLine;
-                    BackgroundWorker abw = new BackgroundWorker();
-                    abw.DoWork += (s, e) =>
-                    {
-                        while (!ffaudio.HasExited && Can_run)
-                            aout += ffaudio.StandardError.ReadLine() + Environment.NewLine;
-                        if (!Can_run)
-                        {
-                            while (System.IO.File.Exists(audiofile))
-                            {
-                                try
-                                {
-                                    ffaudio.Kill();
-                                    Thread.Sleep(1000);
-                                    System.IO.File.Delete(audiofile);
-                                }
-                                catch { }
-                            }
-                        }
-                    };
-
-                    abw.RunWorkerCompleted += (s, e) =>
-                    {
-                        System.IO.File.WriteAllText(Name + "\\audio.log", aout);
-                        Status.Remove("Encoding audio + ");
-                        if (System.IO.File.Exists(audiofile))
-                            audio_size = new FileInfo(audiofile).Length;
-                    };
-                    abw.RunWorkerAsync();
-                }
+                if (audioMissing)
+                    args += $" {A_Param} \"{audiofile}\"";
                 else
+                    args += " -an";
+
+                if (subMissing && subFile != null)
+                {
+                    string subCodecParam = (SubCodec == "srt") ? " -c:s srt" : " -c:s copy";
+                    args += $" -map 0:s:{SubIndex}{subCodecParam} -f matroska \"{subFile}\"";
+                }
+
+                ffproc.StartInfo.Arguments = args;
+                ffproc.Start();
+                string output = ffproc.StartInfo.Arguments + Environment.NewLine;
+                BackgroundWorker bw = new BackgroundWorker();
+                bw.DoWork += (s, e) =>
+                {
+                    while (!ffproc.HasExited && Can_run)
+                        output += ffproc.StandardError.ReadLine() + Environment.NewLine;
+                    if (!Can_run)
+                    {
+                        while ((audioMissing && System.IO.File.Exists(audiofile)) ||
+                               (subMissing && subFile != null && System.IO.File.Exists(subFile)))
+                        {
+                            try
+                            {
+                                ffproc.Kill();
+                                Thread.Sleep(1000);
+                                if (audioMissing && System.IO.File.Exists(audiofile))
+                                    System.IO.File.Delete(audiofile);
+                                if (subMissing && subFile != null && System.IO.File.Exists(subFile))
+                                    System.IO.File.Delete(subFile);
+                            }
+                            catch { }
+                        }
+                    }
+                };
+                bw.RunWorkerCompleted += (s, e) =>
+                {
+                    System.IO.File.WriteAllText(Name + "\\audio.log", output);
+                    Status.RemoveAll(s => s.StartsWith("Encoding audio") || s.StartsWith("Extracting subtitles"));
+                    if (audioMissing && System.IO.File.Exists(audiofile))
+                        audio_size = new FileInfo(audiofile).Length;
+                    if (subMissing && subFile != null && System.IO.File.Exists(subFile))
+                    {
+                        try
+                        {
+                            if (new FileInfo(subFile).Length > 50000)
+                                ExtractedSubtitleFile = subFile;
+                            else
+                                System.IO.File.Delete(subFile);
+                        }
+                        catch { }
+                    }
+                };
+                bw.RunWorkerAsync();
+            }
+            else
+            {
+                // Both already exist
+                if (audio && A_Param != "" && System.IO.File.Exists(audiofile))
                     audio_size = new FileInfo(audiofile).Length;
+
+                if (subFile != null && System.IO.File.Exists(subFile))
+                {
+                    try
+                    {
+                        if (new FileInfo(subFile).Length > 50000)
+                            ExtractedSubtitleFile = subFile;
+                    }
+                    catch { }
+                }
             }
 
+            // Scene detection (unchanged from original)
             if (!System.IO.File.Exists(Name + "\\chunks.txt") || (vbr && !System.IO.File.Exists(Name + "\\complexity.txt")))
             {
-                Status.Add("Detecting scenes...");
+                Status.Add("Detecting scenes | ");
                 int workers = 4;
                 if (v.Width > 1920)
                     workers = 3;
@@ -390,7 +436,6 @@ namespace Av1ador
                         Func.Setinicial(ffmpeg, 3);
                         if ((v.Width <= 1920 || v.Kf_fixed) || vbr || Fps_filter != "")
                             ffmpeg.StartInfo.Arguments = (vbr ? " -loglevel debug" : "") + " -copyts -start_at_zero" + ss1 + " -i \"" + v.File + "\"" + ss2 + " -to " + final2.ToString() + " -filter:v \"" + Fps_filter + "select='gt(scene,0.1)+isnan(prev_selected_t)+gte(t-prev_selected_t\\," + Split_min_time.ToString() + ")',showinfo\" -an -f null - ";
-                            //ffmpeg.StartInfo.Arguments = (vbr ? " -loglevel debug" : "") + " -copyts -start_at_zero" + ss1 + " -i \"" + v.File + "\"" + ss2 + " -to " + final2.ToString() + " -filter:v \"" + Fps_filter + "select='gt(scene,0.1)',select='isnan(prev_selected_t)+gte(t-prev_selected_t\\," + Split_min_time.ToString() + ")',showinfo\" -an -f null - ";
                         else
                             ffmpeg.StartInfo.Arguments = " -copyts -start_at_zero -skip_frame nokey" + ss1 + " -i \"" + v.File + "\"" + ss2 + " -to " + final2.ToString() + " -filter:v showinfo -an -f null - ";
                         ffmpeg.Start();
@@ -501,10 +546,10 @@ namespace Av1ador
 
         public void Begin()
         {
-            Status.Remove("Detecting scenes...");
+            Status.Remove("Detecting scenes");
             if (Can_run)
             {
-                Status.Add("Encoding video...");
+                Status.Add("Encoding video");
                 watch.Start();
                 Encoding();
             }
@@ -758,20 +803,47 @@ namespace Av1ador
             for (int i = 0; i < Chunks.Length; i++)
                 files.Add("file '" + Name.Replace(Tempdir, "").Replace("'", "\'\\'\'") + "\\" + i.ToString("00000").ToString() + "." + Job + "'");
             System.IO.File.WriteAllLines(Tempdir + "concat.txt", files.ToArray());
-            
+
             Process ffconcat = new Process();
             Func.Setinicial(ffconcat, 3);
-            string b = A_Job == "m4a" ? "-bsf:a aac_adtstoasc " : "";
-            b += Extension == "mp4" ? "-movflags faststart " : "";
             string f = Spd != 1 ? " -itsscale " + Spd : "";
+
+            bool hasAudio = System.IO.File.Exists(Name + "\\audio." + A_Job);
+            bool hasSubtitles = SubIndex > -1;
+
+            string args = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt\"";
+            string mapArgs = " -map 0:v:0";
+            string codecArgs = " -c:v copy";
+            string audioCodecParams = "";
 
             // add encode information metadata to output file
             string videoCodecParams = "-metadata VIDEO_ENCODER_PARAMS=\"" + Param.Replace("\"", "'").Replace("-y !seek! -i '!file!' !start! !duration! ", "").Replace("'!name!'", "") + "\" ";
-            string audioCodecParams = "";
-            if ( A_Param != null)
-                audioCodecParams = "-metadata AUDIO_ENCODER_PARAMS=\"" + A_Param.Replace("\"", "'") + "\" ";
-            
             string videoCodecVersion = GetEncoderInfo(Cv);
+
+            int inputIndex = 1;
+
+            if (hasAudio)
+            {
+                args += (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\"";
+                mapArgs += " -map " + inputIndex + ":a:0";
+                codecArgs += " -c:a copy";
+                if (A_Param != null)
+                    audioCodecParams = "-metadata AUDIO_ENCODER_PARAMS=\"" + A_Param.Replace("\"", "'") + "\" ";
+
+                inputIndex++;
+            }
+            else
+            {
+                codecArgs += " -an";
+            }
+
+            if (hasSubtitles && !string.IsNullOrEmpty(ExtractedSubtitleFile))
+            {
+                args += " -i \"" + ExtractedSubtitleFile + "\"";
+                mapArgs += " -map " + inputIndex + ":s:0";
+                codecArgs += " -c:s copy -disposition:s:0 default -metadata:s:s:0 language=eng";
+                inputIndex++;
+            }
 
             Regex vRegex = new Regex("SVT \\[version\\]:\\W(?<encoder_version>.*[l,L]ib*.*)");
             Regex aRegex = new Regex("encoder[ ]+: (?<audio_codec>.*lib.*)");
@@ -786,13 +858,7 @@ namespace Av1ador
 
             string encoderMetadata = (videoCodecVersion + videoCodecParams + audioCodecParams).Replace("\r", "");
 
-            if (System.IO.File.Exists(Name + "\\audio." + A_Job))
-                if (SubIndex > -1) // if we have subtitles as well
-                    ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt" + "\"" + (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\" -i \"" + File + "\" -vsync -1 -async -1 -c:v copy -c:a copy -c:s " + SubCodec + " -map 0:v:0 -map 1:a:0 -map 2:s:" + SubIndex + " -disposition:s:0 default -metadata:s:s:0 language=eng " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
-                else // we don't have subtitles, so don't map them
-                    ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt" + "\"" + (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\" -i \"" + File + "\" -vsync -1 -async -1 -c:v copy -c:a copy -map 0:v:0 -map 1:a:0 " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
-            else // in case there's no audio
-                ffconcat.StartInfo.Arguments = " -y -f concat -safe 0" + f + "  -i \"" + Tempdir + "concat.txt" + "\" -vsync -1 -c:v copy -an -map 0:v:0 -map_metadata -1 " + b + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileNameWithoutExtension(Name)) + "_Av1ador." + Extension + "\"";
+            ffconcat.StartInfo.Arguments = args + codecArgs + mapArgs + " " + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
 
             ffconcat.Start();
             Regex regex = new Regex("time=([0-9]{2}):([0-9]{2}):([0-9]{2}.[0-9]{2})");
@@ -825,6 +891,7 @@ namespace Av1ador
             };
             bw.RunWorkerAsync();
         }
+
         private void Cleanup()
         {
             try
@@ -843,6 +910,8 @@ namespace Av1ador
                             System.IO.File.Delete(f);
                     if ((Clean & 8) != 0)
                         System.IO.File.Delete(Name + "\\audio." + A_Job);
+                    if ((Clean & 16) != 0)
+                        System.IO.File.Delete(Name + "\\subtitles.mkv");
                 }
             }
             catch { }

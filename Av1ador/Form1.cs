@@ -415,6 +415,7 @@ namespace Av1ador
                     timestampsMenuItem.Checked = (settings.Delete_temp_files & 2) != 0;
                     segmentsMenuItem.Checked = (settings.Delete_temp_files & 4) != 0;
                     audioMenuItem.Checked = (settings.Delete_temp_files & 8) != 0;
+                    subsMenuItem.Checked = (settings.Delete_temp_files & 16) != 0;
                     deltempButton.Checked = settings.Delete_temp_files > 1;
                 }
                 folderBrowserDialog1.SelectedPath = settings.Output_folder;
@@ -1404,8 +1405,7 @@ namespace Av1ador
                     }
 
                     double progress = encode.Progress;
-                    statusLabel.Text = string.Join("", encode.Status.ToArray()).Replace("Encoding video...", "Encoding video... " + (progress - 1 < 0 ? 0 : progress - 1) + "%");
-                    statusLabel.Text = statusLabel.Text.Replace("...,", "|");
+                    statusLabel.Text = string.Join("", encode.Status.ToArray()).Replace("Encoding video", "Encoding video " + (progress - 1 < 0 ? 0 : progress - 1) + "%");
                     if (statusLabel.Text.Contains("Encoding video"))
                         statusLabel.Text += $" | FPS: {encode.Speed:F2} | Avg. bitrate: {encode.Abr * Globals.overhead:F0} Kbps";
                     double size = encode.Estimated;
@@ -2069,12 +2069,13 @@ namespace Av1ador
             timestampsMenuItem.Image = timestampsMenuItem.Checked ? Resources.Delete : null;
             segmentsMenuItem.Image = segmentsMenuItem.Checked ? Resources.Delete : null;
             audioMenuItem.Image = audioMenuItem.Checked ? Resources.Delete : null;
+            subsMenuItem.Image = subsMenuItem.Checked ? Resources.Delete : null;
             deltempMenuStrip.Show(Cursor.Position.X, Cursor.Position.Y);
         }
 
         private void TimestampsMenuItem_Click(object sender, EventArgs e)
         {
-            settings.Delete_temp_files = 1 + (uint)((timestampsMenuItem.Checked ? 2 : 0) + (segmentsMenuItem.Checked ? 4 : 0) + (audioMenuItem.Checked ? 8 : 0));
+            settings.Delete_temp_files = 1 + (uint)((timestampsMenuItem.Checked ? 2 : 0) + (segmentsMenuItem.Checked ? 4 : 0) + (audioMenuItem.Checked ? 8 : 0) + (subsMenuItem.Checked ? 16 : 0 ));
             deltempButton.Checked = settings.Delete_temp_files > 1;
         }
 

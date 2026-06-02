@@ -230,6 +230,7 @@
             this.timestampsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.segmentsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.audioMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.subsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.opentempMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.remove2 = new System.Windows.Forms.ToolStripDropDownMenu();
@@ -2609,10 +2610,11 @@
             this.timestampsMenuItem,
             this.segmentsMenuItem,
             this.audioMenuItem,
+            this.subsMenuItem,
             this.toolStripSeparator18,
             this.opentempMenuItem});
             this.deltempMenuStrip.Name = "deltempMenuStrip";
-            this.deltempMenuStrip.Size = new System.Drawing.Size(215, 98);
+            this.deltempMenuStrip.Size = new System.Drawing.Size(215, 120);
             // 
             // timestampsMenuItem
             // 
@@ -2642,6 +2644,15 @@
             this.audioMenuItem.Size = new System.Drawing.Size(214, 22);
             this.audioMenuItem.Text = "Encoded audio";
             this.audioMenuItem.Click += new System.EventHandler(this.TimestampsMenuItem_Click);
+            // 
+            // subsMenuItem
+            // 
+            this.subsMenuItem.AutoSize = false;
+            this.subsMenuItem.CheckOnClick = true;
+            this.subsMenuItem.Name = "subsMenuItem";
+            this.subsMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.subsMenuItem.Text = "Subtitles";
+            this.subsMenuItem.Click += new System.EventHandler(this.TimestampsMenuItem_Click);
             // 
             // toolStripSeparator18
             // 
@@ -2967,6 +2978,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
         private System.Windows.Forms.ToolStripMenuItem savedToolStripMenuItem;
         private System.Windows.Forms.ToolStripDropDownMenu remove2;
+        private System.Windows.Forms.ToolStripMenuItem subsMenuItem;
     }
 }
 
