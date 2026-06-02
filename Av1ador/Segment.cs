@@ -286,9 +286,8 @@ namespace Av1ador
         public void Start_encode(string dir, Video v, bool audio, bool audioPassthru, double delay = 0, int br = 0, double spd = 1)
         {
             // determines the minimum chunk length (in seconds)
-            Split_min_time = 10;
+            Split_min_time = 15;
 
-            track_delay = delay;
             Dir = dir == "" ? Path.GetDirectoryName(v.File) + "\\" : dir + "\\";
             File = v.File;
             Name = Tempdir + Path.GetFileNameWithoutExtension(v.File);
@@ -303,7 +302,7 @@ namespace Av1ador
             double seek = v.StartTime - Kf_interval;
             string ss1 = seek > 0 ? " -ss " + seek.ToString() : "";
             string ss2 = v.StartTime > 0 ? " -ss " + v.StartTime.ToString() : "";
-            double to = v.EndTime != v.Duration ? v.EndTime : v.Duration + 1;
+            double to = v.EndTime != v.Duration ? v.EndTime : v.Duration;
             double final = v.CreditsTime > 0 && !vbr ? v.CreditsTime - (double)Split_min_time : to;
             double ato = (to - v.StartTime) * Spd;
 
@@ -318,12 +317,15 @@ namespace Av1ador
 
             if (audioMissing || subMissing)
             {
-                Status.Add((audioMissing ? "Encoding audio | " : "") +
-                           (audioMissing && subMissing ? "Extracting subtitles | " : "") +
-                           (!audioMissing && subMissing ? "Extracting subtitles | " : ""));
-                Process ffproc = new Process();
+                string statusMsg = "";
+                if (audioMissing) 
+                    statusMsg += "Encoding audio | ";
+                if (subMissing) 
+                    statusMsg += "Extracting subtitles | ";
+                
+                Status.Add(statusMsg); Process ffproc = new Process();
                 Func.Setinicial(ffproc, 3);
-                string args = $"-analyzeduration 100M -probesize 100M -i \"{v.File}\"";
+                string args = $"-analyzeduration 100M -probesize 100M -avoid_negative_ts make_zero -fflags +genpts -i \"{v.File}\"";
 
                 if (audioMissing)
                     args += $" {A_Param} \"{audiofile}\"";
@@ -411,7 +413,7 @@ namespace Av1ador
             // Scene detection (unchanged from original)
             if (!System.IO.File.Exists(Name + "\\chunks.txt") || (vbr && !System.IO.File.Exists(Name + "\\complexity.txt")))
             {
-                Status.Add("Detecting scenes | ");
+                Status.Add("Detecting scenes");
                 int workers = 4;
                 if (v.Width > 1920)
                     workers = 3;
@@ -444,7 +446,7 @@ namespace Av1ador
                         Process ffmpeg = new Process();
                         Func.Setinicial(ffmpeg, 3);
                         if ((v.Width <= 1920 || v.Kf_fixed) || vbr || Fps_filter != "")
-                            ffmpeg.StartInfo.Arguments = (vbr ? " -loglevel debug" : "") + " -copyts -start_at_zero" + ss1 + " -i \"" + v.File + "\"" + ss2 + " -to " + final2.ToString() + " -filter:v \"" + Fps_filter + "select='gt(scene,0.1)+isnan(prev_selected_t)+gte(t-prev_selected_t\\," + Split_min_time.ToString() + ")',showinfo\" -an -f null - ";
+                            ffmpeg.StartInfo.Arguments = (vbr ? " -loglevel debug" : "") + " -copyts -start_at_zero" + ss1 + " -i \"" + v.File + "\"" + ss2 + " -to " + final2.ToString() + " -filter:v \"" + Fps_filter + "select='gt(scene,0.25)+isnan(prev_selected_t)+gte(t-prev_selected_t\\," + Split_min_time.ToString() + ")',showinfo\" -an -f null - ";
                         else
                             ffmpeg.StartInfo.Arguments = " -copyts -start_at_zero -skip_frame nokey" + ss1 + " -i \"" + v.File + "\"" + ss2 + " -to " + final2.ToString() + " -filter:v showinfo -an -f null - ";
                         ffmpeg.Start();
@@ -867,7 +869,7 @@ namespace Av1ador
 
             string encoderMetadata = (videoCodecVersion + videoCodecParams + audioCodecParams).Replace("\r", "");
 
-            ffconcat.StartInfo.Arguments = args + codecArgs + mapArgs + " " + encoderMetadata + "\"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
+            ffconcat.StartInfo.Arguments = args + codecArgs + mapArgs + " " + encoderMetadata + " -fflags +genpts -avoid_negative_ts make_zero " + " \"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
 
             ffconcat.Start();
             Regex regex = new Regex("time=([0-9]{2}):([0-9]{2}):([0-9]{2}.[0-9]{2})");
