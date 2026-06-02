@@ -368,16 +368,23 @@ namespace Av1ador
                     Status.RemoveAll(s => s.StartsWith("Encoding audio") || s.StartsWith("Extracting subtitles"));
                     if (audioMissing && System.IO.File.Exists(audiofile))
                         audio_size = new FileInfo(audiofile).Length;
+
                     if (subMissing && subFile != null && System.IO.File.Exists(subFile))
                     {
                         try
                         {
-                            if (new FileInfo(subFile).Length > 50000)
-                                ExtractedSubtitleFile = subFile;
-                            else
+                            long len = new FileInfo(subFile).Length;
+                            if (len == 0 || ffproc.ExitCode != 0)
+                            {
                                 System.IO.File.Delete(subFile);
+                                ExtractedSubtitleFile = null;
+                            }
+                            else
+                            {
+                                ExtractedSubtitleFile = subFile;
+                            }
                         }
-                        catch { }
+                        catch { ExtractedSubtitleFile = null; }
                     }
                 };
                 bw.RunWorkerAsync();
@@ -392,8 +399,10 @@ namespace Av1ador
                 {
                     try
                     {
-                        if (new FileInfo(subFile).Length > 50000)
+                        if (new FileInfo(subFile).Length > 0)
                             ExtractedSubtitleFile = subFile;
+                        else
+                            System.IO.File.Delete(subFile);
                     }
                     catch { }
                 }
