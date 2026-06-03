@@ -33,7 +33,6 @@ namespace Av1ador
         public string Extension { get; set; }
         public int Split_min_time { get; set; }
         public bool Can_run { get; set; }
-        public string ExtractedSubtitleFile { get; set; }
         public bool Failed { get; set; }
         public List<string> Splits { get; set; }
         public List<string> Complexity { get; set; }
@@ -291,7 +290,6 @@ namespace Av1ador
             Dir = dir == "" ? Path.GetDirectoryName(v.File) + "\\" : dir + "\\";
             File = v.File;
             Name = Tempdir + Path.GetFileNameWithoutExtension(v.File);
-            ExtractedSubtitleFile = null;
             if (!Directory.Exists(Name))
                 Directory.CreateDirectory(Name);
             Spd = spd;
@@ -370,18 +368,10 @@ namespace Av1ador
                     {
                         try
                         {
-                            long len = new FileInfo(subFile).Length;
-                            if (len == 0 || ffproc.ExitCode != 0)
-                            {
+                            if (new FileInfo(subFile).Length == 0 || ffproc.ExitCode != 0)
                                 System.IO.File.Delete(subFile);
-                                ExtractedSubtitleFile = null;
-                            }
-                            else
-                            {
-                                ExtractedSubtitleFile = subFile;
-                            }
                         }
-                        catch { ExtractedSubtitleFile = null; }
+                        catch { }
                     }
                 };
                 bw.RunWorkerAsync();
@@ -396,9 +386,7 @@ namespace Av1ador
                 {
                     try
                     {
-                        if (new FileInfo(subFile).Length > 0)
-                            ExtractedSubtitleFile = subFile;
-                        else
+                        if (new FileInfo(subFile).Length == 0)
                             System.IO.File.Delete(subFile);
                     }
                     catch { }
@@ -815,7 +803,8 @@ namespace Av1ador
             string f = Spd != 1 ? " -itsscale " + Spd : "";
 
             bool hasAudio = System.IO.File.Exists(Name + "\\audio." + A_Job);
-            bool hasSubtitles = SubIndex > -1;
+            string subtitleFile = Name + "\\subtitles.mkv";
+            bool hasSubtitles = SubIndex > -1 && System.IO.File.Exists(subtitleFile);
 
             string args = " -y -copyts -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt\"";
             string mapArgs = " -map 0:v:0";
@@ -843,9 +832,9 @@ namespace Av1ador
                 codecArgs += " -an";
             }
 
-            if (hasSubtitles && !string.IsNullOrEmpty(ExtractedSubtitleFile))
+            if (hasSubtitles)
             {
-                args += " -i \"" + ExtractedSubtitleFile + "\"";
+                args += " -i \"" + subtitleFile + "\"";
                 mapArgs += " -map " + inputIndex + ":s:0";
                 codecArgs += " -c:s copy -disposition:s:0 default";
                 inputIndex++;
