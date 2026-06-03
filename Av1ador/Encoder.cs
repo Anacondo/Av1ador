@@ -505,14 +505,14 @@ namespace Av1ador
         {
             if (f == "sofalizer")
             {
-                Af.Add("\"pan=stereo|FL = 0.414*FL + 0.293*FC + 0.293*SL|FR = 0.414*FR + 0.293*FC + 0.293*SR,loudnorm=I=-16:TP=-1.5:LRA=11:print_format=summary,asetpts=PTS-STARTPTS,aresample=async=1:min_hard_comp=0.1:first_pts=0\"");
+                Af.Add("\"pan=stereo|FL = 0.414*FL + 0.293*FC + 0.293*SL|FR = 0.414*FR + 0.293*FC + 0.293*SR,loudnorm=I=-16:TP=-1.5:LRA=11:print_format=summary\"");
             }
 
             if (f == "volume")
                 Af.Add("volume=1.3");
 
             if (f == "normalize")
-                Af.Add("\"loudnorm=I=-16:TP=-1.5:LRA=11:print_format=summary,asetpts=PTS-STARTPTS,aresample=async=1:min_hard_comp=0.1:first_pts=0\"");
+                Af.Add("\"loudnorm=I=-16:TP=-1.5:LRA=11:print_format=summary\"");
 
             if (f == "noisereduction")
                 Af.Add("arnndn=m='" + resdir + "std.rnnn':mix=0.65,afftdn=nr=3:nf=-20");
@@ -529,7 +529,7 @@ namespace Av1ador
                 str += " -vf " + String.Join(",", vf.ToArray());
 
             str += " -pix_fmt " + (Bits == 8 ? "yuv420p" : "yuv420p10le");
-            str += " -fps_mode vfr";
+            str += " -fps_mode 0";
             if (V_kbps > 0)
             {
                 str += " -b:v !bitrate!k";
@@ -587,7 +587,7 @@ namespace Av1ador
             string astr;
             if (AudioPassthru)
             {
-                astr = " -vn -async -1 -c:a copy -map 0:a:" + track;
+                astr = " -vn -c:a copy -map 0:a:" + track;
             }
             else
             {
@@ -598,7 +598,7 @@ namespace Av1ador
                     else if (Ba < A_kbps)
                         Ch = "2";
                 }
-                astr = " -vn -async 1 -c:a " + Ca;
+                astr = " -vn -c:a " + Ca;
                 astr += " -ac " + Ch + " ";
                 string p2 = "-profile:a aac_he_v2", p1 = "-profile:a aac_he";
                 if (Ca == "libfdk_aac")
