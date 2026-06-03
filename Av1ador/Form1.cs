@@ -1412,7 +1412,7 @@ namespace Av1ador
                     string t = encode.Remaining.ToString().Split('.')[0];
                     if (t.Length < 4)
                         t += " day" + (t == "1" ? "" : "s");
-                    estimatedLabel.Text = size > 0 ? $"Projected output size: {Func.Size_unit(size * Globals.overhead)} | Remaining time: {t}" : "Calculating output size...";
+                    estimatedLabel.Text = size > 0 ? $"Projected output size: {Func.Size_unit(size * Globals.overhead)} | Remaining time: {t}" : "Calculating output size ...";
                 }
                 Text = statusLabel.Text.Contains("%") ? statusLabel.Text.Split('%')[0].Split(' ').Last() + "%" + " - " + title : title;
                 UpdateBar();
