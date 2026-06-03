@@ -835,7 +835,7 @@ namespace Av1ador
 
             if (hasAudio)
             {
-                args += (track_delay < 0 ? " -itsoffset " + track_delay + "ms" : "") + " -i \"" + Name + "\\audio." + A_Job + "\"";
+                args += " -i \"" + Name + "\\audio." + A_Job + "\"";
                 mapArgs += " -map " + inputIndex + ":a:0";
                 codecArgs += " -c:a copy";
                 if (A_Param != null)
