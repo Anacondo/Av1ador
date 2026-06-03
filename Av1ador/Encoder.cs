@@ -587,7 +587,7 @@ namespace Av1ador
             string astr;
             if (AudioPassthru)
             {
-                astr = " -vn -c:a copy -map 0:a:" + track;
+                astr = "-vn -c:a copy -map 0:a:" + track;
             }
             else
             {
@@ -598,7 +598,7 @@ namespace Av1ador
                     else if (Ba < A_kbps)
                         Ch = "2";
                 }
-                astr = " -vn -c:a " + Ca;
+                astr = "-vn -c:a " + Ca;
                 astr += " -ac " + Ch + " ";
                 string p2 = "-profile:a aac_he_v2", p1 = "-profile:a aac_he";
                 if (Ca == "libfdk_aac")

@@ -321,7 +321,7 @@ namespace Av1ador
                 string args = $"-analyzeduration 100M -probesize 100M -i \"{v.File}\"";
 
                 if (audioMissing)
-                    args += $" {A_Param} \"{audiofile}\"";
+                    args += $"{A_Param} \"{audiofile}\"";
                 else
                     args += " -an";
 
