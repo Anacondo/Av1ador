@@ -317,15 +317,10 @@ namespace Av1ador
 
             if (audioMissing || subMissing)
             {
-                string statusMsg = "";
-                if (audioMissing) 
-                    statusMsg += "Encoding audio | ";
-                if (subMissing) 
-                    statusMsg += "Extracting subtitles | ";
-                
-                Status.Add(statusMsg); Process ffproc = new Process();
+                Status.Add("Processing audio and subtitles | "); 
+                Process ffproc = new Process();
                 Func.Setinicial(ffproc, 3);
-                string args = $"-analyzeduration 100M -probesize 100M -avoid_negative_ts make_zero -fflags +genpts -i \"{v.File}\"";
+                string args = $"-analyzeduration 100M -probesize 100M -i \"{v.File}\"";
 
                 if (audioMissing)
                     args += $" {A_Param} \"{audiofile}\"";
@@ -367,7 +362,7 @@ namespace Av1ador
                 bw.RunWorkerCompleted += (s, e) =>
                 {
                     System.IO.File.WriteAllText(Name + "\\audio.log", output);
-                    Status.RemoveAll(s => s.StartsWith("Encoding audio") || s.StartsWith("Extracting subtitles"));
+                    Status.RemoveAll(s => s.StartsWith("Processing audio"));
                     if (audioMissing && System.IO.File.Exists(audiofile))
                         audio_size = new FileInfo(audiofile).Length;
 
@@ -807,7 +802,7 @@ namespace Av1ador
             {
                 Thread.Sleep(500);
             }
-            Status.Add("Merging chunks...");
+            Status.Add("Merging chunks");
 
             var files = new List<string>();
 
@@ -822,7 +817,7 @@ namespace Av1ador
             bool hasAudio = System.IO.File.Exists(Name + "\\audio." + A_Job);
             bool hasSubtitles = SubIndex > -1;
 
-            string args = " -y -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt\"";
+            string args = " -y -copyts -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt\"";
             string mapArgs = " -map 0:v:0";
             string codecArgs = " -c:v copy";
             string audioCodecParams = "";
@@ -869,7 +864,7 @@ namespace Av1ador
 
             string encoderMetadata = (videoCodecVersion + videoCodecParams + audioCodecParams).Replace("\r", "");
 
-            ffconcat.StartInfo.Arguments = args + codecArgs + mapArgs + " " + encoderMetadata + " -fflags +genpts -avoid_negative_ts make_zero " + " \"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
+            ffconcat.StartInfo.Arguments = args + codecArgs + mapArgs + " " + encoderMetadata + " \"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
 
             ffconcat.Start();
             Regex regex = new Regex("time=([0-9]{2}):([0-9]{2}):([0-9]{2}.[0-9]{2})");
@@ -896,7 +891,7 @@ namespace Av1ador
             };
             bw.RunWorkerCompleted += (s, e) =>
             {
-                Status.Remove("Merging chunks...");
+                Status.Remove("Merging chunks");
                 Cleanup();
                 Finished = true;
             };
