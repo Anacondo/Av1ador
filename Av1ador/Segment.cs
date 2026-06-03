@@ -23,7 +23,7 @@ namespace Av1ador
         private TimeSpan remaining;
         private readonly Stopwatch watch;
         private int bitrate;
-        private double track_delay;
+        //private double track_delay;
         private int[] fps = new int[0];
         private int frames_last;
         public string Tempdir { get; } = "temp\\";
