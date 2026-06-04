@@ -1405,7 +1405,7 @@ namespace Av1ador
                     }
 
                     double progress = encode.Progress;
-                    statusLabel.Text = string.Join("", encode.Status.ToArray()).Replace("Encoding video", "Encoding video [" + (progress - 1 < 0 ? 0 : progress - 1) + "%]");
+                    statusLabel.Text = string.Join("", encode.Status.ToArray()).Replace("Encoding video", "Encoding video: " + (progress - 1 < 0 ? 0 : progress - 1) + "%");
                     if (statusLabel.Text.Contains("Encoding video"))
                         statusLabel.Text += $" | FPS: {encode.Speed:F2} | Avg. bitrate: {encode.Abr * Globals.overhead:F0} Kbps";
                     double size = encode.Estimated;
