@@ -289,7 +289,11 @@ namespace Av1ador
 
             Dir = dir == "" ? Path.GetDirectoryName(v.File) + "\\" : dir + "\\";
             File = v.File;
-            Name = Tempdir + Path.GetFileNameWithoutExtension(v.File);
+
+            // to deal with paths with illegal characters coming from SAMBA
+            string safeName = Func.SanitizeFilename( Path.GetFileNameWithoutExtension(v.File) );
+            Name = Tempdir + safeName;
+
             if (!Directory.Exists(Name))
                 Directory.CreateDirectory(Name);
             Spd = spd;

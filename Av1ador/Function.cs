@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -326,6 +327,49 @@ namespace Av1ador
             {
                 return concatenated;
             }
+        }
+        public static string SanitizeFilePath(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return path;
+            try
+            {
+                string dir = Path.GetDirectoryName(path);
+                string fileName = Path.GetFileName(path);
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    // Split into base name and extension
+                    string ext = Path.GetExtension(fileName);
+                    string baseName = Path.GetFileNameWithoutExtension(fileName);
+                    // Trim trailing spaces and dots from base name
+                    baseName = baseName.TrimEnd(' ', '.');
+                    // Rebuild filename
+                    string trimmedFileName = baseName + ext;
+                    if (trimmedFileName != fileName)
+                        path = Path.Combine(dir, trimmedFileName);
+                }
+            }
+            catch { }
+            return path;
+        }
+        public static string SanitizeFilename(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return name;
+
+            // Remove any leading/trailing whitespace (Unicode-aware)
+            name = name.Trim();
+
+            // Remove trailing whitespace immediately before the extension
+            // e.g., "file .mkv" -> "file.mkv"
+            name = Regex.Replace(name, @"\s+(?=\.[^.]*$)", "");
+
+            // Replace invalid filename characters
+            char[] invalidChars = Path.GetInvalidFileNameChars();
+            foreach (char c in invalidChars)
+                name = name.Replace(c, '_');
+
+            return name;
         }
     }
 }
