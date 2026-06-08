@@ -121,7 +121,7 @@ namespace Av1ador
 
             A_max = 320;
             Ch = "2";
-            Gs_level = 0;
+            //Gs_level = 0;
             Color = "";
             Vf = new List<string>();
             Af = new List<string>();
@@ -200,7 +200,7 @@ namespace Av1ador
                 Job = j[1];
                 Presets = new string[] { "-1 (slowest)", "0", "1", "2", "3", "*4", "5", "6", "7", "8", "9", "10", "11", "12 (fastest)" };
                 speed_str = "-preset ";
-                Params = "-svtav1-params tune=3:keyint=240:enable-qm=1:qm-min=8:qm-max=15:aq-mode=2:enable-dlf=2:enable-overlays=0:enable-restoration=0:enable-tf=2:tf-strength=1:enable-cdef=0:sharpness=2:enable-variance-boost=1:qp-scale-compress-strength=2:noise-norm-strength=1:psy-rd=2.0:spy-rd=1:luminance-qp-bias=5:hbd-mds=1:complex-hvs=1:sharp-tx=1:noise-adaptive-filtering=0";
+                Params = "-svtav1-params tune=3:keyint=240:enable-qm=1:qm-min=8:qm-max=15:aq-mode=2:enable-dlf=2:enable-overlays=0:enable-restoration=0:enable-tf=2:tf-strength=1:enable-cdef=0:sharpness=2:enable-variance-boost=1:qp-scale-compress-strength=2:noise-norm-strength=1:psy-rd=2.0:spy-rd=1:luminance-qp-bias=5:hbd-mds=1:complex-hvs=1:sharp-tx=1:noise-adaptive-filtering=0:mbr=12000:variance-boost-strength=2:variance-octile=5";
                 Color = ":color-primaries=1:transfer-characteristics=1:matrix-coefficients=1";
                 Gs = 50;
                 Rate = 0.85;
@@ -703,6 +703,7 @@ namespace Av1ador
                 settings.Codec_audio = codec_audio.Text;
                 settings.Channels = ch_s == "Default" ? settings.Channels : ch_s[0] == '2' ? "Default" : ch_s;
                 settings.Audio_br = ba.Text;
+                settings.Gs = Gs;
                 settings.Output_folder = output_folder;
                 settings.Delete_temp_files = s.Delete_temp_files;
             }
@@ -717,6 +718,7 @@ namespace Av1ador
                     Crf = crf.Value.ToString(),
                     Codec_audio = codec_audio.Text,
                     Channels = ch_s,
+                    Gs = Gs,
                     Audio_br = ba.Text,
                     Output_folder = output_folder,
                     Delete_temp_files = s.Delete_temp_files
@@ -760,6 +762,7 @@ namespace Av1ador
         public string Codec_audio;
         public string Channels;
         public string Audio_br;
+        public int Gs;
         public string Output_folder;
         public uint Delete_temp_files;
         public List<string> CustomVf;

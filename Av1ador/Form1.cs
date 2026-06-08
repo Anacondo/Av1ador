@@ -412,6 +412,18 @@ namespace Av1ador
                 if (before)
                 {
                     abitrateBox.Text = settings.Audio_br;
+
+                    // ADD THIS BLOCK: Restore Grain Synthesis safely
+                    if (settings.Gs >= gsUpDown.Minimum)
+                    {
+                        // Prevent crash if the restored value exceeds the default maximum
+                        if (settings.Gs > gsUpDown.Maximum)
+                            gsUpDown.Maximum = settings.Gs;
+
+                        gsUpDown.Value = settings.Gs;
+                        encoder.Gs_level = settings.Gs;
+                    }
+
                     timestampsMenuItem.Checked = (settings.Delete_temp_files & 2) != 0;
                     segmentsMenuItem.Checked = (settings.Delete_temp_files & 4) != 0;
                     audioMenuItem.Checked = (settings.Delete_temp_files & 8) != 0;
