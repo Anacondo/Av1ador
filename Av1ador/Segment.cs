@@ -313,7 +313,7 @@ namespace Av1ador
 
             // Unified extraction: audio (if needed) + subtitles (if selected) in one ffmpeg command, full file, no trimming
             string audiofile = Name + "\\audio." + A_Job;
-            string subFile = (SubIndex > -1 && !audioPassthru) ? Name + "\\subtitles.mkv" : null;
+            string subFile = (SubIndex > -1) ? Name + "\\subtitles.mkv" : null;
             bool audioMissing = (audio && A_Param != "" && !System.IO.File.Exists(audiofile));
             bool subMissing = (subFile != null && !System.IO.File.Exists(subFile));
 
