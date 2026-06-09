@@ -115,6 +115,14 @@ namespace Av1ador
                 Restore_settings(true);
                 listBox1.SelectedIndex = Entry.Index("-1", listBox1);
 
+                // Reset any stale "encoding" statuses from previous crash
+                foreach (Entry entry in listBox1.Items)
+                {
+                    if (entry.Status == 1)
+                        entry.Status = 0;
+                }
+                Entry.Save(listBox1);
+
                 //underload = -2;
                 Program.Log = true;
                 Mpv_load_first();
