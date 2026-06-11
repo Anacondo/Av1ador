@@ -685,7 +685,7 @@ namespace Av1ador
             return str;
         }
 
-        public void Save_settings(ToolStripComboBox format, ToolStripComboBox codec_video, ToolStripComboBox speed, ToolStripComboBox bit_depth, NumericUpDown crf, ToolStripComboBox codec_audio, ToolStripComboBox channels, TextBox ba, string output_folder, Settings s)
+        public void Save_settings(ToolStripComboBox format, ToolStripComboBox codec_video, ToolStripComboBox speed, ToolStripComboBox bit_depth, NumericUpDown crf, ToolStripComboBox codec_audio, ToolStripComboBox channels, TextBox ba, NumericUpDown gs, string output_folder, Settings s)
         {
             if (Form.ActiveForm == null)
                 return;
@@ -703,7 +703,7 @@ namespace Av1ador
                 settings.Codec_audio = codec_audio.Text;
                 settings.Channels = ch_s == "Default" ? settings.Channels : ch_s[0] == '2' ? "Default" : ch_s;
                 settings.Audio_br = ba.Text;
-                settings.Gs = Gs;
+                settings.Gs = (int)gs.Value;
                 settings.Output_folder = output_folder;
                 settings.Delete_temp_files = s.Delete_temp_files;
             }
@@ -718,7 +718,7 @@ namespace Av1ador
                     Crf = crf.Value.ToString(),
                     Codec_audio = codec_audio.Text,
                     Channels = ch_s,
-                    Gs = Gs,
+                    Gs = (int)gs.Value,
                     Audio_br = ba.Text,
                     Output_folder = output_folder,
                     Delete_temp_files = s.Delete_temp_files
@@ -762,7 +762,7 @@ namespace Av1ador
         public string Codec_audio;
         public string Channels;
         public string Audio_br;
-        public int Gs;
+        public decimal Gs;
         public string Output_folder;
         public uint Delete_temp_files;
         public List<string> CustomVf;

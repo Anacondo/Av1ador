@@ -429,7 +429,7 @@ namespace Av1ador
                             gsUpDown.Maximum = settings.Gs;
 
                         gsUpDown.Value = settings.Gs;
-                        encoder.Gs_level = settings.Gs;
+                        encoder.Gs_level = (int)settings.Gs;
                     }
 
                     timestampsMenuItem.Checked = (settings.Delete_temp_files & 2) != 0;
@@ -1160,7 +1160,7 @@ namespace Av1ador
                 Dialogo = false;
             }
             else if (mpv.Mpv_loaded)
-                encoder.Save_settings(formatComboBox, cvComboBox, speedComboBox, bitsComboBox, upDownCRF, caComboBox, chComboBox, abitrateBox, folderBrowserDialog1.SelectedPath, settings);
+                encoder.Save_settings(formatComboBox, cvComboBox, speedComboBox, bitsComboBox, upDownCRF, caComboBox, chComboBox, abitrateBox, gsUpDown, folderBrowserDialog1.SelectedPath, settings);
         }
 
         private void Exit(bool stop = false)
@@ -1226,7 +1226,7 @@ namespace Av1ador
         {
             if (primer_video == null)
                 return;
-            encoder.Save_settings(formatComboBox, cvComboBox, speedComboBox, bitsComboBox, upDownCRF, caComboBox, chComboBox, abitrateBox, folderBrowserDialog1.SelectedPath, settings);
+            encoder.Save_settings(formatComboBox, cvComboBox, speedComboBox, bitsComboBox, upDownCRF, caComboBox, chComboBox, abitrateBox, gsUpDown, folderBrowserDialog1.SelectedPath, settings);
             encodestopButton.Enabled = true;
             encodestartButton.Enabled = false;
 
@@ -1254,15 +1254,30 @@ namespace Av1ador
             heat = Func.Heat(0);
             workersgroupBox.Refresh();
 
-            try
+            // Safely clear the elapsed time and running status
+            for (int i = 0; i < listBox1.Items.Count; i++)
             {
-                Entry entry;
-                entry = (Entry)listBox1.SelectedItems[0];
-                entry.Elapsed = 0;
+                if (listBox1.Items[i] is Entry entryItem)
+                {
+                    // Reset the specific file that was just actively encoding
+                    if (encode != null && entryItem.File == encode.File)
+                    {
+                        entryItem.Status = 0;
+                        entryItem.Elapsed = 0; // Accurately clear the timer of the stopped job
+                        listBox1.Items[i] = entryItem;
+                    }
+                    // Fallback: forcefully clear any other orphaned running statuses
+                    else if (entryItem.Status == 1)
+                    {
+                        entryItem.Status = 0;
+                        listBox1.Items[i] = entryItem;
+                    }
+                }
             }
-            catch { }
-        }
 
+            listBox1.Refresh(); // Instantly remove the blue boxes
+            Entry.Save(listBox1); // Sync the cleanup to queue.xml
+        }
         private void Abitrate_update(bool calc)
         {
 
@@ -1296,6 +1311,20 @@ namespace Av1ador
                 encode = new Encode();
             if (listBox1.Items.Count == 0 || primer_video == null)
                 return;
+
+            for (int i = 0; i < listBox1.Items.Count; i++)
+            {
+                if (listBox1.Items[i] is Entry entryItem && entryItem.Status == 1)
+                {
+                    if (encodestopButton.Enabled == false || encode.File != entryItem.File)
+                    {
+                        entryItem.Status = 0;
+                        listBox1.Items[i] = entryItem;
+                        listBox1.Refresh();
+                    }
+                }
+            }
+
             Entry entry;
             try
             {
