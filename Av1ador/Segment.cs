@@ -191,7 +191,7 @@ namespace Av1ador
 
                 if (currentProgressPercentage / 10 > lastLoggedPercentage / 10)
                 {
-                    string crfValue = Param.Split(new string[] { "-crf " }, StringSplitOptions.None)[1].Split(' ')[0];
+                    string crfValue = float.Parse(Param.Split(new string[] { "-crf " }, StringSplitOptions.None)[1].Split(' ')[0], System.Globalization.CultureInfo.InvariantCulture).ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
                     string presetValue = Param.Split(new string[] { "-preset " }, StringSplitOptions.None)[1].Split(' ')[0];
                     string tuneValue = Param.Split(new string[] { "tune=" }, StringSplitOptions.None)[1].Split(':')[0]; 
                     LogEstimatesToFile($"[{DateTime.Now:dd-MM-yyyy HH:mm}] {(int)progress}%" + $" -> {(video_size + audio_size / 1024 / 1024 / 1024) / 1024 * Globals.overhead:F2} GB (Tune={tuneValue} Preset={presetValue} CRF={crfValue} Bitrate={(totalSize / 1024.0 * 8.0 / timeElapsed) * Globals.overhead:F0} Kbps)");
