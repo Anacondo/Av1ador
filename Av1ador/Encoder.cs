@@ -526,7 +526,7 @@ namespace Av1ador
             bool always_2p = Cv == "libvpx-vp9" && Regex.Match(Params, "auto-alt-ref [1-6]").Success;
 
             if (vf.Count > 0)
-                str += " -vf " + String.Join(",", vf.ToArray());
+                str += " -vf format=yuv420p10le," + String.Join(",", vf.ToArray());
 
             str += " -pix_fmt " + (Bits == 8 ? "yuv420p" : "yuv420p10le");
             str += " -fps_mode passthrough";
