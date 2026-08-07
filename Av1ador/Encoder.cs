@@ -200,7 +200,7 @@ namespace Av1ador
                 Job = j[1];
                 Presets = new string[] { "-1 (slowest)", "0", "1", "2", "3", "*4", "5", "6", "7", "8", "9", "10", "11", "12 (fastest)" };
                 speed_str = "-preset ";
-                Params = "-svtav1-params tune=3:keyint=240:enable-qm=1:qm-min=8:qm-max=15:aq-mode=2:enable-dlf=2:enable-overlays=0:enable-restoration=0:enable-tf=2:tf-strength=1:enable-cdef=0:sharpness=2:enable-variance-boost=1:qp-scale-compress-strength=2:noise-norm-strength=1:psy-rd=2.0:spy-rd=1:luminance-qp-bias=5:hbd-mds=1:complex-hvs=1:sharp-tx=1:noise-adaptive-filtering=0:mbr=12000:variance-boost-strength=2:variance-octile=5";
+                Params = "-svtav1-params tune=3:keyint=240:enable-qm=1:qm-min=8:qm-max=15:aq-mode=2:enable-dlf=2:enable-overlays=0:enable-restoration=0:enable-tf=2:tf-strength=1:enable-cdef=0:sharpness=2:enable-variance-boost=1:qp-scale-compress-strength=2:noise-norm-strength=1:psy-rd=2.0:spy-rd=1:hbd-mds=1:complex-hvs=1:sharp-tx=1:noise-adaptive-filtering=0:mbr=12000:variance-boost-strength=2:variance-octile=5:luminance-qp-bias=5";
                 Color = ":color-primaries=1:transfer-characteristics=1:matrix-coefficients=1";
                 Gs = 50;
                 Rate = 0.85;
