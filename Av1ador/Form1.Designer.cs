@@ -2140,6 +2140,7 @@
             // 
             this.formatComboBox.AutoSize = false;
             this.formatComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.formatComboBox.Enabled = false;
             this.formatComboBox.ForeColor = System.Drawing.Color.SaddleBrown;
             this.formatComboBox.Items.AddRange(new object[] {
             "mp4",

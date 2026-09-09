@@ -520,8 +520,8 @@ namespace Av1ador
 
         public string Build_vstr(bool predict = false)
         {
-            string str = " -init_hw_device vulkan:" + Vkn_Device;
-            str += " -hide_banner -copyts -start_at_zero -display_rotation 0 -threads " + Threads.ToString() + " -y !seek! -i \"!file!\" !start! !duration! -c:v:0 " + Cv;
+            string str = " -init_hw_device vulkan=vk:" + Vkn_Device + " -filter_hw_device vk";
+            str += " -hide_banner -copyts -start_at_zero -display_rotation 0 -vsync -1 -threads " + Threads.ToString() + " -y !seek! -i \"!file!\" !start! !duration! -c:v:0 " + Cv;
             List<string> vf = new List<string>(Vf);
             bool always_2p = Cv == "libvpx-vp9" && Regex.Match(Params, "auto-alt-ref [1-6]").Success;
 
