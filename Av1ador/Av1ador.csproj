@@ -83,6 +83,7 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="Segment.cs" />
+    <Compile Include="StopPipe.cs" />
     <Compile Include="Video.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

@@ -83,6 +83,17 @@ namespace Av1ador
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Text = title;
 
+            StopPipe.Listen(cmd =>
+            {
+                if (cmd != "stop-encode" || !IsHandleCreated)
+                    return;
+                BeginInvoke(new Action(() =>
+                {
+                    if (encodestopButton.Enabled)   // same condition as clicking it in the GUI
+                        EncodestopButton_Click(this, EventArgs.Empty);
+                }));
+            });
+
             encoder = new Encoder();
             workersUpDown.Maximum = encoder.PhysicalCores;
             workersgroupBox.GetType().GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(workersgroupBox, true, null);
