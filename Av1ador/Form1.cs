@@ -27,6 +27,82 @@ namespace Av1ador
         [DllImport("user32.dll")]
         static extern bool GetCursorPos(ref Point point);
 
+        [DllImport("user32.dll")]
+        static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct FLASHWINFO
+        {
+            public uint cbSize;
+            public IntPtr hwnd;
+            public uint dwFlags;
+            public uint uCount;
+            public uint dwTimeout;
+        }
+
+        [ComImport]
+        [Guid("ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        private interface ITaskbarList3
+        {
+            void HrInit();
+            void AddTab(IntPtr hwnd);
+            void DeleteTab(IntPtr hwnd);
+            void ActivateTab(IntPtr hwnd);
+            void SetActiveAlt(IntPtr hwnd);
+            void MarkFullscreenWindow(IntPtr hwnd, bool fullscreen);
+            void SetProgressValue(IntPtr hwnd, ulong ullCompleted, ulong ullTotal);
+            void SetProgressState(IntPtr hwnd, int tbpFlags);
+        }
+
+        private static ITaskbarList3 taskbar;
+        private static ITaskbarList3 Taskbar()
+        {
+            if (taskbar == null)
+                taskbar = (ITaskbarList3)Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("56FDF344-FD6D-11d0-958A-006097C9A090")));
+            return taskbar;
+        }
+
+        // unattended-run alarm: flash the taskbar button until it is clicked and
+        // paint its progress bar red, without stopping the encode in any way
+        private void TaskbarFail()
+        {
+            try
+            {
+                FLASHWINFO info = new FLASHWINFO
+                {
+                    cbSize = (uint)Marshal.SizeOf(typeof(FLASHWINFO)),
+                    hwnd = Handle,
+                    dwFlags = 3 | 12, // FLASHW_ALL | FLASHW_TIMERNOFG: flash until foreground
+                    uCount = 0,
+                    dwTimeout = 0
+                };
+                FlashWindowEx(ref info);
+                ITaskbarList3 t = Taskbar();
+                t.SetProgressState(Handle, 4); // TBPF_ERROR
+                t.SetProgressValue(Handle, 100, 100);
+            }
+            catch { }
+        }
+
+        private void TaskbarReset()
+        {
+            try
+            {
+                FLASHWINFO info = new FLASHWINFO
+                {
+                    cbSize = (uint)Marshal.SizeOf(typeof(FLASHWINFO)),
+                    hwnd = Handle,
+                    dwFlags = 0, // FLASHW_STOP
+                    uCount = 0,
+                    dwTimeout = 0
+                };
+                FlashWindowEx(ref info);
+                Taskbar().SetProgressState(Handle, 0); // TBPF_NOPROGRESS
+            }
+            catch { }
+        }
+
         private readonly string title = GetInfoVersion();
         private readonly Regex formatos = new Regex(".+(mkv|mp4|avi|webm|ivf|m2ts|wmv|mpg|mov|3gp|ts|mpeg|y4m|vob|m2v|m4v|flv|asf|png)$", RegexOptions.IgnoreCase);
         private Player mpv;
@@ -1240,6 +1316,9 @@ namespace Av1ador
             encoder.Save_settings(formatComboBox, cvComboBox, speedComboBox, bitsComboBox, upDownCRF, caComboBox, chComboBox, abitrateBox, gsUpDown, folderBrowserDialog1.SelectedPath, settings);
             encodestopButton.Enabled = true;
             encodestartButton.Enabled = false;
+            TaskbarReset();
+            if (encode != null)
+                encode.Failed = false;
 
             try
             {
@@ -1450,9 +1529,20 @@ namespace Av1ador
                 }
                 else if (encode.Failed)
                 {
+                    TaskbarFail();
                     Entry.Set_status(listBox1, encode.File, encode.Elapsed, false, true);
-                    encodestopButton.Enabled = false;
-                    encodestartButton.Enabled = true;
+                    if (!Next(listBox1, Entry.Index(primer_video.File, listBox1)))
+                    {
+                        encodestopButton.Enabled = false;
+                        encodestartButton.Enabled = true;
+                        heat = Func.Heat(0);
+                        workersgroupBox.Refresh();
+                        Detener();
+                        if (shutdownMenuItem.Checked)
+                            Process.Start("shutdown", "/s /t 0");
+                        else if (exitMenuItem.Checked)
+                            Exit();
+                    }
                 }
                 if (encodestopButton.Enabled && !statusLabel.Text.Contains("grain"))
                 {

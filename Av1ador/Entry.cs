@@ -68,8 +68,8 @@ namespace Av1ador
             bool isItemSelected = ((e.State & DrawItemState.Selected) == DrawItemState.Selected);
             if (e.Index >= 0 && e.Index < list.Items.Count)
             {
-                e.Graphics.FillRectangle(Brush_bg(isItemSelected, e.Index), e.Bounds);
                 Entry entry = (Entry)list.Items[e.Index];
+                e.Graphics.FillRectangle(entry.Status < 0 ? Brushes.LightCoral : Brush_bg(isItemSelected, e.Index), e.Bounds);
                 if (entry.Status == 1)
                     e.Graphics.DrawRectangle(new Pen(SystemColors.Highlight, 1), e.Bounds.X, e.Bounds.Y, e.Bounds.Width - 1, e.Bounds.Height - 1);
                 string dir = Path.GetDirectoryName(entry.File);

@@ -34,6 +34,7 @@ namespace Av1ador
         public int Split_min_time { get; set; }
         public bool Can_run { get; set; }
         public bool Failed { get; set; }
+        private const int Max_failed = 5;
         public List<string> Splits { get; set; }
         public List<string> Complexity { get; set; }
         public int Workers { get; set; }
@@ -61,6 +62,7 @@ namespace Av1ador
         private bool EncodeStart { get; set; } = true;
         public static BackgroundWorker[] Bw { get; set; }
         private string LogFilePath { get; set; }
+        private double src_fps;
 
         public int Progress
         {
@@ -301,6 +303,7 @@ namespace Av1ador
             bool vbr = br > 0;
 
             Kf_interval = v.Kf_interval;
+            src_fps = ChunkVerify.ExactFps(v.Fps);
             double seek = v.StartTime - Kf_interval;
             string ss1 = seek > 0 ? " -ss " + seek.ToString() : "";
             string ss2 = v.StartTime > 0 ? " -ss " + v.StartTime.ToString() : "";
@@ -637,6 +640,7 @@ namespace Av1ador
                 Complexity = new List<string>(System.IO.File.ReadAllLines(Name + "\\complexity.txt"));
             if (Chunks == null)
             {
+                ChunkVerify.Gated = ChunkVerify.ChangesFrameCount(Param, Fps_filter);
                 Chunks = new Segment[Splits.Count - 1];
                 List<KeyValuePair<int, double>> Sorted = new List<KeyValuePair<int, double>>();
                 Order = new List<int>();
@@ -673,6 +677,7 @@ namespace Av1ador
                         Arguments = Replace_times(Param, File, pathfile, Splits[i + 1], seek, start, scene_bitrate),
                         Pathfile = pathfile,
                         Length = scene_duration,
+                        Expected = (int)Math.Round(scene_duration * src_fps),
                         Credits = Splits[i].Length > 3 && Splits[i].Substring(0, 3) == "000",
                         Last = i + 1 == Splits.Count() - 1
                     };
@@ -707,7 +712,7 @@ namespace Av1ador
                     bool skip = true;
                     if (chunk.Encoding)
                         instances++;
-                    else if (!chunk.Completed && chunk.Progress == 0 && Can_run)
+                    else if (!chunk.Completed && !chunk.Failed && chunk.Progress == 0 && Can_run)
                     {
                         bool present = System.IO.File.Exists(chunk.Pathfile);
                         if (present && new FileInfo(chunk.Pathfile).Length > 500 && !System.IO.File.Exists(chunk.Pathfile + ".txt")
@@ -715,6 +720,7 @@ namespace Av1ador
                         {
                             skip = false;
                             chunk.Completed = true;
+                            ChunkVerify.Log(chunk.Pathfile, "reused existing chunk");
                             chunk.Progress = chunk.Progress == 0 ? 1 : chunk.Progress;
                             chunk.Size = new FileInfo(chunk.Pathfile).Length;
                             chunk.Bitrate = chunk.Size / (double)1024 * (double)8 / chunk.Length;
@@ -746,7 +752,7 @@ namespace Av1ador
                             Thread.Sleep(100);
                         }
                     }
-                    if (chunk.Completed)
+                    if (chunk.Completed || chunk.Failed)
                         done++;
                     if (instances >= Workers && skip)
                     {
@@ -758,12 +764,21 @@ namespace Av1ador
                 if (done == Chunks.Length)
                 {
                     watch.Reset();
-                    Status.RemoveAll(s => s.StartsWith("Encoding video"));
-                    Thread trd = new Thread(new ThreadStart(Concatenate))
+                    if (Chunks.Any(c => c.Failed))
                     {
-                        IsBackground = true
-                    };
-                    trd.Start();
+                        // some chunk is missing: never build an unsynced output
+                        ChunkVerify.GlobalLog(Name + " - video FAILED: no output written (" + Chunks.Count(c => c.Failed) + " chunk(s) missing)");
+                        Failed = true;
+                    }
+                    else
+                    {
+                        Status.RemoveAll(s => s.StartsWith("Encoding video"));
+                        Thread trd = new Thread(new ThreadStart(Concatenate))
+                        {
+                            IsBackground = true
+                        };
+                        trd.Start();
+                    }
                 }
                 Running = false;
             };
@@ -923,20 +938,26 @@ namespace Av1ador
         public void Background(Segment chunk)
         {
             string log = chunk.Start();
-            if (log == "Retry")
+            while (log == "Retry" && !Failed)
                 log = chunk.Start();
-            if (log.Trim() != "" && log != "Retry" && !Failed)
+            if (log.Trim() != "" && log != "Retry")
             {
-                Failed = true;
-                Set_state(true);
-                if (MessageBox.Show(log, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
+                // this chunk failed for good: keep encoding the rest of the video,
+                // the failed flag only prevents muxing (see Encoding)
+                chunk.Failed = true;
+                // and make sure this video never erases its (still salvageable) chunks
+                Clean &= ~4u;
+                int failed = Chunks.Count(c => c.Failed);
+                ChunkVerify.Log(chunk.Pathfile, "FAILED (" + failed + "/" + Max_failed + " failed in this video)");
+                ChunkVerify.GlobalLog(Name + " - chunk " + System.IO.Path.GetFileName(chunk.Pathfile) + " FAILED after " + Segment.Max_attempts + " attempts (" + failed + "/" + Max_failed + " in this video)");
+                if (failed >= Max_failed)
                 {
-                    Status = new List<string>
-                    {
-                        "Failed"
-                    };
-                    Failed = false; // reset failed state so that we can continue encoding after ffmpeg crash
-                    Chunks = null;
+                    // too many ruined chunks for a usable output: abandon this video, move on
+                    ChunkVerify.Log(chunk.Pathfile, "reached " + Max_failed + " failed chunks - abandoning this video");
+                    ChunkVerify.GlobalLog(Name + " - abandoning: reached " + Max_failed + " failed chunks");
+                    Can_run = false;
+                    Failed = true;
+                    Set_state(true);
                 }
             }
             if (!Running && !Failed)
@@ -1000,6 +1021,7 @@ namespace Av1ador
     internal class Segment
     {
         public bool Completed { get; set; }
+        public bool Failed { get; set; }
         public bool Encoding { get; set; }
         public long Size { get; set; }
         public double Bitrate { get; set; }
@@ -1011,10 +1033,26 @@ namespace Av1ador
         public bool Stop { get; set; }
         public bool Credits { get; set; }
         public int Retry { get; set; }
+        public const int Max_attempts = 15;
         public bool Last { get; set; }
         public bool Compare { get; set; }
+        public int Expected { get; set; }
+        public int Actual { get; set; } = -1;
         private bool retry;
         private string output;
+
+        public bool Verify()
+        {
+            Actual = -1;
+            if (!ChunkVerify.Enabled || ChunkVerify.Gated)
+                return true;
+            try
+            {
+                Actual = ChunkVerify.CountFrames(Pathfile);
+                return ChunkVerify.Judge(Pathfile, Expected, Actual);
+            }
+            catch { return true; }
+        }
 
         public string Start()
         {
@@ -1167,19 +1205,37 @@ namespace Av1ador
             }
             else
             {
-                Completed = true;
                 if (System.IO.File.Exists(Pathfile))
                 {
                     Size = new FileInfo(Pathfile).Length;
                     Bitrate = Size / (double)1024 * (double)8 / Length;
                 }
-                if (Progress == 0 && Size < 500)
+                int exitCode = 0;
+                try { exitCode = ffmpeg.ExitCode; } catch { }
+                if (exitCode != 0 || !Verify())
                 {
+                    string why = exitCode != 0 ? "ffmpeg exited with code " + exitCode
+                        : Actual < 0 ? "could not verify the frame count"
+                        : "expected " + Expected + " frames but got " + Actual;
+                    ChunkVerify.Log(Pathfile, "attempt " + (Retry + 1) + "/" + Max_attempts + " failed: " + why + (Retry < Max_attempts - 1 ? " - retrying" : " - giving up"));
+                    Progress = 0;
+                    Size = 0;
+                    if (Retry < Max_attempts - 1)
+                    {
+                        // discard the bad attempt so the retry starts clean
+                        try { if (System.IO.File.Exists(Pathfile)) System.IO.File.Delete(Pathfile); } catch { }
+                        Retry++;
+                        output = "";
+                        return "Retry";
+                    }
+                    // kept: never delete anything once a chunk is marked failed
                     System.IO.File.AppendAllText(Pathfile + ".txt", output);
-                    return output;
+                    return Pathfile + "\r\n" + why + " after " + (Retry + 1) + " attempts.\r\n" + output;
                 }
                 if (Compare && Math.Abs(Video.Get_duration(Video.Get_info(Pathfile), out string _, Pathfile) - Length) > 2 && !Last)
                     return Pathfile + "\r\nThe segment has finished but there is a mismatch in the duration.\r\nUsually this means that ffmpeg crashed.";
+                ChunkVerify.Log(Pathfile, "ok in " + (Retry + 1) + " attempt(s)" + (Actual >= 0 ? " - frames " + Actual + "/" + Expected : " - frames not checked"));
+                Completed = true;
             }
             System.IO.File.Delete(Pathfile + ".txt");
             if (multi)
