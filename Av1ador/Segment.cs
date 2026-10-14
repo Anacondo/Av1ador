@@ -715,7 +715,7 @@ namespace Av1ador
                     else if (!chunk.Completed && !chunk.Failed && chunk.Progress == 0 && Can_run)
                     {
                         bool present = System.IO.File.Exists(chunk.Pathfile);
-                        if (present && new FileInfo(chunk.Pathfile).Length > 500 && !System.IO.File.Exists(chunk.Pathfile + ".txt")
+                        if (present && new FileInfo(chunk.Pathfile).Length > 500 && !System.IO.File.Exists(chunk.Pathfile + ".txt") && chunk.Verify()
                             && (!chunk.Compare || Math.Abs(Video.Get_duration(Video.Get_info(chunk.Pathfile), out string _, chunk.Pathfile) - chunk.Length) < 2 || chunk.Last))
                         {
                             skip = false;
@@ -1033,7 +1033,7 @@ namespace Av1ador
         public bool Stop { get; set; }
         public bool Credits { get; set; }
         public int Retry { get; set; }
-        public const int Max_attempts = 15;
+        public const int Max_attempts = 6;
         public bool Last { get; set; }
         public bool Compare { get; set; }
         public int Expected { get; set; }
@@ -1049,6 +1049,12 @@ namespace Av1ador
             try
             {
                 Actual = ChunkVerify.CountFrames(Pathfile);
+                // split times are stored to the millisecond, so at 23.976 fps a keyframe can tip
+                // half a frame across a boundary: the two adjacent chunks then differ by one frame
+                // in opposite directions and their total is unchanged (nothing is lost or duplicated).
+                // A one-frame difference is ~42 ms and cannot retime or desync anything, so tolerate it
+                if (Math.Abs(Actual - Expected) == 1)
+                    return true;
                 return ChunkVerify.Judge(Pathfile, Expected, Actual);
             }
             catch { return true; }
@@ -1234,7 +1240,7 @@ namespace Av1ador
                 }
                 if (Compare && Math.Abs(Video.Get_duration(Video.Get_info(Pathfile), out string _, Pathfile) - Length) > 2 && !Last)
                     return Pathfile + "\r\nThe segment has finished but there is a mismatch in the duration.\r\nUsually this means that ffmpeg crashed.";
-                ChunkVerify.Log(Pathfile, "ok in " + (Retry + 1) + " attempt(s)" + (Actual >= 0 ? " - frames " + Actual + "/" + Expected : " - frames not checked"));
+                ChunkVerify.Log(Pathfile, "ok in " + (Retry + 1) + " attempt(s)" + (Actual >= 0 ? " - frames " + Actual + "/" + Expected : " - frames not checked") + (Actual >= 0 && Actual != Expected ? " (frame boundary tolerance)" : ""));
                 Completed = true;
             }
             System.IO.File.Delete(Pathfile + ".txt");
