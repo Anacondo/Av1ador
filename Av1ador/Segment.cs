@@ -661,10 +661,12 @@ namespace Av1ador
 
                 for (int i = 0; i < Splits.Count - 1; i++)
                 {
-                    double start = Double.Parse(Splits[i]);
+                    // snap both split edges onto the exact frame grid before building the chunk
+                    double start = Snap_to_frame(Double.Parse(Splits[i]));
+                    double end = Snap_to_frame(Double.Parse(Splits[i + 1]));
                     double seek = start - Kf_interval;
                     string pathfile = Name + "\\" + i.ToString("00000") + "." + Job;
-                    double scene_duration = Double.Parse(Splits[i + 1]) - start;
+                    double scene_duration = end - start;
                     int scene_bitrate = bitrate;
                     if (avg_scene_score > 0)
                     {
@@ -674,7 +676,7 @@ namespace Av1ador
                     // this is where the fun begins and the parameters for the encoded chunk are created
                     Chunks[i] = new Segment
                     {
-                        Arguments = Replace_times(Param, File, pathfile, Splits[i + 1], seek, start, scene_bitrate),
+                        Arguments = Replace_times(Param, File, pathfile, end.ToString(CultureInfo.InvariantCulture), seek, start, scene_bitrate),
                         Pathfile = pathfile,
                         Length = scene_duration,
                         Expected = (int)Math.Round(scene_duration * src_fps),
@@ -974,6 +976,12 @@ namespace Av1ador
             str = str.Replace("!log!.log", name.Replace("\\", "\\\\") + ".log");
             str = str.Replace("!log!", name);
             return str.Replace("!name!", name).Replace("transforms.trf", name.Replace(@"\", @"\\") + ".trf");
+        }
+
+        // player-marked split times (credits, trim) fall between frames: snap them to the exact frame grid (1/fps)
+        private double Snap_to_frame(double t)
+        {
+            return Math.Round(t * src_fps) / src_fps;
         }
 
         public int Get_segment(int w, int x, double duration, double time)
