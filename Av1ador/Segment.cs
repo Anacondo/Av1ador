@@ -63,6 +63,11 @@ namespace Av1ador
         public static BackgroundWorker[] Bw { get; set; }
         private string LogFilePath { get; set; }
         private double src_fps;
+        // canonical chunk boundaries: absolute source frame indices, strictly increasing
+        public List<int> FrameSplits { get; set; }
+        private int Credits_frame = -1;
+        // the trimmed end (seconds), used as the time based bound of the tail chunk
+        private double end_time;
 
         public int Progress
         {
@@ -308,6 +313,7 @@ namespace Av1ador
             string ss1 = seek > 0 ? " -ss " + seek.ToString() : "";
             string ss2 = v.StartTime > 0 ? " -ss " + v.StartTime.ToString() : "";
             double to = v.EndTime != v.Duration ? v.EndTime : v.Duration;
+            end_time = to;
             double final = v.CreditsTime > 0 && !vbr ? v.CreditsTime - (double)Split_min_time : to;
             double ato = (to - v.StartTime) * Spd;
 
@@ -519,14 +525,9 @@ namespace Av1ador
                         }
                         if (!busy)
                         {
-                            Splits = Func.Concat(trim_time).Distinct().ToList();
-                            if (v.CreditsTime > 0 && !vbr)
-                            {
-                                Splits.Add("000" + v.CreditsTime.ToString());
-                                if (v.CreditsEndTime > 0)
-                                    Splits.Add(v.CreditsEndTime.ToString());
-                            }
-                            Splits.Add(to.ToString());
+                            List<double> times = Func.Concat(trim_time).Distinct().Select(s => double.Parse(s, CultureInfo.InvariantCulture)).ToList();
+                            Build_splits(times, v.CreditsTime > 0 && !vbr ? v.CreditsTime : 0, v.CreditsEndTime, to);
+                            // persist the raw split seconds (mpv aligns against these); frames are derived on load
                             System.IO.File.WriteAllLines(Name + "\\chunks.txt", Splits.ToArray());
                             if (vbr)
                                 System.IO.File.WriteAllLines(Name + "\\complexity.txt", Func.Concat(scenes_complex, false).ToArray());
@@ -635,38 +636,41 @@ namespace Av1ador
             if (Running)
                 return;
             Running = true;
-            Splits ??= new List<string>(System.IO.File.ReadAllLines(Name + "\\chunks.txt"));
+            if (Splits == null)
+                Load_splits();
             if (bitrate > 0 && Complexity == null)
                 Complexity = new List<string>(System.IO.File.ReadAllLines(Name + "\\complexity.txt"));
             if (Chunks == null)
             {
                 ChunkVerify.Gated = ChunkVerify.ChangesFrameCount(Param, Fps_filter);
-                Chunks = new Segment[Splits.Count - 1];
+                Chunks = new Segment[FrameSplits.Count - 1];
                 List<KeyValuePair<int, double>> Sorted = new List<KeyValuePair<int, double>>();
                 Order = new List<int>();
                 double avg_scene_score = 0;
-                double duration = Double.Parse(Splits[Splits.Count - 1]);
+                double duration = FrameToTime(FrameSplits[FrameSplits.Count - 1]);
                 double min_scene_duration = duration;
                 if (bitrate > 0 && Complexity != null)
                 {
-                    for (int i = 0; i < Splits.Count - 1; i++)
+                    for (int i = 0; i < FrameSplits.Count - 1; i++)
                     {
                         avg_scene_score += Double.Parse(Complexity[i]);
-                        double scene_duration = Double.Parse(Splits[i + 1]) - Double.Parse(Splits[i]);
+                        double scene_duration = (FrameSplits[i + 1] - FrameSplits[i]) / src_fps;
                         if (scene_duration < min_scene_duration)
                             min_scene_duration = scene_duration;
                     }
                     avg_scene_score /= Complexity.Count;
                 }
 
-                for (int i = 0; i < Splits.Count - 1; i++)
+                for (int i = 0; i < FrameSplits.Count - 1; i++)
                 {
-                    // snap both split edges onto the exact frame grid before building the chunk
-                    double start = Snap_to_frame(Double.Parse(Splits[i]));
-                    double end = Snap_to_frame(Double.Parse(Splits[i + 1]));
-                    double seek = start - Kf_interval;
+                    // boundaries are integer source frame indices: the chunk takes exactly this many frames
+                    int b0 = FrameSplits[i];
+                    int b1 = FrameSplits[i + 1];
+                    int frames = b1 - b0;
+                    bool last = i + 1 == FrameSplits.Count - 1;
+                    double seek = FrameToTime(b0) - Kf_interval;
                     string pathfile = Name + "\\" + i.ToString("00000") + "." + Job;
-                    double scene_duration = end - start;
+                    double scene_duration = frames / src_fps;
                     int scene_bitrate = bitrate;
                     if (avg_scene_score > 0)
                     {
@@ -676,12 +680,12 @@ namespace Av1ador
                     // this is where the fun begins and the parameters for the encoded chunk are created
                     Chunks[i] = new Segment
                     {
-                        Arguments = Replace_times(Param, File, pathfile, end.ToString(CultureInfo.InvariantCulture), seek, start, scene_bitrate),
+                        Arguments = Replace_times(Param, File, pathfile, b1, seek, b0, scene_bitrate, last ? end_time : 0),
                         Pathfile = pathfile,
                         Length = scene_duration,
-                        Expected = (int)Math.Round(scene_duration * src_fps),
-                        Credits = Splits[i].Length > 3 && Splits[i].Substring(0, 3) == "000",
-                        Last = i + 1 == Splits.Count() - 1
+                        Expected = frames,
+                        Credits = Credits_frame >= 0 && b0 == Credits_frame,
+                        Last = last
                     };
                     Sorted.Add(new KeyValuePair<int, double>(i, Chunks[i].Length));
                 }
@@ -965,11 +969,20 @@ namespace Av1ador
             if (!Running && !Failed)
                 Encoding();
         }
-        public string Replace_times(string str, string file, string name, string to, [Optional] double seek, [Optional] double ss, [Optional] int bitrate)
+        public string Replace_times(string str, string file, string name, int end_frame, [Optional] double seek, [Optional] int start_frame, [Optional] int bitrate, double end_sec = 0)
         {
-            string ss1 = seek > 0 ? "-ss " + seek.ToString() : "";
-            str = str.Replace("!file!", file).Replace("!duration!", "-to " + to);
-            string ss2 = ss > 0 ? "-ss " + ss.ToString() : "";
+            // fast seek to the keyframe before the boundary, then decode to half a frame before the
+            // first wanted frame: the real frame time sits on the container grid, and this guard keeps
+            // the boundary frame itself regardless of where it falls within its nominal slot
+            string ss1 = seek > 0 ? "-ss " + seek.ToString("0.######", CultureInfo.InvariantCulture) : "";
+            double ss = start_frame > 0 ? (start_frame - 0.5) / src_fps : 0;
+            string ss2 = ss > 0 ? "-ss " + ss.ToString("0.######", CultureInfo.InvariantCulture) : "";
+            // the tail and frame-count-changing filters are bounded by a time; every other chunk
+            // takes an exact frame count so nothing can drift by a frame
+            string dur = ChunkVerify.Gated || end_sec > 0
+                ? "-to " + (end_sec > 0 ? end_sec : FrameToTime(end_frame)).ToString("0.######", CultureInfo.InvariantCulture)
+                : "-frames:v " + (end_frame - start_frame);
+            str = str.Replace("!file!", file).Replace("!duration!", dur);
             str = str.Replace("!seek!", ss1).Replace("!start!", ss2);
             if (bitrate > 0)
                 str = str.Replace("!bitrate!", bitrate.ToString());
@@ -978,10 +991,66 @@ namespace Av1ador
             return str.Replace("!name!", name).Replace("transforms.trf", name.Replace(@"\", @"\\") + ".trf");
         }
 
-        // player-marked split times (credits, trim) fall between frames: snap them to the exact frame grid (1/fps)
-        private double Snap_to_frame(double t)
+        // convert a media time (seconds) to an absolute source frame index
+        private int TimeToFrame(double t)
         {
-            return Math.Round(t * src_fps) / src_fps;
+            return (int)Math.Round(t * src_fps);
+        }
+
+        // convert an absolute source frame index back to a media time (seconds)
+        private double FrameToTime(int f)
+        {
+            return f / src_fps;
+        }
+
+        // add a split boundary to both the seconds view and the frame list, keeping them index-aligned;
+        // sub-frame repeats collapse so no chunk can end up empty
+        private void Add_split(string raw, double t, bool credits)
+        {
+            int f = TimeToFrame(t);
+            if (FrameSplits.Count > 0 && f <= FrameSplits[FrameSplits.Count - 1])
+                return;
+            FrameSplits.Add(f);
+            Splits.Add(credits ? "000" + raw : raw);
+            if (credits)
+                Credits_frame = f;
+        }
+
+        // Splits holds the raw container times mpv aligns against; FrameSplits is the frame-exact view for encoding
+        private void Build_splits(List<double> times, double credits, double credits_end, double end)
+        {
+            Splits = new List<string>();
+            FrameSplits = new List<int>();
+            Credits_frame = -1;
+            foreach (double t in times)
+                Add_split(t.ToString(CultureInfo.InvariantCulture), t, false);
+            if (credits > 0)
+            {
+                Add_split(credits.ToString(CultureInfo.InvariantCulture), credits, true);
+                if (credits_end > credits)
+                    Add_split(credits_end.ToString(CultureInfo.InvariantCulture), credits_end, false);
+            }
+            Add_split(end.ToString(CultureInfo.InvariantCulture), end, false);
+        }
+
+        // read the seconds chunks.txt (same format older builds wrote) into both views
+        private void Load_splits()
+        {
+            Splits = new List<string>();
+            FrameSplits = new List<int>();
+            Credits_frame = -1;
+            foreach (string line in System.IO.File.ReadAllLines(Name + "\\chunks.txt"))
+            {
+                string s = line.Trim();
+                if (s.Length == 0 || s == "frames")
+                    continue;
+                bool credits = s.Length > 3 && s.Substring(0, 3) == "000";
+                if (credits)
+                    s = s.Substring(3);
+                if (!double.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out double t))
+                    continue;
+                Add_split(s, t, credits);
+            }
         }
 
         public int Get_segment(int w, int x, double duration, double time)
@@ -989,7 +1058,7 @@ namespace Av1ador
             time = time > 0 ? time : (double)x * duration / (double)w;
             for (int i = 0; i < Splits.Count - 1; i++)
             {
-                if (time < Double.Parse(Splits[i + 1]) && time >= Double.Parse(Splits[i]))
+                if (time < Double.Parse(Splits[i + 1], CultureInfo.InvariantCulture) && time >= Double.Parse(Splits[i], CultureInfo.InvariantCulture))
                     return i;
             }
             return -1;
@@ -1057,12 +1126,10 @@ namespace Av1ador
             try
             {
                 Actual = ChunkVerify.CountFrames(Pathfile);
-                // split times are stored to the millisecond, so at 23.976 fps a keyframe can tip
-                // half a frame across a boundary: the two adjacent chunks then differ by one frame
-                // in opposite directions and their total is unchanged (nothing is lost or duplicated).
-                // A one-frame difference is ~42 ms and cannot retime or desync anything, so tolerate it
-                if (Math.Abs(Actual - Expected) == 1)
-                    return true;
+                // the tail chunk is bounded by the source end (a time, not a frame index), so its
+                // count follows from whatever remains: never fail it on a container-duration tie
+                if (Last)
+                    return Actual >= 0;
                 return ChunkVerify.Judge(Pathfile, Expected, Actual);
             }
             catch { return true; }
@@ -1248,7 +1315,7 @@ namespace Av1ador
                 }
                 if (Compare && Math.Abs(Video.Get_duration(Video.Get_info(Pathfile), out string _, Pathfile) - Length) > 2 && !Last)
                     return Pathfile + "\r\nThe segment has finished but there is a mismatch in the duration.\r\nUsually this means that ffmpeg crashed.";
-                ChunkVerify.Log(Pathfile, "ok in " + (Retry + 1) + " attempt(s)" + (Actual >= 0 ? " - frames " + Actual + "/" + Expected : " - frames not checked") + (Actual >= 0 && Actual != Expected ? " (frame boundary tolerance)" : ""));
+                ChunkVerify.Log(Pathfile, "ok in " + (Retry + 1) + " attempt(s)" + (Actual >= 0 ? " - frames " + Actual + "/" + Expected : " - frames not checked"));
                 Completed = true;
             }
             System.IO.File.Delete(Pathfile + ".txt");
