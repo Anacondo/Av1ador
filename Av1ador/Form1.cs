@@ -892,7 +892,7 @@ namespace Av1ador
             mouse_bar = new Point(e.X, -picBoxBarra.Height);
             TimeSpan ts = TimeSpan.FromSeconds(primer_video.Duration * e.X / picBoxBarra.Width);
             string str = ts.ToString().Replace("0000", "");
-            if (statusLabel.Text.Contains("Encoding video") && encode.File == primer_video.File && ts.TotalSeconds > primer_video.StartTime && ts.TotalSeconds < primer_video.EndTime)
+            if ((statusLabel.Text.Contains("Encoding video") || statusLabel.Text.Contains("Checking existing chunks")) && encode.File == primer_video.File && ts.TotalSeconds > primer_video.StartTime && ts.TotalSeconds < primer_video.EndTime)
             {
                 mouse_bar.Y -= picBoxBarra.Height;
                 int segment = encode.Get_segment(picBoxBarra.Width, e.X, primer_video.Duration, 0);

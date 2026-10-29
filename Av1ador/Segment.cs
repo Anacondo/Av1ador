@@ -6,9 +6,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Windows.Forms;
 
 
 namespace Av1ador
@@ -98,12 +98,12 @@ namespace Av1ador
 
         private int lastLoggedPercentage = 0;
 
-        private void LogEstimatesToFile( string message )
+        private void LogEstimatesToFile(string message)
         {
             try
             {
                 using StreamWriter writer = new StreamWriter(Name + LogFilePath, append: true);
-                writer.WriteLine( message );
+                writer.WriteLine(message);
             }
             catch (Exception ex)
             {
@@ -184,7 +184,7 @@ namespace Av1ador
 
                 // Include progress-adjusted audio size
                 totalSize += audio_size * progress / 100;
-                
+
                 // Calculate time elapsed
                 double timeElapsed = progress * duration / 100.0;
 
@@ -200,7 +200,7 @@ namespace Av1ador
                 {
                     string crfValue = float.Parse(Param.Split(new string[] { "-crf " }, StringSplitOptions.None)[1].Split(' ')[0], System.Globalization.CultureInfo.InvariantCulture).ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
                     string presetValue = Param.Split(new string[] { "-preset " }, StringSplitOptions.None)[1].Split(' ')[0];
-                    string tuneValue = Param.Split(new string[] { "tune=" }, StringSplitOptions.None)[1].Split(':')[0]; 
+                    string tuneValue = Param.Split(new string[] { "tune=" }, StringSplitOptions.None)[1].Split(':')[0];
                     LogEstimatesToFile($"[{DateTime.Now:dd-MM-yyyy HH:mm}] {(int)progress}%" + $" -> {(video_size + audio_size / 1024 / 1024 / 1024) / 1024 * Globals.overhead:F2} GB (Tune={tuneValue} Preset={presetValue} CRF={crfValue} Bitrate={(totalSize / 1024.0 * 8.0 / timeElapsed) * Globals.overhead:F0} Kbps)");
                     lastLoggedPercentage = currentProgressPercentage;
                 }
@@ -208,7 +208,7 @@ namespace Av1ador
                 return video_size;
             }
         }
-    
+
         public double Speed
         {
             get
@@ -298,7 +298,7 @@ namespace Av1ador
             File = v.File;
 
             // to deal with paths with illegal characters coming from SAMBA
-            string safeName = Func.SanitizeFilename( Path.GetFileNameWithoutExtension(v.File) );
+            string safeName = Func.SanitizeFilename(Path.GetFileNameWithoutExtension(v.File));
             Name = Tempdir + safeName;
 
             if (!Directory.Exists(Name))
@@ -328,7 +328,7 @@ namespace Av1ador
 
             if (audioMissing || subMissing)
             {
-                Status.Add("Processing audio and subtitles | "); 
+                Status.Add("Processing audio and subtitles | ");
                 Process ffproc = new Process();
                 Func.Setinicial(ffproc, 3);
                 string args = $"-analyzeduration 100M -probesize 100M -i \"{v.File}\"";
@@ -551,7 +551,7 @@ namespace Av1ador
             Status.Remove("Detecting scenes");
             if (Can_run)
             {
-                Status.Add("Encoding video");
+                Status.Add("Checking existing chunks...");
                 watch.Start();
                 Encoding();
             }
@@ -746,11 +746,17 @@ namespace Av1ador
                         else
                         {
                             if (present)
-                            try
+                                try
+                                {
+                                    System.IO.File.Delete(chunk.Pathfile);
+                                }
+                                catch { }
+                            // only now is there actual encoding work to report
+                            if (!Status.Contains("Encoding video"))
                             {
-                                System.IO.File.Delete(chunk.Pathfile);
+                                Status.RemoveAll(s => s.StartsWith("Checking existing chunks"));
+                                Status.Add("Encoding video");
                             }
-                            catch { }
                             instances++;
                             chunk.Encoding = true;
                             Thread thread = new Thread(() => Background(chunk));
@@ -778,7 +784,7 @@ namespace Av1ador
                     }
                     else
                     {
-                        Status.RemoveAll(s => s.StartsWith("Encoding video"));
+                        Status.RemoveAll(s => s.StartsWith("Encoding video") || s.StartsWith("Checking existing chunks"));
                         Thread trd = new Thread(new ThreadStart(Concatenate))
                         {
                             IsBackground = true
@@ -798,7 +804,7 @@ namespace Av1ador
             return output.Replace(".", " ");
         }
 
-        public string GetEncoderInfo( string encoder, bool video = true )
+        public string GetEncoderInfo(string encoder, bool video = true)
         {
             Process ffmpeg = new Process();
             if (video)
@@ -815,101 +821,210 @@ namespace Av1ador
             {
                 Thread.Sleep(500);
             }
-            Status.Add("Merging chunks");
+            Status.Add("Merging all chunks and multiplexing all streams...");
 
             var files = new List<string>();
 
             for (int i = 0; i < Chunks.Length; i++)
                 files.Add("file '" + Name.Replace(Tempdir, "").Replace("'", "\'\\'\'") + "\\" + i.ToString("00000").ToString() + "." + Job + "'");
-            System.IO.File.WriteAllLines(Tempdir + "concat.txt", files.ToArray());
 
+            string concatFile = Tempdir + "concat.txt";
+            string outputFile = Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension;
+            bool outputExisted = System.IO.File.Exists(outputFile);
+            StringBuilder output = new StringBuilder();
             Process ffconcat = new Process();
-            Func.Setinicial(ffconcat, 3);
-            string f = Spd != 1 ? " -itsscale " + Spd : "";
 
-            bool hasAudio = System.IO.File.Exists(Name + "\\audio." + A_Job);
-            string subtitleFile = Name + "\\subtitles.mkv";
-            bool hasSubtitles = SubIndex > -1 && System.IO.File.Exists(subtitleFile);
-
-            string args = " -y -copyts -f concat -safe 0" + f + " -i \"" + Tempdir + "concat.txt\"";
-            string mapArgs = " -map 0:v:0";
-            string codecArgs = " -c:v copy";
-            string audioCodecParams = "";
-
-            // add encode information metadata to output file
-            string videoCodecParams = "-metadata VIDEO_ENCODER_PARAMS=\"" + Param.Replace("\"", "'").Replace("-y !seek! -i '!file!' !start! !duration! ", "").Replace("'!name!'", "") + "\" ";
-            string videoCodecVersion = GetEncoderInfo(Cv);
-
-            int inputIndex = 1;
-
-            if (hasAudio)
+            try
             {
-                args += " -i \"" + Name + "\\audio." + A_Job + "\"";
-                mapArgs += " -map " + inputIndex + ":a:0";
-                codecArgs += " -c:a copy";
-                if (A_Param != null)
-                    audioCodecParams = "-metadata AUDIO_ENCODER_PARAMS=\"" + A_Param.Replace("\"", "'") + "\" ";
+                System.IO.File.WriteAllLines(concatFile, files.ToArray());
 
-                inputIndex++;
-            }
-            else
-            {
-                codecArgs += " -an";
-            }
+                Func.Setinicial(ffconcat, 3);
+                string f = Spd != 1 ? " -itsscale " + Spd : "";
 
-            if (hasSubtitles)
-            {
-                args += " -i \"" + subtitleFile + "\"";
-                mapArgs += " -map " + inputIndex + ":s:0";
-                codecArgs += " -c:s copy -disposition:s:0 default";
-                inputIndex++;
-            }
+                bool hasAudio = System.IO.File.Exists(Name + "\\audio." + A_Job);
+                string subtitleFile = Name + "\\subtitles.mkv";
+                bool hasSubtitles = SubIndex > -1 && System.IO.File.Exists(subtitleFile);
 
-            Regex vRegex = new Regex("SVT \\[version\\]:\\W(?<encoder_version>.*[l,L]ib*.*)");
-            Regex aRegex = new Regex("encoder[ ]+: (?<audio_codec>.*lib.*)");
-            Match vCompare;
+                string args = " -y -copyts -f concat -safe 0" + f + " -i \"" + concatFile + "\"";
+                string mapArgs = " -map 0:v:0";
+                string codecArgs = " -c:v copy";
+                string audioCodecParams = "";
 
-            vCompare = vRegex.Match(videoCodecVersion);
+                // add encode information metadata to output file
+                // trim the params themselves: the leading space is part of the metadata value,
+                // trimming the serialized "-metadata ..." argument would only remove separators
+                string videoEncoderParams = Param.Replace("\"", "'").Replace("-y !seek! -i '!file!' !start! !duration! ", "").Replace("'!name!'", "").Trim();
+                string videoCodecParams = "-metadata VIDEO_ENCODER_PARAMS=\"" + videoEncoderParams + "\"";
+                string videoCodecVersion = GetEncoderInfo(Cv);
 
-            if (vCompare.Success)
-                videoCodecVersion = "-metadata VIDEO_CODEC_VERSION=\"" + vCompare.Groups[1].ToString() + "\" ";
-            else
-                videoCodecVersion = "-metadata VIDEO_CODEC_VERSION=\"\" ";
+                int inputIndex = 1;
 
-            string encoderMetadata = (videoCodecVersion + videoCodecParams + audioCodecParams).Replace("\r", "");
-
-            ffconcat.StartInfo.Arguments = args + codecArgs + mapArgs + " " + encoderMetadata + " \"" + Dir + BeautifyOutputName(Path.GetFileName(Name)) + "_Av1ador." + Extension + "\"";
-
-            ffconcat.Start();
-            Regex regex = new Regex("time=([0-9]{2}):([0-9]{2}):([0-9]{2}.[0-9]{2})");
-            Match compare;
-            BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += (s, e) =>
-            {
-                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-                string output;
-                while (!ffconcat.HasExited)
+                if (hasAudio)
                 {
-                    output = ffconcat.StandardError.ReadLine();
-                    if (output != null)
-                    {
-                        compare = regex.Match(output);
-                        if (compare.Success)
-                        {
-                            double d = Double.Parse(compare.Groups[1].ToString()) * 3600 + Double.Parse(compare.Groups[2].ToString()) * 60 + Double.Parse(compare.Groups[3].ToString());
-                            if (d > Merge)
-                                Merge = d;
-                        }
-                    }
+                    args += " -i \"" + Name + "\\audio." + A_Job + "\"";
+                    mapArgs += " -map " + inputIndex + ":a:0";
+                    codecArgs += " -c:a copy";
+                    if (A_Param != null)
+                        audioCodecParams = "-metadata AUDIO_ENCODER_PARAMS=\"" + A_Param.Replace("\"", "'").Trim() + "\"";
+
+                    inputIndex++;
                 }
-            };
-            bw.RunWorkerCompleted += (s, e) =>
+                else
+                {
+                    codecArgs += " -an";
+                }
+
+                if (hasSubtitles)
+                {
+                    args += " -i \"" + subtitleFile + "\"";
+                    mapArgs += " -map " + inputIndex + ":s:0";
+                    codecArgs += " -c:s copy -disposition:s:0 default";
+                    inputIndex++;
+                }
+
+                Regex vRegex = new Regex("SVT \\[version\\]:\\W(?<encoder_version>.*[l,L]ib*.*)");
+                Match vCompare;
+
+                vCompare = vRegex.Match(videoCodecVersion);
+
+                if (vCompare.Success)
+                    videoCodecVersion = "-metadata VIDEO_CODEC_VERSION=\"" + vCompare.Groups[1].ToString() + "\"";
+                else
+                    videoCodecVersion = "-metadata VIDEO_CODEC_VERSION=\"\"";
+
+                // save original source file name in a tag
+                string sourceName = Path.GetFileName(this.File);
+                string sourceMetadata = "-metadata SOURCE_FILE=\"" + sourceName.Replace("\"", "'") + "\"";
+
+                // encoding date (ISO 8601, locale independent) and encoder name
+                string encodeDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                string dateMetadata = "-metadata ENCODING_DATE=\"" + encodeDate + "\"";
+
+                string encodedBy = "Anacondo";
+                string encodedByMetadata = "-metadata ENCODED_BY=\"" + encodedBy.Replace("\"", "'") + "\"";
+
+                // join with explicit separators: a missing space glues two options into one argument,
+                // and ffmpeg then treats the second metadata value as an output file name
+                string encoderMetadata = string.Join(" ", new[]
+                {
+                    videoCodecVersion,
+                    videoCodecParams,
+                    audioCodecParams,
+                    sourceMetadata,
+                    dateMetadata,
+                    encodedByMetadata
+                }.Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => s.Trim())).Replace("\r", "");
+
+                ffconcat.StartInfo.Arguments = args + codecArgs + mapArgs + " " + encoderMetadata + " \"" + outputFile + "\"";
+
+                ffconcat.Start();
+
+                Regex regex = new Regex("time=([0-9]{2}):([0-9]{2}):([0-9]{2}.[0-9]{2})");
+
+                BackgroundWorker bw = new BackgroundWorker();
+                bw.DoWork += (s, e) =>
+                {
+                    Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+                    try
+                    {
+                        // read to the end of the stream: checking HasExited can skip the final
+                        // (and most important) error lines of a mux that failed immediately
+                        string line;
+                        while ((line = ffconcat.StandardError.ReadLine()) != null)
+                        {
+                            output.AppendLine(line);
+                            Match compare = regex.Match(line);
+                            if (compare.Success)
+                            {
+                                double d = Double.Parse(compare.Groups[1].ToString()) * 3600 + Double.Parse(compare.Groups[2].ToString()) * 60 + Double.Parse(compare.Groups[3].ToString());
+                                if (d > Merge)
+                                    Merge = d;
+                            }
+                        }
+                        ffconcat.WaitForExit();
+                    }
+                    catch (Exception ex)
+                    {
+                        output.AppendLine("Error reading mux output: " + ex.Message);
+                        throw;
+                    }
+                };
+                bw.RunWorkerCompleted += (s, e) =>
+                {
+                    try
+                    {
+                        string reason = null;
+                        if (e.Error != null)
+                            reason = "exception while muxing: " + e.Error.Message;
+                        else if (!ffconcat.HasExited)
+                            reason = "ffmpeg did not exit";
+                        else if (ffconcat.ExitCode != 0)
+                            reason = "ffmpeg exited with code " + ffconcat.ExitCode;
+                        else if (!System.IO.File.Exists(outputFile) || new FileInfo(outputFile).Length == 0)
+                            reason = "ffmpeg reported success but wrote no output file";
+
+                        if (reason != null)
+                        {
+                            MuxFailed(ffconcat, outputFile, concatFile, output, outputExisted, reason);
+                            return;
+                        }
+
+                        Status.Remove("Merging all chunks and multiplexing all streams...");
+                        Cleanup();
+                        Finished = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        MuxFailed(ffconcat, outputFile, concatFile, output, outputExisted, "exception after muxing: " + ex.Message);
+                    }
+                };
+                bw.RunWorkerAsync();
+            }
+            catch (Exception ex)
             {
-                Status.Remove("Merging chunks");
-                Cleanup();
-                Finished = true;
-            };
-            bw.RunWorkerAsync();
+                MuxFailed(ffconcat, outputFile, concatFile, output, outputExisted, "exception before muxing finished: " + ex.Message);
+            }
+        }
+
+        // A failed mux must never touch the chunks: they are hours of work and the only copy.
+        // Keep concat.txt and write the full command + ffmpeg output next to them for debugging.
+        private void MuxFailed(Process ffconcat, string outputFile, string concatFile, StringBuilder output, bool outputExisted, string reason)
+        {
+            try
+            {
+                if (ffconcat != null && !ffconcat.HasExited)
+                    ffconcat.Kill();
+            }
+            catch { }
+
+            Status.Remove("Merging all chunks and multiplexing all streams...");
+            Status.Add("ERROR: Multiplexing stage failed! No chunks have been deleted");
+
+            try
+            {
+                StringBuilder log = new StringBuilder();
+                log.AppendLine("Mux failed: " + reason);
+                log.AppendLine("Command: " + (ffconcat != null ? ffconcat.StartInfo.Arguments : ""));
+                log.AppendLine("Concat file: " + concatFile);
+                log.AppendLine();
+                log.Append(output);
+                System.IO.File.WriteAllText(Name + "\\mux.log", log.ToString());
+            }
+            catch { }
+
+            // only remove an output this run created: an older, untouched file is not ours to delete
+            if (!outputExisted)
+            {
+                try
+                {
+                    if (System.IO.File.Exists(outputFile))
+                        System.IO.File.Delete(outputFile);
+                }
+                catch { }
+            }
+
+            ChunkVerify.GlobalLog(Name + " - mux FAILED: " + reason + " (chunks kept in " + Name + ", details in mux.log)");
+            Failed = true;
         }
 
         private void Cleanup()
